@@ -3,12 +3,25 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const session = require('express-session');
-require('dotenv').config();
+const mongoose = require('mongoose');
+// const session = require('express-session');
+// require('dotenv').config();
+// mongoose.connect(
+  //   "mongodb://localhost:27017/ecofit",
+  //   (err) => {
+    //     if (!err) {
+      //       console.log("MongoDB Connection Succeded");
+      //     } else {
+        //       console.log("Error in DB conncection: " + err);
+        //     }
+//   }
+// );
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var authRouter = require('./routes/auth');
 
+const db = require("./config/dbconnection");
 var app = express();
 
 // view engine setup
@@ -23,6 +36,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/auth', authRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
