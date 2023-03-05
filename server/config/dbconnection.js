@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 mongoose.connect(
-  "mongodb://127.0.0.1:27017/ecofit",
+  "mongodb://0.0.0.0:27017/ecoFit",
   (err) => {
     if (!err) {
       console.log("MongoDB Connection Succeded");
