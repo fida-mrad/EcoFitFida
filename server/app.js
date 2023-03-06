@@ -8,9 +8,9 @@ const cors = require('cors')
 // require('dotenv').config();
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth.router');
 var agentRouter = require('./routes/agent.router');
+var adminRouter = require('./routes/admin.router');
 
 
 const db = require("./config/dbconnection");
@@ -24,9 +24,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/agent', agentRouter);
+app.use('/admin', adminRouter);
 
 
 // view engine setup

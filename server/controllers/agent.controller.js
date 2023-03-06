@@ -129,7 +129,7 @@ const agentController = {
 
         res.cookie("refreshtoken", refreshtoken, {
           httpOnly: true,
-          path: "/auth/refresh_token",
+          path: "/admin/refresh_token",
           maxAge: 1 * 24 * 60 * 60 * 1000, // 7d
         });
 
@@ -141,7 +141,7 @@ const agentController = {
   },
   logout: async (req, res) => {
     try {
-      res.clearCookie("refreshtoken", { path: "/auth/refresh_token" });
+      res.clearCookie("refreshtoken", { path: "/admin/refresh_token" });
       return res.json({ msg: "Logged out" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });

@@ -146,7 +146,6 @@ const clientController = {
         // If login success , create access token and refresh token
         // const accesstoken = createAccessToken({id: client._id})
         const refreshtoken = createRefreshToken({ id: client._id });
-
         res.cookie("refreshtoken", refreshtoken, {
           httpOnly: true,
           path: "/auth/refresh_token",
@@ -198,27 +197,25 @@ const clientController = {
   },
   getClient: async (req, res) => {
     // Get the token from the cookie
-    console.log(req.cookies);
     const token = req.cookies.refreshtoken;
 
     if (!token) {
       res.status(401).send("Not authorized");
       return;
     }
-
     try {
       // Verify the token and extract the user ID
-      const { clientId } = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+      const { id } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
 
       // Get the user profile based on the ID
-      const client = await Client.findById(clientId);
+      const loggedInClient = await Client.findById(id);
 
       // Return the user profile
-      console.log("Logged in Client : " + client);
-      res.json(client);
+      res.json(_.pick(loggedInClient, ["firstname","lastname","email","username"]));
     } catch (err) {
+      console.log(err);
       // Invalid token
-      res.status(401).send("Not authorized");
+      res.status(401).send("Invalid Token");
     }
   },
 };
