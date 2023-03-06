@@ -1,19 +1,48 @@
 const jwt = require('jsonwebtoken')
 const config = require('../controllers/config');
-const auth = (req, res, next) =>{
+const authAdmin = async (req, res, next) =>{
+    const token = req.cookies.refreshtoken;
+
+    if (!token) {
+      return res.status(401).send("Unauthorized");
+    }
     try {
-        const token = req.header("Authorization")
-        if(!token) return res.status(400).json({msg: "Invalid Authentication"})
+      // const { id,role } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
+      const { role } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
+      if(role!="Admin") return res.status(403).send("Access Denied");
+      next();
+    } catch (ex) {
+      // Invalid token
+      res.status(401).send("Unauthorized");
+    }
+}
+const authClient = async (req, res, next) =>{
+    const token = req.cookies.refreshtoken;
 
-        jwt.verify(token, config.ACCESS_TOKEN_SECRET, (err, client) =>{
-            if(err) return res.status(400).json({msg: "Invalid Authentication"})
+    if (!token) {
+      return res.status(401).send("Unauthorized");
+    }
+    try {
+      const { role } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
+      if(role!="Client") return res.status(401).send("Unauthorized");
+      next();
+    } catch (ex) {
+      res.status(401).send("Unauthorized");
+    }
+}
+const authAgent = async (req, res, next) =>{
+    const token = req.cookies.refreshtoken;
 
-            req.client = client
-            next()
-        })
-    } catch (err) {
-        return res.status(500).json({msg: err.message})
+    if (!token) {
+      return res.status(401).send("Unauthorized");
+    }
+    try {
+      const { role } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
+      if(role!="Agent") return res.status(401).send("Unauthorized");
+      next();
+    } catch (ex) {
+      res.status(401).send("Unauthorized");
     }
 }
 
-module.exports = auth
+module.exports = {authAdmin,authClient,authAgent}

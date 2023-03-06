@@ -1,16 +1,14 @@
 var express = require("express");
 var router = express.Router();
 const controller = require("../controllers/agent.controller");
-// const auth = require('../middleware/auth')
+const {authAdmin,authAgent} = require('../middleware/auth')
 
 router.post('/register', controller.register)
-router.get('/refresh_token', controller.refreshToken)
+router.get('/refresh_token', authAgent,controller.refreshToken)
 router.post('/login', controller.login)
 router.get('/logout', controller.logout)
-router.post('/approve', controller.approve)
-// router.get('/infor', auth,  controller.getUser)
+router.post('/approve', authAdmin,controller.approve)
 router.get('/activate/:token',  controller.confirmEmail)
-// router.get('/get',  controller.getClient)
 
 
 

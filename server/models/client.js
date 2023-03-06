@@ -43,6 +43,11 @@ const clientSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    role: {
+      type: String,
+      require: true,
+      default: "Client",
+    },
   },
   {
     timestamps: true,

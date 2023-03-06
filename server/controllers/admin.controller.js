@@ -8,7 +8,7 @@ require("dotenv").config();
 const adminController = {
   addAdmin: async (req, res) => {
     try {
-      const { email, password } = req.body;
+      const { email, password,profileimg } = req.body;
       if (!email || !password)
         return res.status(400).json({ msg: "Please fill in all fields." });
       if (!validateEmail(email))
@@ -40,7 +40,7 @@ const adminController = {
       const isMatch = await bcrypt.compare(password, admin.password);
       if (!isMatch)
         return res.status(400).json({ msg: "Incorrect Credentials." });
-      const refreshtoken = createRefreshToken({ id: admin._id });
+      const refreshtoken = createRefreshToken({ id: admin._id, role : admin.role });
       res.cookie("refreshtoken", refreshtoken, {
         httpOnly: true,
         path: "/admin/refresh_token",

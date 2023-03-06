@@ -82,29 +82,15 @@ const clientController = {
           }
         }
       );
-      // res.status(201).json({
-      //   msg: "Register Success! Please activate your email to start.",
-      // });
 
       // Save mongodb
       await newClient.save();
 
-      // Then create jsonwebtoken to authentication
-      const accesstoken = createAccessToken({ id: newClient._id });
-      const refreshtoken = createRefreshToken({ id: newClient._id });
-
       return res
         .status(201)
-        .cookie("refreshtoken", refreshtoken, {
-          httpOnly: true,
-          path: "/client/refresh_token",
-          maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
-        })
         .json({
           msg: "Register Success! Please activate your email to start.",
         });
-
-      /* res.json({accesstoken})*/
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -124,10 +110,10 @@ const clientController = {
         }
       );
       return res.status(200).send("Email Verified");
+          // return res.redirect("http://localhost:3000/users/login");
     } catch (e) {
       res.status(500).json({ e: e.message });
     }
-    // return res.redirect("http://localhost:3000/users/login");
   },
 
   login: async (req, res) => {
@@ -145,7 +131,7 @@ const clientController = {
       } else {
         // If login success , create access token and refresh token
         // const accesstoken = createAccessToken({id: client._id})
-        const refreshtoken = createRefreshToken({ id: client._id });
+        const refreshtoken = createRefreshToken({ id: client._id,role : client.role });
         res.cookie("refreshtoken", refreshtoken, {
           httpOnly: true,
           path: "/auth/refresh_token",
@@ -200,7 +186,7 @@ const clientController = {
     const token = req.cookies.refreshtoken;
 
     if (!token) {
-      res.status(401).send("Not authorized");
+      res.status(401).send("Unauthorized");
       return;
     }
     try {
@@ -211,7 +197,9 @@ const clientController = {
       const loggedInClient = await Client.findById(id);
 
       // Return the user profile
-      res.json(_.pick(loggedInClient, ["firstname","lastname","email","username"]));
+      res.json(
+        _.pick(loggedInClient, ["firstname", "lastname", "email", "username"])
+      );
     } catch (err) {
       console.log(err);
       // Invalid token

@@ -1,12 +1,10 @@
 const mongoose = require("mongoose");
-const Brand = new mongoose.Schema(
-    {
-      brandname: {
-        type: String,
-        require: true,
-      },
-    }
-  );
+const Brand = new mongoose.Schema({
+  brandname: {
+    type: String,
+    require: true,
+  },
+});
 const agentSchema = new mongoose.Schema(
   {
     firstname: {
@@ -39,10 +37,15 @@ const agentSchema = new mongoose.Schema(
       default: false,
     },
     confirmed: {
-        type: Boolean,
-        require: true,
-        default: false,
-      },
+      type: Boolean,
+      require: true,
+      default: false,
+    },
+    role: {
+      type: String,
+      require: true,
+      default: "Agent",
+    },
   },
   {
     timestamps: true,

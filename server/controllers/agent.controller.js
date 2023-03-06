@@ -45,6 +45,7 @@ const agentController = {
         password: passwordHash,
         brand: brand,
       });
+      //Create Email Verification Token
       jwt.sign(
         {
           agent: _.pick(newAgent, "id"),
@@ -71,18 +72,8 @@ const agentController = {
 
       // Save mongodb
       await newAgent.save();
-
-      // Then create jsonwebtoken to authentication
-      const accesstoken = createAccessToken({ id: newAgent._id });
-      const refreshtoken = createRefreshToken({ id: newAgent._id });
-
       return res
         .status(201)
-        .cookie("refreshtoken", refreshtoken, {
-          httpOnly: true,
-          path: "/agent/refresh_token",
-          maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
-        })
         .json({
           msg: "Register Success! Please activate your email to start.",
         });
@@ -125,7 +116,7 @@ const agentController = {
       } else {
         // If login success , create access token and refresh token
         // const accesstoken = createAccessToken({id: agent._id})
-        const refreshtoken = createRefreshToken({ id: agent._id });
+        const refreshtoken = createRefreshToken({ id: agent._id, role : agent.role });
 
         res.cookie("refreshtoken", refreshtoken, {
           httpOnly: true,
