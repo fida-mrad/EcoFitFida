@@ -3,37 +3,37 @@ const clientSchema = new mongoose.Schema(
   {
     firstname: {
       type: String,
-      require: true,
+      required: true,
     },
     lastname: {
       type: String,
-      require: true,
+      required: true,
     },
     username: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
     },
     email: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
     },
     password: {
       type: String,
-      require: true,
+      required: true,
     },
     phone: {
       type: String,
-      require: true,
+      required: true,
     },
     birthdate: {
       type: Date,
-      require: true,
+      required: true,
     },
     profileimg: {
       type: String,
-      require: true,
+      required: true,
     },
     confirmed: {
       type: Boolean,
@@ -43,9 +43,18 @@ const clientSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    tfaSecret :{
+      type : String ,
+      required : false
+    },
+    tfa : {
+      type : Boolean,
+      required : true,
+      default : false
+    },
     role: {
       type: String,
-      require: true,
+      required: true,
       default: "Client",
     },
   },

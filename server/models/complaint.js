@@ -2,16 +2,16 @@ const mongoose = require("mongoose");
 const complaintSchema = new mongoose.Schema({
     reason: {
         type: String,
-        require: true
+        required: true
     },    
     date : {
         type: Date,
-        require: true,
+        required: true,
         default : Date.now()
     },
     status : {
         type : Boolean,
-        require : true
+        required : true
     },
 
 })

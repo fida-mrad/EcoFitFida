@@ -2,48 +2,48 @@ const mongoose = require("mongoose");
 const Brand = new mongoose.Schema({
   brandname: {
     type: String,
-    require: true,
+    required: true,
   },
 });
 const agentSchema = new mongoose.Schema(
   {
     firstname: {
       type: String,
-      require: true,
+      required: true,
     },
     lastname: {
       type: String,
-      require: true,
+      required: true,
     },
     email: {
       type: String,
-      require: true,
+      required: true,
     },
     password: {
       type: String,
-      require: true,
+      required: true,
     },
     profileimg: {
       type: String,
-      require: true,
+      required: true,
     },
     brand: {
       type: Brand,
-      require: true,
+      required: true,
     },
     approved: {
       type: Boolean,
-      require: true,
+      required: true,
       default: false,
     },
     confirmed: {
       type: Boolean,
-      require: true,
+      required: true,
       default: false,
     },
     role: {
       type: String,
-      require: true,
+      required: true,
       default: "Agent",
     },
   },

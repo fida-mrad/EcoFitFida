@@ -23,8 +23,9 @@ const authClient = async (req, res, next) =>{
       return res.status(401).send("Unauthorized");
     }
     try {
-      const { role } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
+      const { id,role } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
       if(role!="Client") return res.status(401).send("Unauthorized");
+      req.body.id = id;
       next();
     } catch (ex) {
       res.status(401).send("Unauthorized");

@@ -2,19 +2,19 @@ const mongoose = require("mongoose");
 const Admin = new mongoose.Schema({
   email: {
     type: String,
-    require: true,
+    required: true,
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
   profileimg: {
     type: String,
-    require: false,
+    required: false,
   },
   role : {
     type : String,
-    require : true,
+    required : true,
     default : "Admin"
   }
 });

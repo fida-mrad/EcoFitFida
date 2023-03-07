@@ -5,6 +5,8 @@ const config = require("./config");
 const transporter = require("../middleware/transporter");
 const _ = require("lodash");
 require("dotenv").config();
+const speakeasy = require("speakeasy");
+const qrcode = require("qrcode");
 
 const clientController = {
   register: async (req, res) => {
@@ -86,11 +88,9 @@ const clientController = {
       // Save mongodb
       await newClient.save();
 
-      return res
-        .status(201)
-        .json({
-          msg: "Register Success! Please activate your email to start.",
-        });
+      return res.status(201).json({
+        msg: "Register Success! Please activate your email to start.",
+      });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -110,7 +110,7 @@ const clientController = {
         }
       );
       return res.status(200).send("Email Verified");
-          // return res.redirect("http://localhost:3000/users/login");
+      // return res.redirect("http://localhost:3000/users/login");
     } catch (e) {
       res.status(500).json({ e: e.message });
     }
@@ -126,20 +126,19 @@ const clientController = {
 
       const isMatch = await bcrypt.compare(password, client.password);
       if (!isMatch) return res.status(400).json({ msg: "Incorrect password." });
-      if (!client.confirmed) {
+      if (!client.confirmed)
         return res.status(401).send({ msg: "Please Verify your Email" });
-      } else {
-        // If login success , create access token and refresh token
-        // const accesstoken = createAccessToken({id: client._id})
-        const refreshtoken = createRefreshToken({ id: client._id,role : client.role });
-        res.cookie("refreshtoken", refreshtoken, {
-          httpOnly: true,
-          path: "/auth/refresh_token",
-          maxAge: 1 * 24 * 60 * 60 * 1000, // 7d
-        });
+      const refreshtoken = createRefreshToken({
+        id: client._id,
+        role: client.role,
+      });
+      res.cookie("refreshtoken", refreshtoken, {
+        httpOnly: true,
+        path: "/auth/refresh_token",
+        maxAge: 1 * 24 * 60 * 60 * 1000, // 7d
+      });
 
-        res.json({ msg: "Login success!" });
-      }
+      res.json({ msg: "Login success!" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -182,29 +181,50 @@ const clientController = {
     }
   },
   getClient: async (req, res) => {
-    // Get the token from the cookie
-    const token = req.cookies.refreshtoken;
+    const id = req.body.id;
+    // Get the user profile based on the ID
+    const loggedInClient = await Client.findById(id);
 
-    if (!token) {
-      res.status(401).send("Unauthorized");
-      return;
-    }
-    try {
-      // Verify the token and extract the user ID
-      const { id } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
-
-      // Get the user profile based on the ID
-      const loggedInClient = await Client.findById(id);
-
-      // Return the user profile
-      res.json(
+    // Return the user profile
+    res
+      .status(200)
+      .send(
         _.pick(loggedInClient, ["firstname", "lastname", "email", "username"])
       );
-    } catch (err) {
-      console.log(err);
-      // Invalid token
-      res.status(401).send("Invalid Token");
+  },
+  enable2FA: async (req, res) => {
+    const id = req.body.id;
+    var secret = speakeasy.generateSecret({
+      name: "Eco-Fit-2FA",
+    });
+    const loggedInClient = await Client.findById(id);
+    if (loggedInClient.tfa) {
+      return res
+        .status(400)
+        .send("Two-Factor Authentication is Already Enabled !");
+    } else {
+      loggedInClient.set({ tfaSecret: secret.ascii });
+      loggedInClient.save();
+      qrcode.toDataURL(secret.otpauth_url, (err, data) => {
+        return res.status(200).send(data);
+      });
     }
+  },
+  verify2FA: async (req, res, next) => {
+    const id = req.body.id;
+    const loggedInClient = await Client.findById(id);
+    var verified = speakeasy.totp.verify({
+      secret: loggedInClient.tfaSecret,
+      encoding: "ascii",
+      token: req.body.token,
+    });
+    if (verified) {
+      loggedInClient.set({ tfa: true });
+      loggedInClient.save();
+    }
+    // req.body.verified = verified;
+    // next();
+    return res.send({ verified: verified });
   },
 };
 const createAccessToken = (client) => {

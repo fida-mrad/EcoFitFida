@@ -2,27 +2,27 @@ const mongoose = require("mongoose");
 const blogSchema = new mongoose.Schema({
     title: {
         type: String,
-        require: true
+        required: true
     },    
     description: {
         type: String,
-        require: true
+        required: true
     },
     body: {
         type: String,
-        require: true
+        required: true
     },
     images: {
         type: [String],
-        require: true
+        required: true
     },
     author:{
         type : String,
-        require : true
+        required : true
     },
     date : {
         type: Date,
-        require: true,
+        required: true,
         default : Date.now()
     },
 
