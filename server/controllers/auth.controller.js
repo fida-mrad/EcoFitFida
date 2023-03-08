@@ -71,16 +71,16 @@ const clientController = {
         },
         (err, emailToken) => {
           if (!err) {
-            console.log("emailToken : " + emailToken);
             const url = `http://localhost:3000/auth/activate/${emailToken}`;
 
             transporter.sendMail({
               to: newClient.email,
               subject: "Confirm Email",
-              html: `Please click this email to confirm your email: <a href="${url}">Click This Link</a>`,
+              html: `Please Confirm your Email: <a href="${url}">Click This Link</a>`,
             });
           } else {
-            console.log("Email Error : " + err);
+            // console.log("Email Error : " + err);
+            return res.status(401).send('Unauthorized');
           }
         }
       );
@@ -135,7 +135,7 @@ const clientController = {
       res.cookie("refreshtoken", refreshtoken, {
         httpOnly: true,
         path: "/auth/refresh_token",
-        maxAge: 1 * 24 * 60 * 60 * 1000, // 7d
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2d
       });
 
       res.json({ msg: "Login success!" });
@@ -154,28 +154,20 @@ const clientController = {
 
   refreshToken: (req, res) => {
     try {
-      const rf_token = req.cookies.refreshtoken;
-      if (!rf_token)
-        return res.status(400).json({ msg: "Please Login or Register" });
-
-      jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, client) => {
-        if (err)
-          return res.status(400).json({ msg: "Please Login or Register" });
-
-        const accesstoken = createAccessToken({ id: client.id });
-
-        res.json({ accesstoken });
+      const exp = req.body.exp;
+      const currentTime = Math.floor(Date.now() / 1000); // get current time in seconds
+      if (exp < currentTime) return res.status(401).send("Unauthorized : Token Expired");
+      const newToken = createRefreshToken({
+        id: req.body.id,
+        role: req.body.role,
       });
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
-  getUser: async (req, res) => {
-    try {
-      const client = await Client.findById(req.client.id).select("-password");
-      if (!client) return res.status(400).json({ msg: "User does not exist." });
-
-      res.json(client);
+      res
+        .cookie("refreshtoken", newToken, {
+          httpOnly: true,
+          path: "/auth/refresh_token",
+          maxAge: 2 * 24 * 60 * 60 * 1000, // 2d
+        })
+        .send("New Token Generated");
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -227,16 +219,8 @@ const clientController = {
     return res.send({ verified: verified });
   },
 };
-const createAccessToken = (client) => {
-  return jwt.sign(client, config.ACCESS_TOKEN_SECRET, { expiresIn: "11d" });
-};
 const createRefreshToken = (client) => {
-  return jwt.sign(client, config.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
-};
-const createActivationToken = (payload) => {
-  return jwt.sign({ payload }, process.env.ACTIVATION_TOKEN_SECRET, {
-    expiresIn: "1d",
-  });
+  return jwt.sign(client, config.REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
 };
 
 function validateEmail(email) {
