@@ -1,5 +1,3 @@
-const express = require('express');
-const router = express.Router();
 const Client = require('../models/client');
 
 // GET all clients
@@ -20,7 +18,7 @@ const client_GET_ONE = async (req, res, next) => {
       if (client == null) {
         return res.status(404).json({ message: 'Cannot find client' });
       }
-      
+
       res.client = client;
       res.json(res.client);
     } catch (err) {
@@ -53,9 +51,18 @@ const client_POST = async (req, res) => {
   }
 };
 
+// login for the client
+const client_loginFacebook = (req, res) => {
+    // create JWT token for authenticated user
+    const token = Client.generateToken(req.user);
+    // send JWT token to client
+    res.status(200).json({ token });
+}
+
 // Exporting all controllers
 module.exports = {
     client_GET_ALL,
     client_GET_ONE,
     client_POST,
+    client_loginFacebook
 }

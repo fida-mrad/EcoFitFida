@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 
 
 // import the client controller
@@ -28,6 +29,13 @@ router.get('/:clientId', clientsController.client_GET_ONE);
  * @access Public
  */
 router.post('/', clientsController.client_POST);
+
+
+/**
+ * @route POST /client/login/facebook
+ */
+router.post('/login/facebook', passport.authenticate('facebook-token'), clientsController.client_loginFacebook);
+
 
 
 // Exporting the router

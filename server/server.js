@@ -3,6 +3,8 @@ const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser');
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
 const DB = require('./config/dbconnection')
 
 
@@ -29,6 +31,25 @@ const load = async () => {
         }
         next();
     });
+
+    // configure Facebook authentication strategy
+    passport.use(new FacebookStrategy({
+      clientID: '189632240430318',
+      clientSecret: '3391a7996389dd809f82bc9e52f8e3b3',
+      callbackURL: 'http://localhost:8000/auth/facebook/callback',
+      profileFields: ['id', 'displayName', 'email'],
+    },
+    function(accessToken, refreshToken, profile, done) {
+      // find or create client based on Facebook profile data
+      const client = require('./models/client')
+      client.findOrCreate({ facebookId: profile.id }, function (err, user) {
+        return done(err, user);
+      });
+    }
+    ));
+
+    // initialize passport
+    app.use(passport.initialize());
 
     // Connecting to the routes
     const clientRoutes = require('./routes/client.router');
