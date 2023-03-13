@@ -3,7 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const cors = require('cors')
+const cors = require('cors');
+const passport = require('passport');
+require('./passport-config');
 // const session = require('express-session');
 // require('dotenv').config();
 
@@ -13,6 +15,7 @@ var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth.router');
 var agentRouter = require('./routes/agent.router');
 var adminRouter = require('./routes/admin.router');
+var clientRouter = require('./routes/client.router')
 
 
 const db = require("./config/dbconnection");
@@ -29,6 +32,11 @@ app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/agent', agentRouter);
 app.use('/admin', adminRouter);
+app.use('/client', clientRouter);
+
+// login facebook
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 // view engine setup

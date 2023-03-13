@@ -1,39 +1,32 @@
 const mongoose = require("mongoose");
 const clientSchema = new mongoose.Schema(
   {
+    facebookId: {
+      type: String,
+    },
     firstname: {
       type: String,
-      required: true,
     },
     lastname: {
       type: String,
-      required: true,
     },
     username: {
       type: String,
-      required: true,
-      unique: true,
     },
     email: {
       type: String,
-      required: true,
-      unique: true,
     },
     password: {
       type: String,
-      required: true,
     },
     phone: {
       type: String,
-      required: true,
     },
     birthdate: {
       type: Date,
-      required: true,
     },
     profileimg: {
       type: String,
-      required: true,
     },
     confirmed: {
       type: Boolean,
@@ -49,7 +42,6 @@ const clientSchema = new mongoose.Schema(
     },
     tfa : {
       type : Boolean,
-      required : true,
       default : false
     },
     role: {

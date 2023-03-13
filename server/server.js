@@ -34,22 +34,31 @@ const load = async () => {
 
     // configure Facebook authentication strategy
     passport.use(new FacebookStrategy({
-      clientID: '189632240430318',
-      clientSecret: '3391a7996389dd809f82bc9e52f8e3b3',
-      callbackURL: 'http://localhost:8000/auth/facebook/callback',
-      profileFields: ['id', 'displayName', 'email'],
+      clientID: '3726567494237129',
+      clientSecret: '1fa0b21f47cd25956c02ed96139f2019',
+      callbackURL: 'http://localhost:8000/auth/facebook/ecofitcloud',
+      //profileFields: ['id', 'displayName', 'email'],
     },
-    function(accessToken, refreshToken, profile, done) {
+    function(accessToken, refreshToken, profile, cb) {
       // find or create client based on Facebook profile data
       const client = require('./models/client')
       client.findOrCreate({ facebookId: profile.id }, function (err, user) {
-        return done(err, user);
+        return cb(err, user);
       });
     }
     ));
 
+    app.get('/auth/facebook', passport.authenticate('facebook'));
+
+    app.get('/auth/facebook/ecofitcloud',
+        passport.authenticate('facebook', { failureRedirect: '/login-facebook' }),
+        function(req, res) {
+            // Successful authentication, redirect home.
+            res.redirect('/');
+    });
+
     // initialize passport
-    app.use(passport.initialize());
+    //app.use(passport.initialize());
 
     // Connecting to the routes
     const clientRoutes = require('./routes/client.router');

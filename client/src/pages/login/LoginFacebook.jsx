@@ -23,7 +23,7 @@ const LoginFacebook = () => {
       {isLoggedIn ? <p>You are logged in!</p> :
         <>
           <FacebookLogin
-            appId="189632240430318"
+            appId="3726567494237129"
             autoLoad={false}
             fields="name,email,picture"
             callback={responseFacebook}

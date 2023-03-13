@@ -29,6 +29,7 @@ const client_GET_ONE = async (req, res, next) => {
 // POST a new client
 const client_POST = async (req, res) => {
   const client = new Client({
+    facebookId: req.body.facebookId,
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     username: req.body.username,
