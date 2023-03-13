@@ -16,15 +16,16 @@ const client_GET_ALL = async (req, res, next) => {
 const client_GET_ONE = async (req, res, next) => {
     let client;
     try {
-      client = await Client.findById(req.params.id);
+      client = await Client.findById(req.params.clientId);
       if (client == null) {
         return res.status(404).json({ message: 'Cannot find client' });
       }
+      
+      res.client = client;
+      res.json(res.client);
     } catch (err) {
       return res.status(500).json({ message: err.message });
     }
-    res.client = client;
-    next();
   }
 
 // POST a new client
