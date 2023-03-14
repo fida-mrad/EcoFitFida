@@ -1,0 +1,49 @@
+
+.login-card-light {
+    background: linear-gradient(145deg, #eee, #fff);
+}
+
+
+body {
+    font-size: 13px;
+}
+h2.text-white, h2.text-danger
+{
+    font-size: 28px;
+}
+.social-login-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.google-signin-button,
+.facebook-signin-button {
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.google-signin-button {
+    background-color: #db4437;
+}
+
+.facebook-signin-button {
+    background-color: #3b5998;
+}
+.forgot-password-link {
+    display: block;
+    text-align: right;
+    margin-top: 5px;
+    color: #888;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}

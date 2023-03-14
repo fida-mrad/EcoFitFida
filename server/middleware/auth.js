@@ -7,7 +7,7 @@ const authAdmin = async (req, res, next) =>{
       return res.status(401).send("Unauthorized");
     }
     try {
-      // const { id,role } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
+       // const { id,role } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
       const { role } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
       if(role!="Admin") return res.status(403).send("Access Denied");
       next();

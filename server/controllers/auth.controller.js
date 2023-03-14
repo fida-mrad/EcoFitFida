@@ -79,7 +79,7 @@ const clientController = {
               html: `Please Confirm your Email: <a href="${url}">Click This Link</a>`,
             });
           } else {
-            // console.log("Email Error : " + err);
+             console.log("Email Error : " + err);
             return res.status(401).send('Unauthorized');
           }
         }
