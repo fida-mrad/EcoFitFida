@@ -7,6 +7,7 @@ const _ = require("lodash");
 require("dotenv").config();
 const speakeasy = require("speakeasy");
 const qrcode = require("qrcode");
+const cookie = require('cookie');
 
 const clientController = {
   register: async (req, res) => {
@@ -80,7 +81,7 @@ const clientController = {
             });
           } else {
             // console.log("Email Error : " + err);
-            return res.status(401).send('Unauthorized');
+            return res.status(401).send("Unauthorized");
           }
         }
       );
@@ -128,13 +129,19 @@ const clientController = {
       if (!isMatch) return res.status(400).json({ msg: "Incorrect password." });
       if (!client.confirmed)
         return res.status(401).send({ msg: "Please Verify your Email" });
+      if(client.banned) return res.status(401).send({ msg: "You are currently banned" });
       const refreshtoken = createRefreshToken({
         id: client._id,
         role: client.role,
       });
+      res.header("Access-Control-Allow-Origin", "http://localhost:3001");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+      );
+      res.header("Access-Control-Allow-Credentials", true); // Include this line
       res.cookie("refreshtoken", refreshtoken, {
         httpOnly: true,
-        path: "/auth/refresh_token",
         maxAge: 2 * 24 * 60 * 60 * 1000, // 2d
       });
 
@@ -145,9 +152,11 @@ const clientController = {
   },
   logout: async (req, res) => {
     try {
-      res.clearCookie("refreshtoken", { path: "/auth/refresh_token" });
+      res.header("Access-Control-Allow-Credentials", true);
+      res.clearCookie("refreshtoken");
       return res.json({ msg: "Logged out" });
     } catch (err) {
+      console.log(err);
       return res.status(500).json({ msg: err.message });
     }
   },
@@ -156,7 +165,8 @@ const clientController = {
     try {
       const exp = req.body.exp;
       const currentTime = Math.floor(Date.now() / 1000); // get current time in seconds
-      if (exp < currentTime) return res.status(401).send("Unauthorized : Token Expired");
+      if (exp < currentTime)
+        return res.status(401).send("Unauthorized : Token Expired");
       const newToken = createRefreshToken({
         id: req.body.id,
         role: req.body.role,
@@ -164,7 +174,6 @@ const clientController = {
       res
         .cookie("refreshtoken", newToken, {
           httpOnly: true,
-          path: "/auth/refresh_token",
           maxAge: 2 * 24 * 60 * 60 * 1000, // 2d
         })
         .send("New Token Generated");
@@ -176,6 +185,8 @@ const clientController = {
     const id = req.body.id;
     // Get the user profile based on the ID
     const loggedInClient = await Client.findById(id);
+
+    res.header("Access-Control-Allow-Credentials", true);
 
     // Return the user profile
     res
@@ -218,6 +229,11 @@ const clientController = {
     // next();
     return res.send({ verified: verified });
   },
+  getClients : async (req,res)=>{
+    const clients = await Client.find();
+    var mapped = _.map(clients, client => _.pick(client, ['_id',"firstname", "lastname", "email", "username","phone",'birthdate',"banned"]));
+    return res.status(200).send(mapped);
+  }
 };
 const createRefreshToken = (client) => {
   return jwt.sign(client, config.REFRESH_TOKEN_SECRET, { expiresIn: "1d" });

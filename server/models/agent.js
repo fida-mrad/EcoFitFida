@@ -46,6 +46,11 @@ const agentSchema = new mongoose.Schema(
       required: true,
       default: "Agent",
     },
+    banned : {
+      type : Boolean,
+      required : true,
+      default : false
+    },
   },
   {
     timestamps: true,

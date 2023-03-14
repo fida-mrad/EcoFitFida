@@ -10,9 +10,14 @@ require("dotenv").config();
 const agentController = {
   register: async (req, res) => {
     try {
-      const { firstname, lastname, email, password, profileimg, brand } =
-        req.body;
-
+      // let { firstname, lastname, email, password, profileimg, brand } =
+      //   req.body;
+      const firstname = req.body.firstname;
+      const lastname = req.body.lastname;
+      const email = req.body.email;
+      const password = req.body.password;
+      const profileimg = req.file.path;
+      const brand = req.body.brand;
       if (
         !firstname ||
         !lastname ||
@@ -95,7 +100,8 @@ const agentController = {
           returnOriginal: false,
         }
       );
-      return res.status(200).send("Email Verified");
+      // return res.status(200).send("Email Verified");
+      return res.redirect("http://localhost:3001/agentlogin");
     } catch (e) {
       res.status(500).json({ e: e.message });
     }
@@ -111,28 +117,24 @@ const agentController = {
 
       const isMatch = await bcrypt.compare(password, agent.password);
       if (!isMatch) return res.status(400).json({ msg: "Incorrect password." });
-      if (!agent.confirmed) {
-        return res.status(401).send({ msg: "Please Verify your Email" });
-      } else {
-        // If login success , create access token and refresh token
-        // const accesstoken = createAccessToken({id: agent._id})
+      if (!agent.confirmed) return res.status(401).send({ msg: "Please Verify your Email" });
+      if(!agent.approved) return res.status(401).send({ msg: "You must be approved to Log in , please await your approval" });
+      if(agent.banned) return res.status(401).send({ msg: "You are currently banned" });
         const refreshtoken = createRefreshToken({ id: agent._id, role : agent.role });
 
         res.cookie("refreshtoken", refreshtoken, {
           httpOnly: true,
-          path: "/admin/refresh_token",
-          maxAge: 1 * 24 * 60 * 60 * 1000, // 7d
+          maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
         });
 
         res.json({ msg: "Login success!" });
-      }
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
   logout: async (req, res) => {
     try {
-      res.clearCookie("refreshtoken", { path: "/admin/refresh_token" });
+      res.clearCookie("refreshtoken");
       return res.json({ msg: "Logged out" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -141,24 +143,27 @@ const agentController = {
 
   refreshToken: (req, res) => {
     try {
-      const rf_token = req.cookies.refreshtoken;
-      if (!rf_token)
-        return res.status(400).json({ msg: "Please Login or Register" });
-
-      jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, agent) => {
-        if (err)
-          return res.status(400).json({ msg: "Please Login or Register" });
-
-        const accesstoken = createAccessToken({ id: agent.id });
-
-        res.json({ accesstoken });
+      const exp = req.body.exp;
+      const currentTime = Math.floor(Date.now() / 1000); // get current time in seconds
+      if (exp < currentTime)
+        return res.status(401).send("Unauthorized : Token Expired");
+      const newToken = createRefreshToken({
+        id: req.body.id,
+        role: req.body.role,
       });
+      res
+        .cookie("refreshtoken", newToken, {
+          httpOnly: true,
+          maxAge: 2 * 24 * 60 * 60 * 1000, // 2d
+        })
+        .send("New Token Generated");
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
   },
   approve: async (req, res) => {
-    const agentId = req.body.id;
+    const agentId = req.body.agentId;
+    console.log(agentId);
     if(!agentId||!mongoose.Types.ObjectId.isValid(agentId)) return res.status(400).send('Agent Not Specified');
     let approvedAgent = await Agent.findOneAndUpdate(
         { _id: agentId },
@@ -170,6 +175,26 @@ const agentController = {
       if(!approvedAgent) return res.status(400).send('Agent Not Found');
       return res.status(200).send("Brand Agent Approved");
   },
+  getAgent: async (req, res) => {
+    const id = req.body.id;
+    // Get the user profile based on the ID
+    const loggedInAgent = await Agent.findById(id);
+
+    res.header("Access-Control-Allow-Credentials", true);
+
+    // Return the user profile
+    res
+      .status(200)
+      .send(
+        _.pick(loggedInAgent, ["firstname", "lastname", "email", "profileimg","brand"])
+        // _.pick(loggedInAgent, ["firstname", "lastname", "email", "profileimg","brand.brandname"])
+      );
+  },
+  getAgents : async (req,res)=>{
+    const agents = await Agent.find();
+    var mapped = _.map(agents, agent => _.pick(agent, ['_id',"firstname", "lastname", "email","brand","approved","banned"]));
+    return res.status(200).send(mapped);
+  }
 };
 const createAccessToken = (agent) => {
   return jwt.sign(agent, config.ACCESS_TOKEN_SECRET, { expiresIn: "11d" });

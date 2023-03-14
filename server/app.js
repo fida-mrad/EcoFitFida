@@ -7,8 +7,6 @@ const cors = require('cors')
 // const session = require('express-session');
 // require('dotenv').config();
 
-
-
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth.router');
 var agentRouter = require('./routes/agent.router');
@@ -23,13 +21,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors())
+// app.use('/uploads', express.static('uploads'));
+const corsOptions ={
+  origin:'http://localhost:3001', 
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/agent', agentRouter);
 app.use('/admin', adminRouter);
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
