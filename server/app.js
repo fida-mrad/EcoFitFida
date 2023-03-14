@@ -1,11 +1,11 @@
-var createError = require('http-errors');
+ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 const passport = require('passport');
-require('./passport-config');
+//require('./passport-config');
 // const session = require('express-session');
 // require('dotenv').config();
 
@@ -60,3 +60,4 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+ 

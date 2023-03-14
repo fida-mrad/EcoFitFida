@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
+const findOrCreate = require("mongoose-findorcreate");
+
 const clientSchema = new mongoose.Schema(
   {
     facebookId: {
+      type: String,
+    },
+    googleId: {
       type: String,
     },
     firstname: {
@@ -54,4 +59,7 @@ const clientSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+clientSchema.plugin(findOrCreate);
+
 module.exports = mongoose.model("client", clientSchema);
