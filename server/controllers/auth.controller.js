@@ -233,7 +233,7 @@ const clientController = {
     var mapped = _.map(clients, client => _.pick(client, ['_id',"firstname", "lastname", "email", "username","phone",'birthdate',"banned"]));
     return res.status(200).send(mapped);
   },
-  forget: async (req, res) => {
+  forgot: async (req, res) => {
     try {
       // get email
       const { email } = req.body;
@@ -266,15 +266,11 @@ const clientController = {
   reset: async (req, res) => {
     try {
       // get password
-      console.log(req.body);
       const { token,password } = req.body;
-      console.log("new Password : ",password);
-      console.log("Token : ",token);
       const { id } = jwt.verify(
         token,
         process.env.ACTIVATION_TOKEN_SECRET
       );
-      console.log("Client ID: "+id);
 
       // hash password
       const salt = await bcrypt.genSalt();

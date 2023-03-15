@@ -9,7 +9,7 @@ import AdminLayout from './layout/AdminLayout'
 import AgentSignin from './views/pages/signin/AgentSignin';
 import React from 'react';
 import LoginGoogle from './pages/login/LoginGoogle';
-import Test from './components/Test';
+import ResetPassword from './components/ResetPassword';
 const AgentRegister = React.lazy(() => import('./views/pages/register/AgentRegister'))
 const AgentLogin = React.lazy(() => import('./views/pages/login/AgentLogin'))
 const AdminLogin = React.lazy(() => import('./views/pages/login/AdminLogin'))
@@ -29,7 +29,7 @@ function App() {
             <Route exact path="/admin/*" name="Admin Layout" element={<AdminLayout />} />
             <Route path="/agent/*" name="Home" element={<DefaultLayout />} />
             <Route path="reset">
-            <Route path=":token" element={<Test />} />
+            <Route path=":token" element={<ResetPassword />} />
             </Route>
 
             </Routes>

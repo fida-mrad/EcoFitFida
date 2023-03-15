@@ -17,7 +17,7 @@ router.get('/get',  authClient,controller.getClient)
 router.get('/enable2fa',authClient,controller.enable2FA)
 router.post('/verify2fa',authClient,controller.verify2FA)
 router.get('/getall',controller.getClients)
-router.post('/forget',controller.forget)
+router.post('/forgot',controller.forgot)
 router.post('/reset',controller.reset)
 
 router.get("/login/success", (req, res) => {

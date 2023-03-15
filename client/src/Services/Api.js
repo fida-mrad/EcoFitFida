@@ -34,7 +34,11 @@ export const authClientApi = {
   },
   async reset(data) {
     return await axios.post(`${url}/auth/reset`, data, { withCredentials: true }).catch((err) => {
-      console.log(err);
+      return err.response;
+    });
+  },
+  async forgot(email) {
+    return await axios.post(`${url}/auth/forgot`, email, { withCredentials: true }).catch((err) => {
       return err.response;
     });
   },
