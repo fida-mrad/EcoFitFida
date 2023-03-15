@@ -42,9 +42,12 @@ function SignIn() {
         const res = await authClientApi.login(formFields);
         if (res.status === 200)
             navigate("/")
-
-
     }
+    const google = (event) => {
+        event.preventDefault();
+        console.log("Clicked Google");
+        window.open("http://localhost:8000/auth/google", "_self");
+    };
     return (
 
         <div className="container">
@@ -82,7 +85,7 @@ function SignIn() {
                                     Login
                                 </button>
                                 <div className="social-login-buttons">
-                                    <button className="google-signin-button">Sign in with Google</button>
+                                    <button className="google-signin-button" onClick={google}>Sign in with Google</button>
                                     <button className="facebook-signin-button">Sign in with Facebook</button>
                                 </div>
                             </div>

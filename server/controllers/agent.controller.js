@@ -62,7 +62,7 @@ const agentController = {
         (err, emailToken) => {
           if (!err) {
             console.log("emailToken : " + emailToken);
-            const url = `http://localhost:3000/agent/activate/${emailToken}`;
+            const url = `http://localhost:8000/agent/activate/${emailToken}`;
 
             transporter.sendMail({
               to: newAgent.email,
@@ -101,7 +101,7 @@ const agentController = {
         }
       );
       // return res.status(200).send("Email Verified");
-      return res.redirect("http://localhost:3001/agentlogin");
+      return res.redirect("http://localhost:3000/agentlogin");
     } catch (e) {
       res.status(500).json({ e: e.message });
     }

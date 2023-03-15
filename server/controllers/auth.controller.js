@@ -109,8 +109,7 @@ const clientController = {
           returnOriginal: false,
         }
       );
-      return res.status(200).send("Email Verified");
-      // return res.redirect("http://localhost:3000/users/login");
+      return res.redirect("http://localhost:3000/signin");
     } catch (e) {
       res.status(500).json({ e: e.message });
     }
@@ -133,7 +132,7 @@ const clientController = {
         id: client._id,
         role: client.role,
       });
-      res.header("Access-Control-Allow-Origin", "http://localhost:3001");
+      res.header("Access-Control-Allow-Origin", "http://localhost:3000");
       res.header(
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept"
@@ -153,6 +152,7 @@ const clientController = {
     try {
       res.header("Access-Control-Allow-Credentials", true);
       res.clearCookie("refreshtoken");
+      res.clearCookie("session");
       return res.json({ msg: "Logged out" });
     } catch (err) {
       console.log(err);
@@ -182,12 +182,12 @@ const clientController = {
   },
   getClient: async (req, res) => {
     const id = req.body.id;
-    // Get the user profile based on the ID
+    // Get the client profile based on the ID
     const loggedInClient = await Client.findById(id);
 
     res.header("Access-Control-Allow-Credentials", true);
 
-    // Return the user profile
+    // Return the client profile
     res
       .status(200)
       .send(
@@ -232,10 +232,72 @@ const clientController = {
     const clients = await Client.find();
     var mapped = _.map(clients, client => _.pick(client, ['_id',"firstname", "lastname", "email", "username","phone",'birthdate',"banned"]));
     return res.status(200).send(mapped);
-  }
+  },
+  forget: async (req, res) => {
+    try {
+      // get email
+      const { email } = req.body;
+
+      // check email if exits in db
+      const client = await Client.findOne({ email });
+      if (!client)
+        return res
+          .status(400)
+          .json({ msg: "This email is not registered in our system." });
+
+      // create token
+      const token = createToken({ id: client._id });
+      const url = `http://localhost:3000/reset/${token}`;
+      // send email
+      transporter.sendMail({
+        to: client.email,
+        subject: "Resest Password",
+        html: `To Reset your password Please <a href="${url}">Click This Link</a>`,
+      });
+             
+      // success
+      res
+        .status(200)
+        .json({ msg: "Rest Password Email Sent, please check your email." });
+    } catch (err) {
+      res.status(400).json({ msg: err.message });
+    }
+  },
+  reset: async (req, res) => {
+    try {
+      // get password
+      console.log(req.body);
+      const { token,password } = req.body;
+      console.log("new Password : ",password);
+      console.log("Token : ",token);
+      const { id } = jwt.verify(
+        token,
+        process.env.ACTIVATION_TOKEN_SECRET
+      );
+      console.log("Client ID: "+id);
+
+      // hash password
+      const salt = await bcrypt.genSalt();
+      const hashPassword = await bcrypt.hash(password, salt);
+
+      // update password
+      await Client.findOneAndUpdate(
+        { _id: id },
+        { password: hashPassword }
+      );
+
+      // reset success
+      res.status(200).json({ msg: "Password was updated successfully." });
+    } catch (err) {
+      res.status(500).json({ msg: err.message });
+    }
+  },
 };
 const createRefreshToken = (client) => {
   return jwt.sign(client, config.REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
+};
+const createToken = (payload) => {
+    return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, { expiresIn: "15m" });
 };
 
 function validateEmail(email) {
