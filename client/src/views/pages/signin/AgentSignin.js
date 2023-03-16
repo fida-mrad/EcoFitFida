@@ -26,9 +26,11 @@ function AgentSignin() {
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
-  const handleSubmit = async () => {
-    const res = await authClientApi.login(formData);
-    if (res.status === 200) navigate("/details");
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log("Sumbitted");
+    // const res = await authClientApi.login(formData);
+    // if (res.status === 200) navigate("/details");
   };
 
   return (
@@ -48,6 +50,7 @@ function AgentSignin() {
                       autoComplete="email"
                       onChange={handleChange("email")}
                       value={email}
+                      required
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -60,10 +63,12 @@ function AgentSignin() {
                       autoComplete="new-password"
                       onChange={handleChange("password")}
                       value={password}
+                      required
                     />
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="primary" onClick={handleSubmit}>
+                    <CButton color="primary" type="submit">
+                    {/* <CButton color="primary" onClick={handleSubmit}> */}
                       Sign In
                     </CButton>
                   </div>

@@ -53,7 +53,7 @@ function SignIn() {
   };
   const changeBorderColorOnError = (inputName) => {
     let formInput = document.getElementById(`${inputName}`);
-    formInput.classList.add("error");
+    formInput?.classList.add("error")
   };
   const handleValidation = () => {
     let error = {};
@@ -110,6 +110,7 @@ function SignIn() {
                   value={formFields.password}
                   onChange={handleInputValueChange}
                 />
+                                                <span className="error-text">{ErrorForms.password}</span>
               </div>
 
               <div className="form-group form-check">

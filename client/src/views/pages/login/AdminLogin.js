@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 
 function AdminLogin() {
   const navigate = useNavigate();
+  const [validated, setValidated] = useState(false)
   const [error, setError] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -29,7 +30,17 @@ function AdminLogin() {
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
-  const handleSubmit = async () => {
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget
+    if (form.checkValidity() === false) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+    setValidated(true)
     const res = await authAdmin.login(formData);
     if (res.status === 200) navigate("/admin");
     else {
@@ -49,7 +60,7 @@ function AdminLogin() {
             {error && <CAlert color="danger">{alertMessage}</CAlert>}
             <CCard className="mx-4">
               <CCardBody className="p-4">
-                <CForm onSubmit={handleSubmit}>
+                <CForm onSubmit={handleSubmit} noValidate validated={validated} >
                   <h1>Sign In</h1>
                   <p className="text-medium-emphasis">Login to your account</p>
                   <CInputGroup className="mb-3">
@@ -59,6 +70,11 @@ function AdminLogin() {
                       autoComplete="email"
                       onChange={handleChange("email")}
                       value={email}
+                      required
+                      feedbackInvalid="Please provide a valid Email."
+                      feedbackValid="Looks Good."
+                      valid={isValidEmail(email)}
+                      invalid={!isValidEmail(email)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -71,10 +87,16 @@ function AdminLogin() {
                       autoComplete="new-password"
                       onChange={handleChange("password")}
                       value={password}
+                      required
+                      feedbackInvalid="Please enter your Password"
+                      feedbackValid="Looks Good."
+                      valid={password.length>=1}
+                      invalid={password.length<1}
                     />
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="primary" onClick={handleSubmit}>
+                    {/* <CButton color="primary" onClick={handleSubmit}> */}
+                    <CButton color="primary" type="submit">
                       Sign In
                     </CButton>
                   </div>

@@ -1,14 +1,11 @@
 import React from "react";
 import { authClientApi } from "../Services/Api";
-import Cookies from "js-cookie";
 
 function MyLink(props) {
   const handleClick = (event) => {
     event.preventDefault(); // prevent the default link behavior
     props.onClick(); // call the onClick function passed as a prop
   };
-  const userDetails = Cookies.get("session");
-  console.log(userDetails);
 
   return (
     <a href="#" onClick={handleClick}>
@@ -155,17 +152,19 @@ class HomePage extends React.Component {
                       <li>
                         <a href="#">
                           <i className="fa fa-user" aria-hidden="true"></i>
+                          {/* UserName */}
                         </a>
                       </li>
-                      <li className="checkout">
+                      {/* <li className="checkout"> */}
+                      <li>
                         <a href="#">
                           <i
                             className="fa fa-shopping-cart"
                             aria-hidden="true"
                           ></i>
-                          <span id="checkout_items" className="checkout_items">
+                          {/* <span id="checkout_items" className="checkout_items">
                             2
-                          </span>
+                          </span> */}
                         </a>
                       </li>
                     </ul>

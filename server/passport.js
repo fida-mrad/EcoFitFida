@@ -32,8 +32,9 @@ passport.use(new GoogleStrategy({
     callbackURL: "/auth/google/callback"
 },
 function(accessToken, refreshToken, profile, cb) {
+    // console.log(profile);
     const client = require('./models/client')
-    client.findOrCreate({ googleId: profile.id }, function (err, user) {
+    client.findOrCreate({ googleId: profile.id,email : profile._json.email,firstname : profile._json.given_name,lastname:profile._json.family_name }, function (err, user) {
     return cb(err, user);
     });
     //done(null, profile)

@@ -40,7 +40,6 @@ const AgentRegister = () => {
       ...formData,
       [e.target.name]: e.target.files[0],
     });
-    console.log(formData);
   };
   const handleSubmit = async () => {
     const data = {

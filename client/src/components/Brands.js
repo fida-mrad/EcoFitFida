@@ -52,7 +52,7 @@ function BrandsList() {
   return (
     <>
       {alert && <CAlert color="success">Brand Banned</CAlert>}
-      <CTable color="info" striped>
+      <CTable color="info" striped hover>
         <CTableHead>
           <CTableRow>
             <CTableHeaderCell scope="col">Brand</CTableHeaderCell>
