@@ -1,18 +1,21 @@
-var createError = require('http-errors');
+ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const cors = require('cors')
+const cors = require('cors');
+const passport = require('passport');
+//require('./passport-config');
 // const session = require('express-session');
 // require('dotenv').config();
-
-
+const cookieSession = require('cookie-session');
+// const bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth.router');
 var agentRouter = require('./routes/agent.router');
 var adminRouter = require('./routes/admin.router');
+var clientRouter = require('./routes/client.router')
 
 
 const db = require("./config/dbconnection");
@@ -23,13 +26,46 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors())
 
+    // Initialise a session
+    app.use(
+      cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
+  );
+
+  // register regenerate & save after the cookieSession middleware initialization
+  app.use(function(request, response, next) {
+      if (request.session && !request.session.regenerate) {
+          request.session.regenerate = (cb) => {
+              cb()
+          }
+      }
+      if (request.session && !request.session.save) {
+          request.session.save = (cb) => {
+              cb()
+          }
+      }
+      next()
+  })
+
+  // Initialise the auth
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+const corsOptions ={
+  origin:'http://localhost:3000',
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/agent', agentRouter);
 app.use('/admin', adminRouter);
+app.use('/client', clientRouter);
 
+// login facebook
+app.use(passport.initialize());
+app.use(passport.session());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -52,3 +88,4 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+ 
