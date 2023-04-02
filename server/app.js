@@ -16,6 +16,7 @@ var authRouter = require('./routes/auth.router');
 var agentRouter = require('./routes/agent.router');
 var adminRouter = require('./routes/admin.router');
 var clientRouter = require('./routes/client.router')
+var productsRouter = require('./routes/products.router')
 
 
 const db = require("./config/dbconnection");
@@ -62,6 +63,7 @@ app.use('/auth', authRouter);
 app.use('/agent', agentRouter);
 app.use('/admin', adminRouter);
 app.use('/client', clientRouter);
+app.use('/products', productsRouter);
 
 // login facebook
 app.use(passport.initialize());

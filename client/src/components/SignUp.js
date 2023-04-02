@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import { useNavigate } from "react-router-dom";
 import {authClientApi} from "../../src/Services/Api";
 import "../components/Sign.css";
 const defaultFormFields = {
@@ -13,7 +14,7 @@ const defaultFormFields = {
 }
 
 function SignUp() {
-
+const navigate = useNavigate();
     const [formFields, setformFields] = useState(defaultFormFields);
     const [ErrorForms, setErrorForms] = useState({})
     const handleInputValueChange = (event) => {
@@ -90,15 +91,12 @@ function SignUp() {
 
     const handleSubmit = async (event) => {
         event.preventDefault(); // pour ne pas faire refresh
-        // console.log(formFields);
         setErrorForms(handleValidations())
         if (Object.keys(ErrorForms).length > 0) {
             return;
         }
-        console.log(formFields)
         const res = await authClientApi.Register(formFields);
-        if (res.status === 200) ;
-        console.log("c bon")
+        if (res.status === 201) navigate('/signin');
 
     }
 
@@ -175,9 +173,9 @@ function SignUp() {
                                 </button>
                             </div>
 
-                            <div className="text-center mt-2">
+                            {/* <div className="text-center mt-2">
                                 <a href="#">Forgot Password?</a>
-                            </div>
+                            </div> */}
 
                             <div className="mt-5">
                                 <p className="text-center">

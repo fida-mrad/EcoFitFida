@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema({
   ref: {
     type: String,
     required: true,
+    unique : true
   },
   size: {
     type: Number,
@@ -34,8 +35,13 @@ const productSchema = new mongoose.Schema({
   materials: {
     type: [String],
   },
-  color: {
+  colors: {
     type: String,
+  },
+  brand: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'brand',
+    required: true,
   },
 });
 module.exports = mongoose.model("product", productSchema);

@@ -5,13 +5,12 @@ const config = require("./config");
 const transporter = require("../middleware/transporter");
 const _ = require("lodash");
 const mongoose = require('mongoose');
+const Brand = require("../models/brand");
 require("dotenv").config();
 
 const agentController = {
   register: async (req, res) => {
     try {
-      // let { firstname, lastname, email, password, profileimg, brand } =
-      //   req.body;
       const firstname = req.body.firstname;
       const lastname = req.body.lastname;
       const email = req.body.email;
@@ -42,13 +41,19 @@ const agentController = {
       // Password Encryption
       const passwordHash = await bcrypt.hash(password, 10);
 
+      const newBrand = new Brand({
+        brandname: req.body.brand.brandname
+      });
+      await newBrand.save();
+
       const newAgent = new Agent({
         firstname,
         lastname,
         profileimg,
         email,
         password: passwordHash,
-        brand: brand,
+        // brand: brand,
+        brand: newBrand,
       });
       //Create Email Verification Token
       jwt.sign(
@@ -178,7 +183,7 @@ const agentController = {
   getAgent: async (req, res) => {
     const id = req.body.id;
     // Get the user profile based on the ID
-    const loggedInAgent = await Agent.findById(id);
+    const loggedInAgent = await Agent.findById(id).populate('brand');
 
     res.header("Access-Control-Allow-Credentials", true);
 
@@ -191,7 +196,7 @@ const agentController = {
       );
   },
   getAgents : async (req,res)=>{
-    const agents = await Agent.find();
+    const agents = await Agent.find().populate('brand');
     var mapped = _.map(agents, agent => _.pick(agent, ['_id',"firstname", "lastname", "email","brand","approved","banned"]));
     return res.status(200).send(mapped);
   }

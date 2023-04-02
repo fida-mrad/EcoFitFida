@@ -11,6 +11,7 @@ const cookie = require('cookie');
 
 const clientController = {
   register: async (req, res) => {
+    console.log(req.body);
     try {
       const {
         firstname,
@@ -72,7 +73,7 @@ const clientController = {
         },
         (err, emailToken) => {
           if (!err) {
-            const url = `http://localhost:3000/auth/activate/${emailToken}`;
+            const url = `http://localhost:8000/auth/activate/${emailToken}`;
 
             transporter.sendMail({
               to: newClient.email,
@@ -288,6 +289,20 @@ const clientController = {
       res.status(500).json({ msg: err.message });
     }
   },
+  // getLoggedInUser : async (req,res)=>{
+  //   const id = req.body.id;
+  //   // Get the client profile based on the ID
+  //   const loggedInUser = await Client.findById(id);
+
+  //   res.header("Access-Control-Allow-Credentials", true);
+
+  //   // Return the client profile
+  //   res
+  //     .status(200)
+  //     .send(
+  //       _.pick(loggedInUser, ["firstname", "lastname", "email", "username"])
+  //     );
+  // }
 };
 const createRefreshToken = (client) => {
   return jwt.sign(client, config.REFRESH_TOKEN_SECRET, { expiresIn: "1d" });

@@ -21,9 +21,8 @@ export const authClientApi = {
           "Access-Control-Allow-Credentials": true,
         },
       })
-      .catch((err) => {
-        console.log(err);
-        return err.response;
+      .then((res) => {
+        return res;
       });
   },
   async logout() {
@@ -33,14 +32,18 @@ export const authClientApi = {
     return await axios.post(`${url}/auth/register`, data);
   },
   async reset(data) {
-    return await axios.post(`${url}/auth/reset`, data, { withCredentials: true }).catch((err) => {
-      return err.response;
-    });
+    return await axios
+      .post(`${url}/auth/reset`, data, { withCredentials: true })
+      .catch((err) => {
+        return err.response;
+      });
   },
   async forgot(email) {
-    return await axios.post(`${url}/auth/forgot`, email, { withCredentials: true }).catch((err) => {
-      return err.response;
-    });
+    return await axios
+      .post(`${url}/auth/forgot`, email, { withCredentials: true })
+      .catch((err) => {
+        return err.response;
+      });
   },
 };
 export const authAgent = {
@@ -157,6 +160,50 @@ export const adminController = {
   async addAdmin(data) {
     return axios
       .post(`${url}/admin/add`, data, { withCredentials: true })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  },
+};
+export const productsController = {
+  async addProduct(data) {
+    return axios
+      .post(`${url}/products/addProduct`, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  },
+  async updateProduct(data) {
+    return axios
+      .put(`${url}/products/updateProduct`, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  },
+  async getProductsByBrand(brandId) {
+    return axios
+      .post(`${url}/products/getByBrand`, brandId, {
+        withCredentials: true,
+      })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  },
+  async getProductById(id) {
+    return axios
+      .post(`${url}/products/getById`, id, {
+        withCredentials: true,
+      })
       .catch((err) => {
         console.log(err);
         return err.response;
