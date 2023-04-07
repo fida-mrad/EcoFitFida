@@ -59,7 +59,7 @@ const adminController = {
       });
       res.cookie("refreshtoken", refreshtoken, {
         httpOnly: true,
-        maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
+        maxAge: 15 * 60 * 60 * 1000, // 15m
       });
       res.json({ msg: "Login success!" });
     } catch (err) {
@@ -88,7 +88,7 @@ const adminController = {
       res
         .cookie("refreshtoken", newToken, {
           httpOnly: true,
-          maxAge: 2 * 24 * 60 * 60 * 1000, // 2d
+          maxAge: 15 * 60 * 60 * 1000, // 15m
         })
         .send("New Token Generated");
     } catch (err) {
@@ -153,10 +153,10 @@ const adminController = {
   },
 };
 const createAccessToken = (client) => {
-  return jwt.sign(client, config.ACCESS_TOKEN_SECRET, { expiresIn: "11d" });
+  return jwt.sign(client, config.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
 };
 const createRefreshToken = (client) => {
-  return jwt.sign(client, config.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+  return jwt.sign(client, config.REFRESH_TOKEN_SECRET, { expiresIn: "15m" });
 };
 
 function validateEmail(email) {

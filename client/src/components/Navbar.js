@@ -4,7 +4,7 @@ import React from 'react';
 
 function NavBar() {
   let logoutClient = async (event) => {
-    event.preventDefault(); // prevent the default link behavior
+    // event.preventDefault(); // prevent the default link behavior
     await authClientApi.logout();
   };
   return (
@@ -66,7 +66,7 @@ function NavBar() {
                     <ul className="account_selection">
                       <li>
                         <a href="/signin">
-                          <i className="fa fa-sign-in" aria-hidden="true"></i>
+                          <i className="fa fa-sign-in-alt" aria-hidden="true"></i>
                           Sign In
                         </a>
                       </li>
@@ -77,9 +77,9 @@ function NavBar() {
                         </a>
                       </li>
                       <li>
-                        <a href="#" onClick={logoutClient}>
+                        <a href="/signin" onClick={logoutClient}>
                         Logout
-                        <i className="fa fa-sign-out" aria-hidden="true"></i>
+                        <i className="fa fa-sign-out-alt" aria-hidden="true"></i>
                         </a>
                       </li>
                     </ul>
@@ -95,14 +95,14 @@ function NavBar() {
           <div className="row">
             <div className="col-lg-12 text-right">
               <div className="logo_container">
-                <a href="#">
+                <a href="/">
                   Eco<span>Fit</span>
                 </a>
               </div>
               <nav className="navbar">
                 <ul className="navbar_menu">
                   <li>
-                    <a href="#">home</a>
+                    <a href="/">home</a>
                   </li>
                   <li>
                     <a href="#">shop</a>
@@ -127,14 +127,14 @@ function NavBar() {
                     </a>
                   </li>
                   <li>
-                    <a href="#">
+                    <a href="/account">
                       <i className="fa fa-user" aria-hidden="true"></i>
                       {/* UserName */}
                     </a>
                   </li>
                   {/* <li className="checkout"> */}
                   <li>
-                    <a href="#">
+                    <a href="/cart">
                       <i className="fa fa-shopping-cart" aria-hidden="true"></i>
                       {/* <span id="checkout_items" className="checkout_items">
                          2

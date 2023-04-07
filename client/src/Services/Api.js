@@ -136,6 +136,14 @@ export const clientController = {
         return err.response;
       });
   },
+  async updateClient(updatedData){
+    return axios
+      .put(`${url}/client/updateClient`, updatedData, { withCredentials: true })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  }
 };
 export const agentController = {
   async getAgents() {

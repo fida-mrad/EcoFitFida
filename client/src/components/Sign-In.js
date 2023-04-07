@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { authClientApi } from "../../src/Services/Api";
 import "../components/Sign.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
+// import background from '../assets/images/background.jpg'
 import {
   CButton,
   CModalTitle,
@@ -23,12 +24,30 @@ const defaultFormFields = {
 };
 
 function SignIn() {
+  const [rememberMe, setRememberMe] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [showalert, setShowAlert] = useState(false);
   const [formFields, setformFields] = useState(defaultFormFields);
   const [ErrorForms, setErrorForms] = useState({});
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("email");
+    // const storedPassword = localStorage.getItem("password");
+    // if (storedEmail && storedPassword) {
+    if (storedEmail) {
+      setformFields({ email: storedEmail });
+      // setformFields({ email : storedEmail, password : storedPassword });
+      setRememberMe(true);
+    }
+  }, []);
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+  const handleRememberMeChange = (e) => {
+    setRememberMe(e.target.checked);
+  };
   const handleChange = (event) => {
     setEmail(event.target.value);
     console.log(email);
@@ -36,14 +55,14 @@ function SignIn() {
   const handleSend = async (event) => {
     event.preventDefault();
     const data = {
-        email : email
-    }
+      email: email,
+    };
     const res = await authClientApi.forgot(data);
     if (res.status === 200) {
       setShowAlert(true);
       setTimeout(() => {
         setVisible(false);
-        setShowAlert(false)
+        setShowAlert(false);
       }, 1500);
     }
   };
@@ -53,7 +72,7 @@ function SignIn() {
   };
   const changeBorderColorOnError = (inputName) => {
     let formInput = document.getElementById(`${inputName}`);
-    formInput?.classList.add("error")
+    formInput?.classList.add("error");
   };
   const handleValidation = () => {
     let error = {};
@@ -72,6 +91,13 @@ function SignIn() {
     setErrorForms(handleValidation());
     console.log(formFields);
     const res = await authClientApi.login(formFields);
+    if (rememberMe) {
+      localStorage.setItem("email", formFields.email);
+      // localStorage.setItem("password", formFields.password);
+    } else {
+      localStorage.removeItem("email");
+      // localStorage.removeItem("password");
+    }
     if (res.status === 200) navigate("/");
   };
   const google = (event) => {
@@ -80,6 +106,7 @@ function SignIn() {
     window.open("http://localhost:8000/auth/google", "_self");
   };
   return (
+    // <div className="container" style={{backgroundImage : `url(${background})`}}>
     <div className="container">
       <div className=" row m-4 d-flex justify-content-center">
         <div className="col-6 align-self-center">
@@ -103,14 +130,26 @@ function SignIn() {
 
               <div className="form-group">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   className="form-control form-control-sm"
                   placeholder="Password"
                   name="password"
                   value={formFields.password}
                   onChange={handleInputValueChange}
                 />
-                                                <span className="error-text">{ErrorForms.password}</span>
+                <i
+                  className="fa fa-eye"
+                  id="togglePassword"
+                  style={{
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleTogglePassword}
+                ></i>
+                <span className="error-text">{ErrorForms.password}</span>
               </div>
 
               <div className="form-group form-check">
@@ -118,6 +157,8 @@ function SignIn() {
                   type="checkbox"
                   className="form-check-input"
                   id="rememberCheckBox"
+                  checked={rememberMe}
+                  onChange={handleRememberMeChange}
                 />
                 <label
                   className="form-check-label text-dark"
@@ -189,9 +230,12 @@ function SignIn() {
                 </CModalFooter>
               </CModal>
               <div className="mt-5">
-                <p className="text-center">
-                  Don't have an account?
-                  <a href="/signup">Click here to register</a>
+                <p className="text-center" style={{ fontSize: 17 }}>
+                  Don't have an account ?
+                  <a href="/signup" style={{ fontSize: 17 }}>
+                    {" "}
+                    Click here to register
+                  </a>
                 </p>
               </div>
             </form>

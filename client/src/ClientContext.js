@@ -1,38 +1,47 @@
-import { useState, useContext, createContext, useEffect, ReactNode } from 'react';
-import { authClientApi } from './Services/Api';
+import {
+  useState,
+  useContext,
+  createContext,
+  useEffect,
+  ReactNode,
+} from "react";
+import { authClientApi } from "./Services/Api";
 
 const clientContext = createContext({
   client: null,
-})
+});
 
-const Store = ()  => {
-  const [client, setClient] =  useState(
-null
-  )
+const Store = () => {
+  const [client, setClient] = useState(null);
 
   useEffect(() => {
     authClientApi
       .details()
       .then((res) => {
         // if (res.status === 200||res.status===304||res.status === 204) {
-          setClient(res);
+        setClient(res);
         // }
-      }).catch((err) =>{
+      })
+      .catch((err) => {
         console.log(err.response);
         setClient(err.response);
-      })
-  }, [])
-  
+      });
+  }, []);
+
   return {
-    client
-  }
-}
+    client,setClient
+  };
+};
 
 export const ProvideClient = ({ children }) => {
-  const storeValue  = Store()
-  return <clientContext.Provider value={storeValue}>{children}</clientContext.Provider>
-}
+  const storeValue = Store();
+  return (
+    <clientContext.Provider value={storeValue}>
+      {children}
+    </clientContext.Provider>
+  );
+};
 
-export const useClient = ()  => {
-  return useContext(clientContext)
-}
+export const useClient = () => {
+  return useContext(clientContext);
+};

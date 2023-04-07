@@ -22,6 +22,7 @@ import ProductDetails from "./components/ProductDetails";
 import PDetails from "./components/PDetails";
 import ProductsList from "./components/ProductsList";
 import NewHomePage from "./components/NewHomePage";
+import MyAccount from "./components/MyAccount";
 const AgentRegister = React.lazy(() =>
   import("./views/pages/register/AgentRegister")
 );
@@ -37,6 +38,7 @@ function App() {
         <Route path="signin" element={<SignIn />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="cart" element={<Cart />} />
+        {/* <Route path="account" element={<MyAccount />} /> */}
         {/* <Route path="productDetails" element={<ProductDetails />} /> */}
         <Route path="productDetails" element={<PDetails />} />
         {/* <Route path="test" element={<TestComp />} />
@@ -83,6 +85,7 @@ function ClientRoutes() {
         {/* <Route path="*" element={<HomePage />} /> */}
         <Route path="/details" element={<ClientDetails />} />
         <Route path="/test" element={<TestComp />} />
+        <Route path="/account" element={<MyAccount />} />
       </Routes>
     </ProvideClient>
   );

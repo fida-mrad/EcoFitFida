@@ -10,6 +10,7 @@ function TestComp() {
       console.log("not logged in");
       navigate("/signin");
     }
+    console.log(client?.data);
   }, [client]);
   return (
     <>

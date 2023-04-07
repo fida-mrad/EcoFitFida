@@ -42,7 +42,7 @@ function UpdateProduct() {
       .then((response) => {
         const product = response.data[0];
         console.log(product);
-        setFormData(prevState=>({
+        setFormData((prevState) => ({
           ...prevState,
           name: product.name,
           price: product.price,
@@ -52,7 +52,7 @@ function UpdateProduct() {
           quantity: product.quantity,
           category: product.category,
           colors: product.colors,
-          images : product.images
+          images: product.images,
         }));
       })
       .catch((err) => {

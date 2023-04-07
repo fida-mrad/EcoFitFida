@@ -129,7 +129,7 @@ const agentController = {
 
         res.cookie("refreshtoken", refreshtoken, {
           httpOnly: true,
-          maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
+          maxAge: 15 * 60 * 60 * 1000, // 15m
         });
 
         res.json({ msg: "Login success!" });
@@ -159,7 +159,7 @@ const agentController = {
       res
         .cookie("refreshtoken", newToken, {
           httpOnly: true,
-          maxAge: 2 * 24 * 60 * 60 * 1000, // 2d
+          maxAge: 15 * 60 * 60 * 1000, // 15m
         })
         .send("New Token Generated");
     } catch (err) {
@@ -202,10 +202,10 @@ const agentController = {
   }
 };
 const createAccessToken = (agent) => {
-  return jwt.sign(agent, config.ACCESS_TOKEN_SECRET, { expiresIn: "11d" });
+  return jwt.sign(agent, config.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
 };
 const createRefreshToken = (agent) => {
-  return jwt.sign(agent, config.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+  return jwt.sign(agent, config.REFRESH_TOKEN_SECRET, { expiresIn: "15m" });
 };
 const createActivationToken = (payload) => {
   return jwt.sign({ payload }, process.env.ACTIVATION_TOKEN_SECRET, {
