@@ -1,8 +1,10 @@
 import React from 'react'
+import { ProvideAgent } from '../AgentContext'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
 
 const DefaultLayout = () => {
   return (
+    <ProvideAgent>
     <div>
       <AppSidebar />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
@@ -13,6 +15,7 @@ const DefaultLayout = () => {
         <AppFooter />
       </div>
     </div>
+    </ProvideAgent> 
   )
 }
 

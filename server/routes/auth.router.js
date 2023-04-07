@@ -6,6 +6,7 @@ const controller = require("../controllers/auth.controller");
 const {authClient} = require('../middleware/auth')
 const cookie = require('cookie');
 const CLIENT_URL = "http://localhost:3000/";
+const failureRedirect = "http://localhost:3000/signin";
 require('../passport')
 
 router.post('/register', controller.register)

@@ -5,13 +5,12 @@ const config = require("./config");
 const transporter = require("../middleware/transporter");
 const _ = require("lodash");
 const mongoose = require('mongoose');
+const Brand = require("../models/brand");
 require("dotenv").config();
 
 const agentController = {
   register: async (req, res) => {
     try {
-      // let { firstname, lastname, email, password, profileimg, brand } =
-      //   req.body;
       const firstname = req.body.firstname;
       const lastname = req.body.lastname;
       const email = req.body.email;
@@ -42,13 +41,19 @@ const agentController = {
       // Password Encryption
       const passwordHash = await bcrypt.hash(password, 10);
 
+      const newBrand = new Brand({
+        brandname: req.body.brand.brandname
+      });
+      await newBrand.save();
+
       const newAgent = new Agent({
         firstname,
         lastname,
         profileimg,
         email,
         password: passwordHash,
-        brand: brand,
+        // brand: brand,
+        brand: newBrand,
       });
       //Create Email Verification Token
       jwt.sign(
@@ -124,7 +129,7 @@ const agentController = {
 
         res.cookie("refreshtoken", refreshtoken, {
           httpOnly: true,
-          maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
+          maxAge: 15 * 60 * 60 * 1000, // 15m
         });
 
         res.json({ msg: "Login success!" });
@@ -154,7 +159,7 @@ const agentController = {
       res
         .cookie("refreshtoken", newToken, {
           httpOnly: true,
-          maxAge: 2 * 24 * 60 * 60 * 1000, // 2d
+          maxAge: 15 * 60 * 60 * 1000, // 15m
         })
         .send("New Token Generated");
     } catch (err) {
@@ -178,7 +183,7 @@ const agentController = {
   getAgent: async (req, res) => {
     const id = req.body.id;
     // Get the user profile based on the ID
-    const loggedInAgent = await Agent.findById(id);
+    const loggedInAgent = await Agent.findById(id).populate('brand');
 
     res.header("Access-Control-Allow-Credentials", true);
 
@@ -191,16 +196,16 @@ const agentController = {
       );
   },
   getAgents : async (req,res)=>{
-    const agents = await Agent.find();
+    const agents = await Agent.find().populate('brand');
     var mapped = _.map(agents, agent => _.pick(agent, ['_id',"firstname", "lastname", "email","brand","approved","banned"]));
     return res.status(200).send(mapped);
   }
 };
 const createAccessToken = (agent) => {
-  return jwt.sign(agent, config.ACCESS_TOKEN_SECRET, { expiresIn: "11d" });
+  return jwt.sign(agent, config.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
 };
 const createRefreshToken = (agent) => {
-  return jwt.sign(agent, config.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+  return jwt.sign(agent, config.REFRESH_TOKEN_SECRET, { expiresIn: "15m" });
 };
 const createActivationToken = (payload) => {
   return jwt.sign({ payload }, process.env.ACTIVATION_TOKEN_SECRET, {

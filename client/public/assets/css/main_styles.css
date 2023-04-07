@@ -110,6 +110,7 @@ p a:active
 }
 p a:hover
 {
+	text-decoration: none;
 	color: #FF6347;
 	background: #fde0db;
 }

@@ -11,6 +11,7 @@ const cookie = require('cookie');
 
 const clientController = {
   register: async (req, res) => {
+    console.log(req.body);
     try {
       const {
         firstname,
@@ -44,10 +45,10 @@ const clientController = {
       if (client)
         return res.status(400).json({ msg: "Client already exists." });
 
-      if (password.length < 6)
+      if (!validatePassword(password))
         return res
           .status(400)
-          .json({ msg: "Password is at least 6 characters long." });
+          .json({ msg: "Password must be at least 8 characters long, containing at least one uppercase letter, one lowercase letter, and one digit" });
 
       // Password Encryption
       const passwordHash = await bcrypt.hash(password, 10);
@@ -72,7 +73,7 @@ const clientController = {
         },
         (err, emailToken) => {
           if (!err) {
-            const url = `http://localhost:3000/auth/activate/${emailToken}`;
+            const url = `http://localhost:8000/auth/activate/${emailToken}`;
 
             transporter.sendMail({
               to: newClient.email,
@@ -191,7 +192,7 @@ const clientController = {
     res
       .status(200)
       .send(
-        _.pick(loggedInClient, ["firstname", "lastname", "email", "username"])
+        _.pick(loggedInClient, ["_id","firstname", "lastname", "email", "username","phone","birthdate","profileimg"])
       );
   },
   enable2FA: async (req, res) => {
@@ -288,6 +289,20 @@ const clientController = {
       res.status(500).json({ msg: err.message });
     }
   },
+  // getLoggedInUser : async (req,res)=>{
+  //   const id = req.body.id;
+  //   // Get the client profile based on the ID
+  //   const loggedInUser = await Client.findById(id);
+
+  //   res.header("Access-Control-Allow-Credentials", true);
+
+  //   // Return the client profile
+  //   res
+  //     .status(200)
+  //     .send(
+  //       _.pick(loggedInUser, ["firstname", "lastname", "email", "username"])
+  //     );
+  // }
 };
 const createRefreshToken = (client) => {
   return jwt.sign(client, config.REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
@@ -300,5 +315,9 @@ function validateEmail(email) {
   const re =
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
+}
+function validatePassword(password) {
+  const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+  return regex.test(password);
 }
 module.exports = clientController;

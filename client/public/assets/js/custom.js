@@ -49,7 +49,7 @@ jQuery(document).ready(function($)
 	});
 
 	initMenu();
-	initTimer();
+	// initTimer();
 	initFavorite();
 	initFixProductBorder();
 	initIsotopeFiltering();

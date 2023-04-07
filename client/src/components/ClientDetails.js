@@ -10,23 +10,31 @@ import {
 } from "@coreui/react/dist";
 import { authClientApi } from "../Services/Api";
 import { useNavigate } from "react-router-dom";
+import { useClient } from "../ClientContext";
 
 function ClientDetails() {
   const navigate = useNavigate();
-  const [client, setclient] = useState();
-  useEffect(() => {
-    setData();
-  }, []);
-  let setData = async () => {
-    authClientApi
-      .details()
-      .then((res) => {
-        if (res.status === 200) {
-          console.log(res.data);
-          setclient(res);
-        }else navigate('/signin');
-      })
-  };
+  // const [client, setclient] = useState();
+  // useEffect(() => {
+  //   setData();
+  // }, []);
+  // let setData = async () => {
+  //   authClientApi
+  //     .details()
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         console.log(res.data);
+  //         setclient(res);
+  //       }else navigate('/signin');
+  //     })
+  // };
+  const { client } = useClient();
+  // useEffect(() => {
+  //   if (client!=null && client.status>400) {
+  //     console.log("not logged in");
+  //     navigate("/signin");
+  //   }
+  // }, [client]);
   let logoutClient = async () => {
     let res = await authClientApi.logout();
     navigate("/signin");
@@ -38,6 +46,8 @@ function ClientDetails() {
       <CCardBody>
         <CCardTitle>{client?.data.email}</CCardTitle>
         <CCardText>
+          First Name : {client?.data.firstname}
+          <br/>
           Some quick example text to build on the card title and make up the
           bulk of the card&apos;s content.
         </CCardText>
