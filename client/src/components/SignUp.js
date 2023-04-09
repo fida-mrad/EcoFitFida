@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authClientApi } from "../../src/Services/Api";
 import "../components/Sign.css";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 const defaultFormFields = {
   firstname: "",
   lastname: "",
@@ -17,6 +19,7 @@ function SignUp() {
   const navigate = useNavigate();
   const [formFields, setformFields] = useState(defaultFormFields);
   const [ErrorForms, setErrorForms] = useState({});
+  const [phoneNumber, setphoneNumber] = useState();
   const handleInputValueChange = (event) => {
     const { name, value } = event.target;
     setformFields({ ...formFields, [name]: value });
@@ -63,13 +66,13 @@ function SignUp() {
       changeBorderColorOnError("password");
     }
 
-    if (!formFields.phone) {
-      error.phone = "Phone number is required!";
-      changeBorderColorOnError("phone");
-    } else if (formFields.phone.length !== 8) {
-      error.phone = "Phone number must be exactly 8 digits long!";
-      changeBorderColorOnError("phone");
-    }
+    // if (!formFields.phone) {
+    //   error.phone = "Phone number is required!";
+    //   changeBorderColorOnError("phone");
+    // } else if (formFields.phone.length !== 8) {
+    //   error.phone = "Phone number must be exactly 8 digits long!";
+    //   changeBorderColorOnError("phone");
+    // }
     if (!formFields.birthdate) {
       error.birthdate = "Birthdate is required!";
       changeBorderColorOnError("birthdate");
@@ -165,15 +168,22 @@ function SignUp() {
                 <span className="error-text">{ErrorForms.password}</span>
               </div>
               <div className="form-group">
-                <input
+                {/* <input
                   type="number"
                   className="form-control form-control-sm"
                   placeholder="phone"
                   name="phone"
                   value={formFields.phone}
                   onChange={handleInputValueChange}
+                /> */}
+                <PhoneInput
+                  className="form-control form-control-sm"
+                  placeholder="Enter phone number"
+                  name="phone"
+                  value={phoneNumber}
+                  onChange={setphoneNumber}
                 />
-                <span className="error-text">{ErrorForms.phone}</span>
+                {/* <span className="error-text">{ErrorForms.phone}</span> */}
               </div>
               <div className="form-group">
                 <input

@@ -8,7 +8,6 @@ import SignUp from "./components/SignUp";
 import AdminLayout from "./layout/AdminLayout";
 import AgentSignin from "./views/pages/signin/AgentSignin";
 import React, { useEffect, useState } from "react";
-import LoginGoogle from "./pages/login/LoginGoogle";
 import ResetPassword from "./components/ResetPassword";
 import Login from "./views/pages/login/Login";
 import { authClientApi } from "./Services/Api";
@@ -37,7 +36,7 @@ function App() {
         <Route path="*" element={<HomePage />} />
         <Route path="signin" element={<SignIn />} />
         <Route path="signup" element={<SignUp />} />
-        <Route path="cart" element={<Cart />} />
+        {/* <Route path="cart" element={<Cart />} /> */}
         {/* <Route path="account" element={<MyAccount />} /> */}
         {/* <Route path="productDetails" element={<ProductDetails />} /> */}
         <Route path="productDetails" element={<PDetails />} />
@@ -86,6 +85,7 @@ function ClientRoutes() {
         <Route path="/details" element={<ClientDetails />} />
         <Route path="/test" element={<TestComp />} />
         <Route path="/account" element={<MyAccount />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </ProvideClient>
   );

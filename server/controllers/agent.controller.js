@@ -118,10 +118,10 @@ const agentController = {
 
       const agent = await Agent.findOne({ email });
       if (!agent)
-        return res.status(400).json({ msg: "This email does not exist." });
+        return res.status(400).send({ msg: "Incorrect Credentials." });
 
       const isMatch = await bcrypt.compare(password, agent.password);
-      if (!isMatch) return res.status(400).json({ msg: "Incorrect password." });
+      if (!isMatch) return res.status(400).send({ msg: "Incorrect Credentials." });
       if (!agent.confirmed) return res.status(401).send({ msg: "Please Verify your Email" });
       if(!agent.approved) return res.status(401).send({ msg: "You must be approved to Log in , please await your approval" });
       if(agent.banned) return res.status(401).send({ msg: "You are currently banned" });

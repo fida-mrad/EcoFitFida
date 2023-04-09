@@ -127,14 +127,14 @@ function NavBar() {
                     </a>
                   </li>
                   <li>
-                    <a href="/account">
+                    <a href="/client/account">
                       <i className="fa fa-user" aria-hidden="true"></i>
                       {/* UserName */}
                     </a>
                   </li>
                   {/* <li className="checkout"> */}
                   <li>
-                    <a href="/cart">
+                    <a href="/client/cart">
                       <i className="fa fa-shopping-cart" aria-hidden="true"></i>
                       {/* <span id="checkout_items" className="checkout_items">
                          2

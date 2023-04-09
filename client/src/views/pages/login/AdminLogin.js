@@ -13,14 +13,15 @@ import {
   CRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilLockLocked } from "@coreui/icons";
+import { cilLockLocked, cilLockUnlocked } from "@coreui/icons";
 import { authAdmin } from "../../../Services/Api";
 import { useNavigate } from "react-router-dom";
 
 function AdminLogin() {
   const navigate = useNavigate();
-  const [validated, setValidated] = useState(false)
+  const [validated, setValidated] = useState(false);
   const [error, setError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [formData, setFormData] = useState({
     email: "",
@@ -30,17 +31,20 @@ function AdminLogin() {
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
   function isValidEmail(email) {
     return /\S+@\S+\.\S+/.test(email);
   }
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const form = event.currentTarget
+    const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault()
-      event.stopPropagation()
+      event.preventDefault();
+      event.stopPropagation();
     }
-    setValidated(true)
+    setValidated(true);
     const res = await authAdmin.login(formData);
     if (res.status === 200) navigate("/admin");
     else {
@@ -60,7 +64,7 @@ function AdminLogin() {
             {error && <CAlert color="danger">{alertMessage}</CAlert>}
             <CCard className="mx-4">
               <CCardBody className="p-4">
-                <CForm onSubmit={handleSubmit} noValidate validated={validated} >
+                <CForm onSubmit={handleSubmit} noValidate validated={validated}>
                   <h1>Sign In</h1>
                   <p className="text-medium-emphasis">Login to your account</p>
                   <CInputGroup className="mb-3">
@@ -79,10 +83,14 @@ function AdminLogin() {
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
-                      <CIcon icon={cilLockLocked} />
+                      <CIcon
+                        icon={showPassword ? cilLockUnlocked : cilLockLocked}
+                        onClick={handleTogglePassword}
+                        style={{ cursor: "pointer" }}
+                      />
                     </CInputGroupText>
                     <CFormInput
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       autoComplete="new-password"
                       onChange={handleChange("password")}
@@ -90,8 +98,8 @@ function AdminLogin() {
                       required
                       feedbackInvalid="Please enter your Password"
                       feedbackValid="Looks Good."
-                      valid={password.length>=1}
-                      invalid={password.length<1}
+                      valid={password.length >= 1}
+                      invalid={password.length < 1}
                     />
                   </CInputGroup>
                   <div className="d-grid">

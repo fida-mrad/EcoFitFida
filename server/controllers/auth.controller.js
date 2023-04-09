@@ -7,7 +7,7 @@ const _ = require("lodash");
 require("dotenv").config();
 const speakeasy = require("speakeasy");
 const qrcode = require("qrcode");
-const cookie = require('cookie');
+const cookie = require("cookie");
 
 const clientController = {
   register: async (req, res) => {
@@ -46,9 +46,9 @@ const clientController = {
         return res.status(400).json({ msg: "Client already exists." });
 
       if (!validatePassword(password))
-        return res
-          .status(400)
-          .json({ msg: "Password must be at least 8 characters long, containing at least one uppercase letter, one lowercase letter, and one digit" });
+        return res.status(400).json({
+          msg: "Password must be at least 8 characters long, containing at least one uppercase letter, one lowercase letter, and one digit",
+        });
 
       // Password Encryption
       const passwordHash = await bcrypt.hash(password, 10);
@@ -81,7 +81,7 @@ const clientController = {
               html: `Please Confirm your Email: <a href="${url}">Click This Link</a>`,
             });
           } else {
-            return res.status(401).send('Unauthorized');
+            return res.status(401).send("Unauthorized");
           }
         }
       );
@@ -122,13 +122,14 @@ const clientController = {
 
       const client = await Client.findOne({ email });
       if (!client)
-        return res.status(400).json({ msg: "This email does not exist." });
+        return res.status(400).send({ msg: "Incorrect Credentials." });
 
       const isMatch = await bcrypt.compare(password, client.password);
-      if (!isMatch) return res.status(400).json({ msg: "Incorrect password." });
+      if (!isMatch) return res.status(400).json({ msg: "Incorrect Credentials." });
       if (!client.confirmed)
         return res.status(401).send({ msg: "Please Verify your Email" });
-      if(client.banned) return res.status(401).send({ msg: "You are currently banned" });
+      if (client.banned)
+        return res.status(401).send({ msg: "You are currently banned" });
       const refreshtoken = createRefreshToken({
         id: client._id,
         role: client.role,
@@ -192,7 +193,16 @@ const clientController = {
     res
       .status(200)
       .send(
-        _.pick(loggedInClient, ["_id","firstname", "lastname", "email", "username","phone","birthdate","profileimg"])
+        _.pick(loggedInClient, [
+          "_id",
+          "firstname",
+          "lastname",
+          "email",
+          "username",
+          "phone",
+          "birthdate",
+          "profileimg",
+        ])
       );
   },
   enable2FA: async (req, res) => {
@@ -229,9 +239,20 @@ const clientController = {
     // next();
     return res.send({ verified: verified });
   },
-  getClients : async (req,res)=>{
+  getClients: async (req, res) => {
     const clients = await Client.find();
-    var mapped = _.map(clients, client => _.pick(client, ['_id',"firstname", "lastname", "email", "username","phone",'birthdate',"banned"]));
+    var mapped = _.map(clients, (client) =>
+      _.pick(client, [
+        "_id",
+        "firstname",
+        "lastname",
+        "email",
+        "username",
+        "phone",
+        "birthdate",
+        "banned",
+      ])
+    );
     return res.status(200).send(mapped);
   },
   forgot: async (req, res) => {
@@ -255,7 +276,7 @@ const clientController = {
         subject: "Resest Password",
         html: `To Reset your password Please <a href="${url}">Click This Link</a>`,
       });
-             
+
       // success
       res
         .status(200)
@@ -267,24 +288,55 @@ const clientController = {
   reset: async (req, res) => {
     try {
       // get password
-      const { token,password } = req.body;
-      const { id } = jwt.verify(
-        token,
-        process.env.ACTIVATION_TOKEN_SECRET
-      );
+      const { token, password } = req.body;
+      const { id } = jwt.verify(token, process.env.ACTIVATION_TOKEN_SECRET);
 
       // hash password
       const salt = await bcrypt.genSalt();
       const hashPassword = await bcrypt.hash(password, salt);
 
       // update password
-      await Client.findOneAndUpdate(
-        { _id: id },
-        { password: hashPassword }
-      );
+      await Client.findOneAndUpdate({ _id: id }, { password: hashPassword });
 
       // reset success
       res.status(200).json({ msg: "Password was updated successfully." });
+    } catch (err) {
+      res.status(500).json({ msg: err.message });
+    }
+  },
+  change: async (req, res) => {
+    try {
+      // get password
+      const { id, currentPassword, newPassword } = req.body;
+      if (!currentPassword || !newPassword || !id)
+        return res.status(400).send({ msg: "Please Fill All Fields" });
+
+      //get Client
+      const client = await Client.findById({ _id: id });
+      if (!client) return res.status(401).json({ msg: "Unauthorized" });
+
+      //check if Current Password Matches
+      const isMatch = await bcrypt.compare(currentPassword, client.password);
+      if (!isMatch)
+        return res
+          .status(401)
+          .send({ msg: "Unauthorized : Incorrect password." });
+
+      //validate newPassword complexity
+      if (!validatePassword(newPassword))
+        return res.status(400).send({
+          msg: "Password must be at least 8 characters long, containing at least one uppercase letter, one lowercase letter, and one digit",
+        });
+
+      // hash password
+      const salt = await bcrypt.genSalt();
+      const hashPassword = await bcrypt.hash(newPassword, salt);
+
+      // update password
+      await Client.findOneAndUpdate({ _id: id }, { password: hashPassword });
+
+      // reset success
+      res.status(201).json({ msg: "Password was updated successfully." });
     } catch (err) {
       res.status(500).json({ msg: err.message });
     }
@@ -308,7 +360,9 @@ const createRefreshToken = (client) => {
   return jwt.sign(client, config.REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
 };
 const createToken = (payload) => {
-    return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, { expiresIn: "15m" });
+  return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, {
+    expiresIn: "15m",
+  });
 };
 
 function validateEmail(email) {
