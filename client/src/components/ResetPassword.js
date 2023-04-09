@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useState } from "react";
-import { authClientApi } from "../Services/Api";
+import { authClientApi } from "../services/Api";
 
 function ResetPassword() {
   let { token } = useParams();

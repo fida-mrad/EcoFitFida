@@ -5,7 +5,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { authClientApi } from "./Services/Api";
+import { authClientApi } from "./services/Api";
 
 const clientContext = createContext({
   client: null,

@@ -4,9 +4,6 @@ import BrandProducts from "./components/BrandProducts";
 import UpdateProduct from "./components/UpdateProduct";
 
 const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard"));
-const ClientDetails = React.lazy(() =>
-  import("../src/components/ClientDetails")
-);
 
 const routes = [
   { path: "/", exact: true, name: "Home" },

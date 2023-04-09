@@ -15,7 +15,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser, cilLockUnlocked } from "@coreui/icons";
-import { authAgent } from "../../../Services/Api";
+import { authAgent } from "../../../services/Api";
 import { Link, useNavigate } from "react-router-dom";
 
 function AgentLogin() {
@@ -79,7 +79,7 @@ function AgentLogin() {
     //   event.stopPropagation();
     // }
     // setValidated(true);
-    if (validatePassword(password) && isValidEmail(email)) {
+    // if (validatePassword(password) && isValidEmail(email)) {
       const res = await authAgent.login(formData);
       if (res.status === 200) navigate("/agent");
       else {
@@ -89,7 +89,7 @@ function AgentLogin() {
           setError((prev) => !prev);
         }, 2000);
       }
-    }
+    // }
   };
 
   return (

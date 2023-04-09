@@ -14,7 +14,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilLockUnlocked } from "@coreui/icons";
-import { authAdmin } from "../../../Services/Api";
+import { authAdmin } from "../../../services/Api";
 import { useNavigate } from "react-router-dom";
 
 function AdminLogin() {

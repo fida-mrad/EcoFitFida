@@ -13,7 +13,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser, cilImage} from "@coreui/icons";
-import { authAgent } from "../../../Services/Api";
+import { authAgent } from "../../../services/Api";
 import { useNavigate } from "react-router-dom";
 
 const AgentRegister = () => {

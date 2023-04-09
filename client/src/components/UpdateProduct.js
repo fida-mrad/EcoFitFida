@@ -8,11 +8,9 @@ import {
   CFormSelect,
   CRow,
 } from "@coreui/react";
-import { productsController } from "../Services/Api";
+import { productsController } from "../services/Api";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { MultipleFileUploadBasic } from "./MultipleFileUploadBasic";
-// import product from "../../../server/models/product";
 
 function UpdateProduct() {
   let { id } = useParams();

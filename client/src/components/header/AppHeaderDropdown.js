@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   CAvatar,
   CBadge,
@@ -8,7 +8,7 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
-} from '@coreui/react'
+} from "@coreui/react";
 import {
   cilBell,
   cilCreditCard,
@@ -19,17 +19,17 @@ import {
   cilSettings,
   cilTask,
   cilUser,
-} from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
+} from "@coreui/icons";
+import CIcon from "@coreui/icons-react";
 
-import avatar2 from './../../assets/images/avatars/2.jpg'
-import { authAgent } from '../../../src/Services/Api'
-import { useNavigate } from 'react-router-dom'
+import avatar2 from "./../../assets/images/avatars/2.jpg";
+import { authAgent } from "../../services/Api";
+import { useNavigate } from "react-router-dom";
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate();
   let logoutAgent = async () => {
-    let res = await authAgent.logout();
+    await authAgent.logout();
     navigate("/agentlogin");
   };
   return (
@@ -38,7 +38,9 @@ const AppHeaderDropdown = () => {
         <CAvatar src={avatar2} size="md" />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownHeader className="bg-light fw-semibold py-2">Account</CDropdownHeader>
+        <CDropdownHeader className="bg-light fw-semibold py-2">
+          Account
+        </CDropdownHeader>
         <CDropdownItem href="#">
           <CIcon icon={cilBell} className="me-2" />
           Updates
@@ -67,7 +69,9 @@ const AppHeaderDropdown = () => {
             42
           </CBadge>
         </CDropdownItem>
-        <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
+        <CDropdownHeader className="bg-light fw-semibold py-2">
+          Settings
+        </CDropdownHeader>
         <CDropdownItem href="#">
           <CIcon icon={cilUser} className="me-2" />
           Profile
@@ -97,7 +101,7 @@ const AppHeaderDropdown = () => {
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>
-  )
-}
+  );
+};
 
-export default AppHeaderDropdown
+export default AppHeaderDropdown;
