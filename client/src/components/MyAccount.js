@@ -3,8 +3,8 @@ import Footer from "./Footer";
 import NavBar from "./Navbar";
 import { useClient } from "../ClientContext";
 import { useNavigate } from "react-router-dom";
-import { clientController } from "../Services/Api";
-
+import { authClientApi, clientController } from "../Services/Api";
+import { CAlert } from "@coreui/react";
 function MyAccount() {
   const navigate = useNavigate();
   const defaultFormFields = {
@@ -15,7 +15,16 @@ function MyAccount() {
   };
   const [formFields, setformFields] = useState(defaultFormFields);
   const [clientState, setClientState] = useState(null);
-
+  const [passwordChangeFields, setPasswordChangeFields] = useState({
+    currentPassword: "",
+    newPassword: "",
+  });
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showSuccessAlert, setshowSuccessAlert] = useState(false);
+  const [dangerAlert, setDangerAlert] = useState({
+    show: false,
+    msg: "",
+  });
   const { client, setClient } = useClient();
   useEffect(() => {
     if (client != null && client.status >= 400) {
@@ -42,6 +51,15 @@ function MyAccount() {
   const handleChange = (text) => (e) => {
     setformFields({ ...formFields, [text]: e.target.value });
   };
+  const handlePasswordChangeFiels = (text) => (e) => {
+    setPasswordChangeFields({
+      ...passwordChangeFields,
+      [text]: e.target.value,
+    });
+  };
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
+  };
   const updateClient = async (clientId) => {
     const data = {
       clientId: clientId,
@@ -60,6 +78,26 @@ function MyAccount() {
         username: res?.data.username,
         phone: res?.data.phone,
       }));
+    }
+  };
+  const changePassword = async () => {
+    const res = await authClientApi.changePassword(passwordChangeFields);
+    if (res.status === 201) {
+      setshowSuccessAlert(true);
+      setTimeout(() => {
+        setshowSuccessAlert((prev) => !prev);
+      }, 1500);
+    } else {
+      setDangerAlert({
+        show: true,
+        msg: res.data.msg,
+      });
+      setTimeout(() => {
+        setDangerAlert((prevState) => ({
+          ...prevState,
+          show: !prevState.show,
+        }));
+      }, 3000);
     }
   };
   return (
@@ -304,6 +342,8 @@ function MyAccount() {
                         className="form-control"
                         type="password"
                         placeholder="Current Password"
+                        onChange={handlePasswordChangeFiels("currentPassword")}
+                        value={passwordChangeFields.currentPassword || ""}
                       />
                     </div>
                     <div className="col-md-6">
@@ -311,6 +351,8 @@ function MyAccount() {
                         className="form-control"
                         type="text"
                         placeholder="New Password"
+                        onChange={handlePasswordChangeFiels("newPassword")}
+                        value={passwordChangeFields.newPassword || ""}
                       />
                     </div>
                     <div className="col-md-6">
@@ -318,11 +360,29 @@ function MyAccount() {
                         className="form-control"
                         type="text"
                         placeholder="Confirm Password"
+                        onChange={handleConfirmPasswordChange}
+                        value={confirmPassword}
                       />
                     </div>
                     <div className="col-md-12">
-                      <button className="btn btn-danger">Save Changes</button>
+                      <button
+                        className="btn btn-danger"
+                        disabled={
+                          passwordChangeFields.newPassword !== confirmPassword
+                        }
+                        onClick={changePassword}
+                      >
+                        Save Changes
+                      </button>
                     </div>
+                    {showSuccessAlert && (
+                      <CAlert color="success" className="mt-2">
+                        Password Changed successfully
+                      </CAlert>
+                    )}
+                    {dangerAlert.show && (
+                      <CAlert color="danger" className="mt-2">{dangerAlert.msg}</CAlert>
+                    )}
                   </div>
                 </div>
               </div>

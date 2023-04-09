@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { authClientApi } from "../../src/Services/Api";
 import "../components/Sign.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
 // import background from '../assets/images/background.jpg'
+import ReCAPTCHA from "react-google-recaptcha";
 import {
   CButton,
   CModalTitle,
@@ -24,12 +25,14 @@ const defaultFormFields = {
 };
 
 function SignIn() {
+  const captchaRef = useRef(null);
   const [rememberMe, setRememberMe] = useState(false);
   const [visible, setVisible] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showalert, setShowAlert] = useState(false);
   const [formFields, setformFields] = useState(defaultFormFields);
   const [ErrorForms, setErrorForms] = useState({});
+  const [isVerified, setIsVerified] = useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   useEffect(() => {
@@ -42,6 +45,9 @@ function SignIn() {
       setRememberMe(true);
     }
   }, []);
+  function handleVerify(recaptchaToken) {
+    setIsVerified(true);
+  }
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
@@ -89,8 +95,12 @@ function SignIn() {
   const handleSubmit = async (event) => {
     event.preventDefault(); // pour ne pas faire refresh
     setErrorForms(handleValidation());
-    console.log(formFields);
-    const res = await authClientApi.login(formFields);
+    const token = captchaRef.current.getValue();
+    const data = {
+      ...formFields,
+      token: token,
+    };
+    const res = await authClientApi.login(data);
     if (rememberMe) {
       localStorage.setItem("email", formFields.email);
       // localStorage.setItem("password", formFields.password);
@@ -98,7 +108,10 @@ function SignIn() {
       localStorage.removeItem("email");
       // localStorage.removeItem("password");
     }
-    if (res.status === 200) navigate("/");
+    if (res.status === 200) {
+      captchaRef.current.reset();
+      navigate("/");
+    }
   };
   const google = (event) => {
     event.preventDefault();
@@ -167,9 +180,16 @@ function SignIn() {
                   Remember me?
                 </label>
               </div>
-
+              <div className="form-group">
+                <ReCAPTCHA
+                  sitekey={process.env.REACT_APP_SITE_KEY}
+                  ref={captchaRef}
+                  onChange={handleVerify}
+                />
+              </div>
               <div className="mt-5">
                 <button
+                  disabled={!isVerified}
                   onClick={handleSubmit}
                   className="btn btn-sm btn-danger col"
                 >

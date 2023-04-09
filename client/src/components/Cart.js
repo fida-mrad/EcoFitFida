@@ -30,7 +30,7 @@ function Cart() {
                                         <tr>
                                             <td>
                                                 <div className="img">
-                                                    <a href="#"><img src="assets/images/product_1.png" alt="Image"/></a>
+                                                    <a href="#"><img src="../assets/images/product_1.png" alt="Image"/></a>
                                                     <p>Product Name</p>
                                                 </div>
                                             </td>
@@ -48,7 +48,7 @@ function Cart() {
                                         <tr>
                                             <td>
                                                 <div className="img">
-                                                    <a href="#"><img src="assets/images/product_9.png" alt="Image"/></a>
+                                                    <a href="#"><img src="../assets/images/product_9.png" alt="Image"/></a>
                                                     <p>Product Name</p>
                                                 </div>
                                             </td>
@@ -66,7 +66,7 @@ function Cart() {
                                         <tr>
                                             <td>
                                                 <div className="img">
-                                                    <a href="#"><img src="assets/images/product_3.png" alt="Image"/></a>
+                                                    <a href="#"><img src="../assets/images/product_3.png" alt="Image"/></a>
                                                     <p>Product Name</p>
                                                 </div>
                                             </td>
@@ -84,7 +84,7 @@ function Cart() {
                                         <tr>
                                             <td>
                                                 <div className="img">
-                                                    <a href="#"><img src="assets/images/product_4.png" alt="Image"/></a>
+                                                    <a href="#"><img src="../assets/images/product_4.png" alt="Image"/></a>
                                                     <p>Product Name</p>
                                                 </div>
                                             </td>
@@ -102,7 +102,7 @@ function Cart() {
                                         <tr>
                                             <td>
                                                 <div className="img">
-                                                    <a href="#"><img src="assets/images/product_5.png" alt="Image"/></a>
+                                                    <a href="#"><img src="../assets/images/product_5.png" alt="Image"/></a>
                                                     <p>Product Name</p>
                                                 </div>
                                             </td>

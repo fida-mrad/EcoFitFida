@@ -38,6 +38,13 @@ export const authClientApi = {
         return err.response;
       });
   },
+  async changePassword(data) {
+    return await axios
+      .post(`${url}/auth/change`, data, { withCredentials: true })
+      .catch((err) => {
+        return err.response;
+      });
+  },
   async forgot(email) {
     return await axios
       .post(`${url}/auth/forgot`, email, { withCredentials: true })
