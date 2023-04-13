@@ -24,17 +24,6 @@ function ResetPassword() {
   };
   return (
     <>
-      {/* <p>token : {token}</p>
-      <form>
-        <input
-          type="text"
-          onChange={handleChange}
-          value={pass}
-        />
-        <button onClick={sendPassword}>
-          Send Password
-        </button>
-      </form> */}
       <div className="container">
         <div className=" row m-4 d-flex justify-content-center">
           <div className="col-6 align-self-center">
@@ -66,13 +55,13 @@ function ResetPassword() {
                   />
                 </div>
                 <div className="mt-5">
-                <button
-                  onClick={sendPassword}
-                  className="btn btn-sm btn-danger col"
-                  disabled={pass!==confirmPassword}
-                >
-                  Confirm
-                </button>
+                  <button
+                    onClick={sendPassword}
+                    className="btn btn-sm btn-danger col"
+                    disabled={pass !== confirmPassword}
+                  >
+                    Confirm
+                  </button>
                 </div>
               </form>
             </div>

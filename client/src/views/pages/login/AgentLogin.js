@@ -79,7 +79,7 @@ function AgentLogin() {
     //   event.stopPropagation();
     // }
     // setValidated(true);
-    // if (validatePassword(password) && isValidEmail(email)) {
+    if (validatePassword(password).isValid && isValidEmail(email)) {
       const res = await authAgent.login(formData);
       if (res.status === 200) navigate("/agent");
       else {
@@ -89,7 +89,7 @@ function AgentLogin() {
           setError((prev) => !prev);
         }, 2000);
       }
-    // }
+    }
   };
 
   return (

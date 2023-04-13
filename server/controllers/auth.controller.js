@@ -21,7 +21,7 @@ const clientController = {
         password,
         phone,
         birthdate,
-        profileimg,
+        // profileimg,
       } = req.body;
 
       if (
@@ -30,23 +30,22 @@ const clientController = {
         !username ||
         !phone ||
         !birthdate ||
-        !profileimg ||
+        // !profileimg ||
         !email ||
         !password
       )
-        return res.status(400).json({ msg: "Please fill in all fields." });
+        return res.status(400).send({ msg: "Please fill in all fields." });
 
       if (!validateEmail(email))
-        return res.status(400).json({ msg: "Invalid emails." });
+        return res.status(400).send({ msg: "Invalid Email." });
 
       const client = await Client.findOne({
         $or: [{ email: email }, { username: username }],
       });
-      if (client)
-        return res.status(400).json({ msg: "Client already exists." });
+      if (client) return res.status(400).send({ msg: "Email Already in Use." });
 
       if (!validatePassword(password))
-        return res.status(400).json({
+        return res.status(400).send({
           msg: "Password must be at least 8 characters long, containing at least one uppercase letter, one lowercase letter, and one digit",
         });
 
@@ -59,7 +58,7 @@ const clientController = {
         username,
         phone,
         birthdate,
-        profileimg,
+        // profileimg,
         email,
         password: passwordHash,
       });
@@ -78,7 +77,79 @@ const clientController = {
             transporter.sendMail({
               to: newClient.email,
               subject: "Confirm Email",
-              html: `Please Confirm your Email: <a href="${url}">Click This Link</a>`,
+              // html: `Please Confirm your Email: <a href="${url}">Click This Link</a>`,
+              html: `<html lang="en">
+      <head>
+        <meta charset="UTF8" />
+        <meta httpequiv="XUACompatible" content="IE=edge" />
+        <meta name="viewport" content="width=devicewidth, initialscale=1.0" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap"
+          rel="stylesheet"
+        />
+        <title>EcoFit | Account Activation</title>
+        <style>
+          body {
+            backgroundcolor: #333333;
+            height: 100vh;
+            fontfamily: "Roboto", sansserif;
+            color: #fff;
+            position: relative;
+            textalign: center;
+          }
+          .container {
+            maxwidth: 700px;
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+          }
+          .wrapper {
+            padding: 0 15px;
+          }
+          .card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(50%, 50%);
+            width: 100%;
+          }
+          span {
+            color: #008000;
+          }
+          button {
+            padding: 1em 6em;
+            borderradius: 5px;
+            border: 0;
+            backgroundcolor: hsl(120, 70%, 51%);
+            transition: all 0.3s easein;
+            cursor: pointer;
+          }
+          button:hover {
+            backgroundcolor: hsl(45, 70%, 51%);
+            transition: all 0.3s easein;
+          }
+          .spacing {
+            margintop: 5rem;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="wrapper">
+            <div class="card">
+              <h1><span>Welcome !</span>  !</h1>
+              <p>Please Activate Your Email By Clicking The Button Bellow 👇🏻</p>
+              <a href=${url}><button>Confirm Your Email</button></a>
+              <p class="spacing">
+                If the button above does not work, please navigate to the link
+                provided below 👇🏻
+              </p>
+              <div><a href="${url}">Click This Link</a></div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>`,
             });
           } else {
             return res.status(401).send("Unauthorized");
@@ -89,11 +160,11 @@ const clientController = {
       // Save mongodb
       await newClient.save();
 
-      return res.status(201).json({
+      return res.status(201).send({
         msg: "Register Success! Please activate your email to start.",
       });
     } catch (err) {
-      return res.status(500).json({ msg: err.message });
+      return res.status(500).send({ msg: err.message });
     }
   },
   confirmEmail: async (req, res) => {
@@ -110,7 +181,7 @@ const clientController = {
           returnOriginal: false,
         }
       );
-      return res.redirect("http://localhost:3000/signin");
+      return res.redirect("http://localhost:3000/login");
     } catch (e) {
       res.status(500).json({ e: e.message });
     }
@@ -125,7 +196,8 @@ const clientController = {
         return res.status(400).send({ msg: "Incorrect Credentials." });
 
       const isMatch = await bcrypt.compare(password, client.password);
-      if (!isMatch) return res.status(400).json({ msg: "Incorrect Credentials." });
+      if (!isMatch)
+        return res.status(400).send({ msg: "Incorrect Credentials." });
       if (!client.confirmed)
         return res.status(401).send({ msg: "Please Verify your Email" });
       if (client.banned)
@@ -142,10 +214,10 @@ const clientController = {
       res.header("Access-Control-Allow-Credentials", true); // Include this line
       res.cookie("refreshtoken", refreshtoken, {
         httpOnly: true,
-        maxAge: 2 * 24 * 60 * 60 * 1000, // 2d
+        maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
       });
 
-      res.json({ msg: "Login success!" });
+      res.send({ msg: "Login success!" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -164,10 +236,10 @@ const clientController = {
 
   refreshToken: (req, res) => {
     try {
-      const exp = req.body.exp;
-      const currentTime = Math.floor(Date.now() / 1000); // get current time in seconds
-      if (exp < currentTime)
-        return res.status(401).send("Unauthorized : Token Expired");
+      // const exp = req.body.exp;
+      // const currentTime = Math.floor(Date.now() / 1000); // get current time in seconds
+      // if (exp < currentTime)
+      //   return res.status(401).send("Unauthorized : Token Expired");
       const newToken = createRefreshToken({
         id: req.body.id,
         role: req.body.role,
@@ -175,7 +247,7 @@ const clientController = {
       res
         .cookie("refreshtoken", newToken, {
           httpOnly: true,
-          maxAge: 2 * 24 * 60 * 60 * 1000, // 2d
+          maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
         })
         .send("New Token Generated");
     } catch (err) {
@@ -190,20 +262,18 @@ const clientController = {
     res.header("Access-Control-Allow-Credentials", true);
 
     // Return the client profile
-    res
-      .status(200)
-      .send(
-        _.pick(loggedInClient, [
-          "_id",
-          "firstname",
-          "lastname",
-          "email",
-          "username",
-          "phone",
-          "birthdate",
-          "profileimg",
-        ])
-      );
+    res.status(200).send(
+      _.pick(loggedInClient, [
+        "_id",
+        "firstname",
+        "lastname",
+        "email",
+        "username",
+        "phone",
+        "birthdate",
+        // "profileimg",
+      ])
+    );
   },
   enable2FA: async (req, res) => {
     const id = req.body.id;
@@ -265,7 +335,7 @@ const clientController = {
       if (!client)
         return res
           .status(400)
-          .json({ msg: "This email is not registered in our system." });
+          .send({ msg: "This email is not registered in our system." });
 
       // create token
       const token = createToken({ id: client._id });
@@ -274,15 +344,87 @@ const clientController = {
       transporter.sendMail({
         to: client.email,
         subject: "Resest Password",
-        html: `To Reset your password Please <a href="${url}">Click This Link</a>`,
+        // html: `To Reset your password Please <a href="${url}">Click This Link</a>`,
+        html: `<html lang="en">
+        <head>
+          <meta charset="UTF8" />
+          <meta httpequiv="XUACompatible" content="IE=edge" />
+          <meta name="viewport" content="width=devicewidth, initialscale=1.0" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap"
+            rel="stylesheet"
+          />
+          <title>EcoFit | Reset Password</title>
+          <style>
+            body {
+              backgroundcolor: #333333;
+              height: 100vh;
+              fontfamily: "Roboto", sansserif;
+              color: #fff;
+              position: relative;
+              textalign: center;
+            }
+            .container {
+              maxwidth: 700px;
+              width: 100%;
+              height: 100%;
+              margin: 0 auto;
+            }
+            .wrapper {
+              padding: 0 15px;
+            }
+            .card {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(50%, 50%);
+              width: 100%;
+            }
+            span {
+              color: #008000;
+            }
+            button {
+              padding: 1em 6em;
+              borderradius: 5px;
+              border: 0;
+              backgroundcolor: hsl(120, 70%, 51%);
+              transition: all 0.3s easein;
+              cursor: pointer;
+            }
+            button:hover {
+              backgroundcolor: hsl(45, 70%, 51%);
+              transition: all 0.3s easein;
+            }
+            .spacing {
+              margintop: 5rem;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="wrapper">
+              <div class="card">
+                <h1><span>Welcome !</span>  !</h1>
+                <p>Please reset your password by clicking on the button bellow 👇🏻</p>
+                <a href=${url}><button>Reset your password</button></a>
+                <p class="spacing">
+                  If the button above does not work, please navigate to the link
+                  provided below 👇🏻
+                </p>
+                <div><a href="${url}">Click This Link</a></div>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>`,
       });
 
       // success
       res
         .status(200)
-        .json({ msg: "Rest Password Email Sent, please check your email." });
+        .send({ msg: "Rest Password Email Sent, please check your email." });
     } catch (err) {
-      res.status(400).json({ msg: err.message });
+      res.status(400).send({ msg: err.message });
     }
   },
   reset: async (req, res) => {
@@ -299,9 +441,9 @@ const clientController = {
       await Client.findOneAndUpdate({ _id: id }, { password: hashPassword });
 
       // reset success
-      res.status(200).json({ msg: "Password was updated successfully." });
+      res.status(200).send({ msg: "Password was updated successfully." });
     } catch (err) {
-      res.status(500).json({ msg: err.message });
+      res.status(500).send({ msg: "Token Expired , Please Try Again" });
     }
   },
   change: async (req, res) => {

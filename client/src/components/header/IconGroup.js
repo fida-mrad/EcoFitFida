@@ -47,10 +47,10 @@ const IconGroup = ({ iconWhiteClass }) => {
         <div className="account-dropdown">
           <ul>
             <li>
-              <Link to={process.env.PUBLIC_URL + "/login-register"}>Login</Link>
+              <Link to={process.env.PUBLIC_URL + "/login"}>Login</Link>
             </li>
             <li>
-              <Link to={process.env.PUBLIC_URL + "/login-register"}>
+              <Link to={process.env.PUBLIC_URL + "/register"}>
                 Register
               </Link>
             </li>
@@ -62,7 +62,7 @@ const IconGroup = ({ iconWhiteClass }) => {
             <li>
               <Link
                 onClick={logoutClient}
-                to={process.env.PUBLIC_URL + "/login-register"}
+                to={process.env.PUBLIC_URL + "/login"}
               >
                 Logout
               </Link>

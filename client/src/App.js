@@ -54,6 +54,11 @@ const AgentRegister = lazy(() =>
 );
 const AdminLogin = lazy(() => import("./views/pages/login/AdminLogin"));
 const AdminLayout = lazy(() => import("./layout/AdminLayout"));
+const ResetPassword = lazy(() => import("./components/ResetPassword"));
+const ForgotPassword = lazy(() => import("./pages/other/ForgotPassword"));
+const Register = lazy(() => import("./pages/other/Register"));
+const SignUp = lazy(() => import("./components/SignUp"));
+
 const App = () => {
   return (
     <Router>
@@ -89,12 +94,13 @@ const App = () => {
                 name="Admin Layout"
                 element={<AdminLayout />}
               />
-                            <Route
+              <Route
                 exact
-                path="/signin"
-                name="Client SignIn"
-                element={<SignIn />}
+                path="/register"
+                name="Client Register"
+                element={<Register />}
               />
+
               <Route
                 path={process.env.PUBLIC_URL + "/"}
                 element={<HomeFashion />}
@@ -105,6 +111,9 @@ const App = () => {
                 name="Agent SignIn Page"
                 element={<AgentLogin />}
               />
+              <Route path="reset">
+                <Route path=":token" element={<ForgotPassword />} />
+              </Route>
 
               {/* Homepages */}
               <Route
@@ -176,7 +185,7 @@ const App = () => {
               />
 
               <Route
-                path={process.env.PUBLIC_URL + "/login-register"}
+                path={process.env.PUBLIC_URL + "/login"}
                 element={<LoginRegister />}
               />
 

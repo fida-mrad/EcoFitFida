@@ -37,22 +37,32 @@ function AdminLogin() {
   function isValidEmail(email) {
     return /\S+@\S+\.\S+/.test(email);
   }
+  const validatePassword = (password) => {
+    let passwordValidation = { isValid: false, validationMesssage: "" };
+    if (!password) {
+      passwordValidation.validationMesssage = "Password is required!";
+      return passwordValidation;
+    } else if (password.length < 8) {
+      passwordValidation.validationMesssage =
+        "Password is be at least 8 characters long!";
+      return passwordValidation;
+    } else {
+      passwordValidation.isValid = true;
+      return passwordValidation;
+    }
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    setValidated(true);
-    const res = await authAdmin.login(formData);
-    if (res.status === 200) navigate("/admin");
-    else {
-      setError(true);
-      setAlertMessage(res.data.msg);
-      setTimeout(() => {
-        setError((prev) => !prev);
-      }, 2000);
+    if (validatePassword(password).isValid && isValidEmail(email)) {
+      const res = await authAdmin.login(formData);
+      if (res.status === 200) navigate("/admin");
+      else {
+        setError(true);
+        setAlertMessage(res.data.msg);
+        setTimeout(() => {
+          setError((prev) => !prev);
+        }, 2000);
+      }
     }
   };
 
@@ -70,6 +80,7 @@ function AdminLogin() {
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
                     <CFormInput
+                      type="email"
                       placeholder="Email"
                       autoComplete="email"
                       onChange={handleChange("email")}
@@ -96,10 +107,12 @@ function AdminLogin() {
                       onChange={handleChange("password")}
                       value={password}
                       required
-                      feedbackInvalid="Please enter your Password"
+                      feedbackInvalid={
+                        validatePassword(password).validationMesssage
+                      }
                       feedbackValid="Looks Good."
-                      valid={password.length >= 1}
-                      invalid={password.length < 1}
+                      valid={validatePassword(password).isValid}
+                      invalid={!validatePassword(password).isValid}
                     />
                   </CInputGroup>
                   <div className="d-grid">

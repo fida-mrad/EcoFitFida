@@ -40,7 +40,7 @@ function ClientsList() {
   return (
     <>
       {alert && <CAlert color="success">Client Banned</CAlert>}
-      <CTable color="info" striped hover>
+      <CTable color="primary" striped hover>
         <CTableHead>
           <CTableRow>
             <CTableHeaderCell scope="col">Firstname</CTableHeaderCell>

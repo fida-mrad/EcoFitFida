@@ -24,17 +24,37 @@ const authAdmin = async (req, res, next) => {
 const authClient = async (req, res, next) => {
   const token = req.cookies.refreshtoken;
   if (!token) {
-    return res.status(401).send("Unauthorized , No Token Found");
-  }
-  try {
-    const { id, role, exp } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
-    if (role != "Client") return res.status(403).send("Access Denied");
-    req.body.id = id;
-    req.body.exp = exp;
-    req.body.role = role;
-    next();
-  } catch (ex) {
-    res.status(401).send("Unauthorized");
+    if (req.cookies.session) {
+      const decodedToken = JSON.parse(
+        Buffer.from(req.cookies.session, "base64").toString("utf-8")
+      );
+      if (Object.keys(decodedToken).length !== 0) {
+        if (decodedToken.passport.user.role != "Client") {
+          return res.status(403).send("Access Denied");
+        }
+
+        req.body.id = decodedToken.passport.user._id;
+        // req.body.exp = exp;
+        req.body.role = decodedToken.passport.user.role;
+        next();
+      } else {
+        return res.status(401).send("Unauthorized , No Token Found");
+      }
+    } else {
+      return res.status(401).send("Unauthorized , No Token Found");
+    }
+  } else {
+    try {
+      const { id, role, exp } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
+      if (role != "Client") return res.status(403).send("Access Denied");
+      req.body.id = id;
+      req.body.exp = exp;
+      req.body.role = role;
+      next();
+    } catch (ex) {
+      console.log(ex);
+      return res.status(500).send({ msg: ex.message });
+    }
   }
 };
 const authAgent = async (req, res, next) => {
@@ -74,9 +94,9 @@ const validateReCAPTCHA = async (req, res, next) => {
     }
   } catch (error) {
     // Handle any errors that occur during the reCAPTCHA verification process
-    console.log(error)
+    console.log(error);
     res.status(500).send("Error verifying reCAPTCHA");
   }
 };
 
-module.exports = { authAdmin, authClient, authAgent,validateReCAPTCHA };
+module.exports = { authAdmin, authClient, authAgent, validateReCAPTCHA };

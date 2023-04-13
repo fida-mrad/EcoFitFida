@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Accordion from "react-bootstrap/Accordion";
 import SEO from "../../components/seo";
@@ -6,6 +6,14 @@ import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { clientController } from "../../services/coreApi";
 import { useClient } from "../../ClientContext";
+import { authClientApi } from "../../services/authClientApi";
+import {
+  CButton,
+  CToast,
+  CToastBody,
+  CToastHeader,
+  CToaster,
+} from "@coreui/react";
 
 const MyAccount = () => {
   const navigate = useNavigate();
@@ -17,11 +25,20 @@ const MyAccount = () => {
     phone: "",
   });
   const [clientState, setClientState] = useState(null);
+  const [passwordChangeFields, setPasswordChangeFields] = useState({
+    currentPassword: "",
+    newPassword: "",
+  });
+  const [confirmPassword, setConfirmPassword] = useState("");
   const { client, setClient } = useClient();
+  const [toast, addToast] = useState(0);
+  const toaster = useRef();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   useEffect(() => {
     console.log(client);
     if (client != null && client.status >= 400) {
-      navigate("/login-register");
+      navigate("/login");
     } else {
       setformFields((prevState) => ({
         ...prevState,
@@ -42,7 +59,21 @@ const MyAccount = () => {
   const handleChange = (text) => (e) => {
     setformFields({ ...formFields, [text]: e.target.value });
   };
-
+  const handlePasswordChangeFiels = (text) => (e) => {
+    setPasswordChangeFields({
+      ...passwordChangeFields,
+      [text]: e.target.value,
+    });
+  };
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
+  };
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+  const handleToggleCurrentPassword = () => {
+    setShowCurrentPassword((prevShowPassword) => !prevShowPassword);
+  };
   const updateClient = async (clientId) => {
     const data = {
       clientId: clientId,
@@ -59,6 +90,53 @@ const MyAccount = () => {
       }));
     }
   };
+  const changePassword = async () => {
+    const res = await authClientApi.changePassword(passwordChangeFields);
+    if (res.status === 201) {
+      console.log("Password Changed");
+      addToast(exampleToast);
+      setPasswordChangeFields({
+        currentPassword: "",
+        newPassword: "",
+      });
+      setConfirmPassword("");
+      // setshowSuccessAlert(true);
+      // setTimeout(() => {
+      //   setshowSuccessAlert((prev) => !prev);
+      // }, 1500);
+    } else {
+      console.log(res.data.msg);
+      // setDangerAlert({
+      //   show: true,
+      //   msg: res.data.msg,
+      // });
+      // setTimeout(() => {
+      //   setDangerAlert((prevState) => ({
+      //     ...prevState,
+      //     show: !prevState.show,
+      //   }));
+      // }, 3000);
+    }
+  };
+  const exampleToast = (
+    <CToast>
+      <CToastHeader closeButton>
+        <svg
+          className="rounded me-2"
+          width="20"
+          height="20"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="xMidYMid slice"
+          focusable="false"
+          role="img"
+        >
+          <rect width="100%" height="100%" fill="#00cc00"></rect>
+        </svg>
+        <div className="fw-bold me-auto">Password Changed Successfully</div>
+      </CToastHeader>
+      <CToastBody>You have successfully changed your password !</CToastBody>
+    </CToast>
+  );
 
   return (
     <Fragment>
@@ -94,7 +172,10 @@ const MyAccount = () => {
                             <h4>My Account Information</h4>
                             <h5>Your Personal Details</h5>
                             {clientState && (
-                              <p>Welcome : {clientState?.firstname}</p>
+                              <h3>
+                                Welcome : {clientState?.firstname}{" "}
+                                {clientState?.lastname}
+                              </h3>
                             )}
                           </div>
                           <div className="row">
@@ -157,6 +238,11 @@ const MyAccount = () => {
                       eventKey="1"
                       className="single-my-account mb-20"
                     >
+                      <CToaster
+                        ref={toaster}
+                        push={toast}
+                        placement="top-center"
+                      />
                       <Accordion.Header className="panel-heading">
                         <span>2 .</span> Change your password
                       </Accordion.Header>
@@ -170,37 +256,104 @@ const MyAccount = () => {
                             <div className="col-lg-12 col-md-12">
                               <div className="billing-info">
                                 <label>Current Password</label>
-                                <input type="password" />
+                                <input
+                                  type={
+                                    showCurrentPassword ? "text" : "password"
+                                  }
+                                  onChange={handlePasswordChangeFiels(
+                                    "currentPassword"
+                                  )}
+                                  value={
+                                    passwordChangeFields.currentPassword || ""
+                                  }
+                                />
+                                <i
+                                  className="fa fa-eye"
+                                  id="togglePassword"
+                                  style={{
+                                    position: "absolute",
+                                    transform: "translate3d(-22px, 12px, 10px)",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={handleToggleCurrentPassword}
+                                ></i>
                               </div>
                             </div>
                             <div className="col-lg-6 col-md-6">
                               <div className="billing-info">
                                 <label>New Password</label>
-                                <input type="password" />
-                              </div>
-                            </div>
-                            <div className="col-lg-6 col-md-6">
-                              <div className="billing-info">
-                                <label>Password Confirm</label>
-                                <input type="password" />
+                                <input
+                                  // type="password"
+                                  type={showPassword ? "text" : "password"}
+                                  onChange={handlePasswordChangeFiels(
+                                    "newPassword"
+                                  )}
+                                  value={passwordChangeFields.newPassword || ""}
+                                />
                                 <i
                                   className="fa fa-eye"
                                   id="togglePassword"
                                   style={{
                                     position: "absolute",
                                     // right: "10px",
-                                    top: "50%",
+                                    // top: "50%",
                                     // transform: "translateY(-50%)",
+                                    transform: "translate3d(-22px, 12px, 10px)",
                                     cursor: "pointer",
                                   }}
-                                  // onClick={handleTogglePassword}
+                                  onClick={handleTogglePassword}
                                 ></i>
+                              </div>
+                            </div>
+                            <div className="col-lg-6 col-md-6">
+                              <div className="billing-info">
+                                <label>Password Confirm</label>
+                                <div>
+                                  <input
+                                    type={showPassword ? "text" : "password"}
+                                    onChange={handleConfirmPasswordChange}
+                                    value={confirmPassword}
+                                  />
+                                  <i
+                                    className="fa fa-eye"
+                                    id="togglePassword"
+                                    style={{
+                                      position: "absolute",
+                                      // right: "10px",
+                                      // top: "50%",
+                                      // transform: "translateY(-50%)",
+                                      transform:
+                                        "translate3d(-22px, 12px, 10px)",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={handleTogglePassword}
+                                  ></i>
+                                </div>
                               </div>
                             </div>
                           </div>
                           <div className="billing-back-btn">
                             <div className="billing-btn">
-                              <button type="submit">Continue</button>
+                              <button
+                                type="submit"
+                                disabled={
+                                  passwordChangeFields.newPassword !==
+                                  confirmPassword
+                                }
+                                style={{
+                                  cursor:
+                                    passwordChangeFields.newPassword !==
+                                      confirmPassword ||
+                                    confirmPassword === "" ||
+                                    passwordChangeFields.newPassword === "" ||
+                                    passwordChangeFields.currentPassword === ""
+                                      ? "not-allowed"
+                                      : "default",
+                                }}
+                                onClick={changePassword}
+                              >
+                                Continue
+                              </button>
                             </div>
                           </div>
                         </div>

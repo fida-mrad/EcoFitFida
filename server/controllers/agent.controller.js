@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const config = require("./config");
 const transporter = require("../middleware/transporter");
 const _ = require("lodash");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Brand = require("../models/brand");
 require("dotenv").config();
 
@@ -25,24 +25,25 @@ const agentController = {
         !email ||
         !password
       )
-        return res.status(400).json({ msg: "Please fill in all fields." });
+        return res.status(400).send({ msg: "Please fill in all fields." });
 
       if (!validateEmail(email))
-        return res.status(400).json({ msg: "Invalid emails." });
+        return res.status(400).send({ msg: "Invalid Email." });
 
       const agent = await Agent.findOne({ email });
-      if (agent) return res.status(400).json({ msg: "Agent already exists." });
+      if (agent)
+        return res.status(400).send({ msg: "You Already Have An Account." });
 
-      if (password.length < 6)
-        return res
-          .status(400)
-          .json({ msg: "Password is at least 6 characters long." });
+      if (!validatePassword(password))
+        return res.status(400).send({
+          msg: "Password must be at least 8 characters long, containing at least one uppercase letter, one lowercase letter, and one digit",
+        });
 
       // Password Encryption
       const passwordHash = await bcrypt.hash(password, 10);
 
       const newBrand = new Brand({
-        brandname: req.body.brand.brandname
+        brandname: req.body.brand.brandname,
       });
       await newBrand.save();
 
@@ -82,13 +83,11 @@ const agentController = {
 
       // Save mongodb
       await newAgent.save();
-      return res
-        .status(201)
-        .json({
-          msg: "Register Success! Please activate your email to start.",
-        });
+      return res.status(201).send({
+        msg: "Register Success! Please activate your email to start.",
+      });
     } catch (err) {
-      return res.status(500).json({ msg: err.message });
+      return res.status(500).send({ msg: err.message });
     }
   },
   confirmEmail: async (req, res) => {
@@ -121,18 +120,29 @@ const agentController = {
         return res.status(400).send({ msg: "Incorrect Credentials." });
 
       const isMatch = await bcrypt.compare(password, agent.password);
-      if (!isMatch) return res.status(400).send({ msg: "Incorrect Credentials." });
-      if (!agent.confirmed) return res.status(401).send({ msg: "Please Verify your Email" });
-      if(!agent.approved) return res.status(401).send({ msg: "You must be approved to Log in , please await your approval" });
-      if(agent.banned) return res.status(401).send({ msg: "You are currently banned" });
-        const refreshtoken = createRefreshToken({ id: agent._id, role : agent.role });
+      if (!isMatch)
+        return res.status(400).send({ msg: "Incorrect Credentials." });
+      if (!agent.confirmed)
+        return res.status(401).send({ msg: "Please Verify your Email" });
+      if (!agent.approved)
+        return res
+          .status(401)
+          .send({
+            msg: "You must be approved to Log in , please await your approval",
+          });
+      if (agent.banned)
+        return res.status(401).send({ msg: "You are currently banned" });
+      const refreshtoken = createRefreshToken({
+        id: agent._id,
+        role: agent.role,
+      });
 
-        res.cookie("refreshtoken", refreshtoken, {
-          httpOnly: true,
-          maxAge: 15 * 60 * 60 * 1000, // 15m
-        });
+      res.cookie("refreshtoken", refreshtoken, {
+        httpOnly: true,
+        maxAge: 15 * 60 * 60 * 1000, // 15m
+      });
 
-        res.json({ msg: "Login success!" });
+      res.json({ msg: "Login success!" });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -169,37 +179,52 @@ const agentController = {
   approve: async (req, res) => {
     const agentId = req.body.agentId;
     console.log(agentId);
-    if(!agentId||!mongoose.Types.ObjectId.isValid(agentId)) return res.status(400).send('Agent Not Specified');
+    if (!agentId || !mongoose.Types.ObjectId.isValid(agentId))
+      return res.status(400).send("Agent Not Specified");
     let approvedAgent = await Agent.findOneAndUpdate(
-        { _id: agentId },
-        { approved: true },
-        {
-          returnOriginal: false,
-        }
-      );
-      if(!approvedAgent) return res.status(400).send('Agent Not Found');
-      return res.status(200).send("Brand Agent Approved");
+      { _id: agentId },
+      { approved: true },
+      {
+        returnOriginal: false,
+      }
+    );
+    if (!approvedAgent) return res.status(400).send("Agent Not Found");
+    return res.status(200).send("Brand Agent Approved");
   },
   getAgent: async (req, res) => {
     const id = req.body.id;
     // Get the user profile based on the ID
-    const loggedInAgent = await Agent.findById(id).populate('brand');
+    const loggedInAgent = await Agent.findById(id).populate("brand");
 
     res.header("Access-Control-Allow-Credentials", true);
 
     // Return the user profile
-    res
-      .status(200)
-      .send(
-        _.pick(loggedInAgent, ["firstname", "lastname", "email", "profileimg","brand"])
-        // _.pick(loggedInAgent, ["firstname", "lastname", "email", "profileimg","brand.brandname"])
-      );
+    res.status(200).send(
+      _.pick(loggedInAgent, [
+        "firstname",
+        "lastname",
+        "email",
+        "profileimg",
+        "brand",
+      ])
+      // _.pick(loggedInAgent, ["firstname", "lastname", "email", "profileimg","brand.brandname"])
+    );
   },
-  getAgents : async (req,res)=>{
-    const agents = await Agent.find().populate('brand');
-    var mapped = _.map(agents, agent => _.pick(agent, ['_id',"firstname", "lastname", "email","brand","approved","banned"]));
+  getAgents: async (req, res) => {
+    const agents = await Agent.find().populate("brand");
+    var mapped = _.map(agents, (agent) =>
+      _.pick(agent, [
+        "_id",
+        "firstname",
+        "lastname",
+        "email",
+        "brand",
+        "approved",
+        "banned",
+      ])
+    );
     return res.status(200).send(mapped);
-  }
+  },
 };
 const createAccessToken = (agent) => {
   return jwt.sign(agent, config.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
@@ -217,5 +242,9 @@ function validateEmail(email) {
   const re =
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
+}
+function validatePassword(password) {
+  const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+  return regex.test(password);
 }
 module.exports = agentController;

@@ -4,9 +4,13 @@ const url = "http://localhost:8000";
 
 export const authClientApi = {
   async login(credentials) {
-    return await axios.post(`${url}/auth/login`, credentials, {
-      withCredentials: true,
-    });
+    return await axios
+      .post(`${url}/auth/login`, credentials, {
+        withCredentials: true,
+      })
+      .catch((err) => {
+        return err.response;
+      });
   },
   async details() {
     return await axios
@@ -25,7 +29,9 @@ export const authClientApi = {
     return await axios.get(`${url}/auth/logout`, { withCredentials: true });
   },
   async Register(data) {
-    return await axios.post(`${url}/auth/register`, data);
+    return await axios.post(`${url}/auth/register`, data).catch((err) => {
+      return err.response;
+    });
   },
   async reset(data) {
     return await axios

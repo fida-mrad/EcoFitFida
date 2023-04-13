@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authClientApi } from "../../src/Services/Api";
+
 import "../components/Sign.css";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
+import { authClientApi } from "../services/authClientApi";
 const defaultFormFields = {
   firstname: "",
   lastname: "",

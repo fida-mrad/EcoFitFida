@@ -27,7 +27,8 @@ const AppContent = () => {
               )
             )
           })}
-          <Route path="/agent" element={<Navigate to="dashboard" replace />} />
+          {/* <Route path="/agent" element={<Navigate to="dashboard" replace />} /> */}
+          <Route path="/" element={<Navigate to="dashboard" replace />} />
         </Routes>
         {/* </ProvideAgent> */}
       </Suspense>

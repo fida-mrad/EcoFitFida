@@ -273,7 +273,7 @@ body {
 
 .error-text {
     color: var(--color-error);
-    font-size: 1rem;
+    font-size: 15px;
     font-weight: 500;
     margin-top: 0.5rem;
 }

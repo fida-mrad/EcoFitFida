@@ -1,4 +1,7 @@
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const config = require("./controllers/config");
+require("dotenv").config();
 
 const FacebookStrategy = require("passport-facebook").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -36,10 +39,12 @@ passport.use(
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: "/auth/google/callback",
+      userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
     },
     function (accessToken, refreshToken, profile, cb) {
       // console.log(profile);
       const client = require("./models/client");
+      // console.log(profile._json);
       client.findOrCreate(
         {
           googleId: profile.id,
@@ -48,19 +53,24 @@ passport.use(
           lastname: profile._json.family_name,
         },
         function (err, user) {
-        //   return cb(err, user);
-        if (err) {
+          console.log(user);
+          //   return cb(err, user);
+          if (err) {
             // Check for a duplicate key error
             if (err.code === 11000) {
               // If the error is a duplicate key error, find the existing user and return it
-              client.findOne({ email: profile._json.email }, function(err, user) {
-                return cb(null, user);
-              });
+              client.findOne(
+                { email: profile._json.email },
+                function (err, user) {
+                  return cb(null, user);
+                }
+              );
             } else {
               // If the error is not a duplicate key error, return the error
               return cb(err);
             }
           } else {
+            console.log(user);
             // If there is no error, return the user object
             return cb(null, user);
           }
@@ -78,3 +88,6 @@ passport.serializeUser((client, done) => {
 passport.deserializeUser((client, done) => {
   done(null, client);
 });
+const createRefreshToken = (client) => {
+  return jwt.sign(client, config.REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
+};
