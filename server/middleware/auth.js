@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const authAdmin = async (req, res, next) => {
   const token = req.cookies.refreshtoken;
-  console.log(token);
+  // console.log(token);
   if (!token) {
     return res.status(401).send("Unauthorized, No Token");
   }
@@ -18,7 +18,7 @@ const authAdmin = async (req, res, next) => {
     next();
   } catch (ex) {
     // Invalid token
-    res.status(401).send("Unauthorized");
+    return res.status(500).send({msg : ex.message});
   }
 };
 const authClient = async (req, res, next) => {

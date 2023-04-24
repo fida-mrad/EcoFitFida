@@ -51,7 +51,7 @@ const IconGroup = ({ iconWhiteClass }) => {
             </li>
             <li>
               <Link to={process.env.PUBLIC_URL + "/register"}>
-                Register
+              Sign Up
               </Link>
             </li>
             <li>

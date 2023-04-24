@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useState } from "react";
-import { authAgent } from "../services/authAgentApi";
+import { authAdmin } from "../services/authAdminApi";
 
-function ResetPassword() {
+function ResetPasswordAdmin() {
   let { token } = useParams();
   const navigate = useNavigate();
   const [pass, setPass] = useState("");
@@ -19,8 +19,8 @@ function ResetPassword() {
       token: token,
       password: pass,
     };
-    const res = await authAgent.reset(data);
-    if (res.status === 200) navigate("/agentlogin");
+    const res = await authAdmin.reset(data);
+    if (res.status === 200) navigate("/adminlogin");
   };
   return (
     <>
@@ -72,4 +72,4 @@ function ResetPassword() {
   );
 }
 
-export default ResetPassword;
+export default ResetPasswordAdmin;

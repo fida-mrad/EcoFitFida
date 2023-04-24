@@ -1,4 +1,5 @@
 import axios from "axios";
+const url = "http://localhost:8000";
 
 export const authAgent = {
   async register(data) {
@@ -40,5 +41,26 @@ export const authAgent = {
   },
   async logout() {
     return await axios.get(`${url}/agent/logout`, { withCredentials: true });
+  },
+  async reset(data) {
+    return await axios
+      .post(`${url}/agent/reset`, data, { withCredentials: true })
+      .catch((err) => {
+        return err.response;
+      });
+  },
+  async changePassword(data) {
+    return await axios
+      .post(`${url}/agent/change`, data, { withCredentials: true })
+      .catch((err) => {
+        return err.response;
+      });
+  },
+  async forgot(email) {
+    return await axios
+      .post(`${url}/agent/forgot`, email, { withCredentials: true })
+      .catch((err) => {
+        return err.response;
+      });
   },
 };

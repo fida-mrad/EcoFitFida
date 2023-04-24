@@ -3,6 +3,7 @@ const { verify2FA } = require("../controllers/auth.controller");
 var router = express.Router();
 const passport = require("passport");
 const controller = require("../controllers/auth.controller");
+const userController = require("../controllers/userController");
 const {authClient,validateReCAPTCHA} = require('../middleware/auth')
 const cookie = require('cookie');
 const CLIENT_URL = "http://localhost:3000/";
@@ -15,6 +16,7 @@ router.post('/login',validateReCAPTCHA,controller.login)
 router.get('/logout',controller.logout)
 router.get('/activate/:token',  controller.confirmEmail)
 router.get('/get',  authClient,controller.getClient)
+router.get('/getUser',  userController.getUser)
 router.get('/enable2fa',authClient,controller.enable2FA)
 router.post('/verify2fa',authClient,controller.verify2FA)
 router.get('/getall',controller.getClients)

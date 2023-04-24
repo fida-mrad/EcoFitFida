@@ -36,4 +36,25 @@ export const authAdmin = {
   async logout() {
     return await axios.get(`${url}/admin/logout`, { withCredentials: true });
   },
+  async reset(data) {
+    return await axios
+      .post(`${url}/admin/reset`, data, { withCredentials: true })
+      .catch((err) => {
+        return err.response;
+      });
+  },
+  async changePassword(data) {
+    return await axios
+      .post(`${url}/admin/change`, data, { withCredentials: true })
+      .catch((err) => {
+        return err.response;
+      });
+  },
+  async forgot(email) {
+    return await axios
+      .post(`${url}/admin/forgot`, email, { withCredentials: true })
+      .catch((err) => {
+        return err.response;
+      });
+  },
 };

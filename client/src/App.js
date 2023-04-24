@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./scss/style.scss";
 import { ProvideClient } from "./ClientContext";
 import SignIn from "./components/Sign-In";
+import ResetPasswordAdmin from "./components/ResetPasswordAdmin";
 
 // home pages
 const HomeFashion = lazy(() => import("./pages/home/HomeFashion"));
@@ -114,6 +115,12 @@ const App = () => {
               <Route path="reset">
                 <Route path=":token" element={<ForgotPassword />} />
               </Route>
+              <Route path="agent/reset">
+                <Route path=":token" element={<ResetPassword />} />
+              </Route>
+              <Route path="admin/reset">
+                <Route path=":token" element={<ResetPasswordAdmin />} />
+              </Route>
 
               {/* Homepages */}
               <Route
@@ -214,5 +221,18 @@ const App = () => {
     </Router>
   );
 };
+function ClientRoutes() {
+  return (
+    <ProvideClient>
+      <Routes>
+        {/* <Route path="*" element={<HomePage />} /> */}
+        {/* <Route path="/details" element={<ClientDetails />} /> */}
+        {/* <Route path="/test" element={<TestComp />} /> */}
+        <Route path="/my-account" element={<MyAccount />} />
+        {/* <Route path="/cart" element={<Cart />} /> */}
+      </Routes>
+    </ProvideClient>
+  );
+}
 
 export default App;

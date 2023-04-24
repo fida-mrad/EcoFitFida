@@ -1,10 +1,16 @@
-const {mailSender} = require('../helpers/mailSender')
+const { mailSender } = require("../helpers/mailSender");
 const createToken = require("../helpers/createToken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
+const Client = require("../models/client");
+const Agent = require("../models/agent");
+const Admin = require("../models/admin");
+const _ = require("lodash");
+const jwt = require("jsonwebtoken");
+const config = require("./config");
+require("dotenv").config();
 
 const userController = {
-
   forgot: async (req, res) => {
     try {
       // get email
@@ -23,7 +29,10 @@ const userController = {
       // send email
       const url = `${ac_token}`;
       const name = user.name;
-      mailSender(email, "FORGOT PASSWORD TOKEN ", `<html lang="en">
+      mailSender(
+        email,
+        "FORGOT PASSWORD TOKEN ",
+        `<html lang="en">
       <head>
         <meta charset="UTF8" />
         <meta httpequiv="XUACompatible" content="IE=edge" />
@@ -94,7 +103,8 @@ const userController = {
           </div>
         </div>
       </body>
-    </html>`);
+    </html>`
+      );
 
       // success
       res
@@ -125,8 +135,134 @@ const userController = {
       res.status(500).json({ msg: err.message });
     }
   },
-   
+  getUser: async (req, res) => {
+    const token = req.cookies.refreshtoken;
+    if (!token) {
+      // if (req.cookies.session) {
+        const decodedToken = JSON.parse(
+          Buffer.from(req.cookies.session, "base64").toString("utf-8")
+        );
+        if (Object.keys(decodedToken).length !== 0) {
+          let user = decodedToken.passport.user;
+          return res.status(200).send(_.omit(user,"password"));
+          // if (user.role === "Client") {
+          //   // Get the client profile based on the ID
+          //   const loggedInUser = await Client.findById(user._id);
+          //   if (!loggedInUser) {
+          //     return res.status(400).send({ msg: "Client Not Found" });
+          //   }
+          //   res.header("Access-Control-Allow-Credentials", true);
+          //   // Return the client profile
+          //   res
+          //     .status(200)
+          //     .send(
+          //       _.pick(loggedInUser, [
+          //         "firstname",
+          //         "lastname",
+          //         "email",
+          //         "username",
+          //         "role",
+          //         "_id",
+          //       ])
+          //     );
+          // } else if (user.role === "Admin") {
+          //   const loggedInUser = await Admin.findById(user._id);
+          //   if (!loggedInUser) {
+          //     return res.status(400).send({ msg: "Admin Not Found" });
+          //   }
+          //   res.header("Access-Control-Allow-Credentials", true);
+          //   // Return the client profile
+          //   res
+          //     .status(200)
+          //     .send(_.pick(loggedInUser, ["email", "role", "_id"]));
+          // } else if (user.role === "Agent") {
+          //   const loggedInUser = await Agent.findById(user._id).populate(
+          //     "brand"
+          //   );
+          //   if (!loggedInUser) {
+          //     return res.status(400).send({ msg: "Agent Not Found" });
+          //   }
+          //   res.header("Access-Control-Allow-Credentials", true);
+          //   // Return the client profile
+          //   res
+          //     .status(200)
+          //     .send(
+          //       _.pick(loggedInUser, [
+          //         "firstname",
+          //         "lastname",
+          //         "email",
+          //         "profileimg",
+          //         "role",
+          //         "_id",
+          //         "approved",
+          //         "banned",
+          //         "confirmed",
+          //         "brand",
+          //       ])
+          //     );
+          // }
+        } else {
+          return res.status(401).send("Unauthorized , No Token Found");
+        }
+      // } else {
+      //   return res.status(401).send("Unauthorized , No Token Found");
+      // }
+    } else {
+      try {
+        const { id, role } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
+        if (role === "Client") {
+          const loggedInUser = await Client.findById(id);
+          if (!loggedInUser) {
+            return res.status(400).send({ msg: "Client Not Found" });
+          }
+          res.header("Access-Control-Allow-Credentials", true);
+          res
+            .status(200)
+            .send(
+              _.pick(loggedInUser, [
+                "firstname",
+                "lastname",
+                "email",
+                "username",
+                "_id",
+              ])
+            );
+        } else if (role === "Agent") {
+          const loggedInUser = await Agent.findById(id);
+          if (!loggedInUser) {
+            return res.status(400).send({ msg: "Agent Not Found" });
+          }
+          res.header("Access-Control-Allow-Credentials", true);
+          res
+            .status(200)
+            .send(
+              _.pick(loggedInUser, [
+                "firstname",
+                "lastname",
+                "email",
+                "profileimg",
+                "role",
+                "_id",
+                "approved",
+                "banned",
+                "confirmed",
+                "brand",
+              ])
+            );
+        } else if (role === "Admin") {
+          const loggedInUser = await Admin.findById(id);
+          if (!loggedInUser) {
+            return res.status(400).send({ msg: "Admin Not Found" });
+          }
+          res.header("Access-Control-Allow-Credentials", true);
+          res.status(200).send(_.pick(loggedInUser, ["email", "_id"]));
+        }
+      } catch (ex) {
+        console.log(ex);
+        return res.status(500).send({ msg: ex.message });
+      }
+    }
+  },
 };
-
 
 module.exports = userController;

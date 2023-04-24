@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CAvatar,
   CBadge,
@@ -22,12 +22,43 @@ import {
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 
-import avatar2 from "./../../assets/images/avatars/2.jpg";
-import { authAdmin } from "../../services/Api";
+import avatar from "./../../assets/images/avatars/user.jpg";
+import { authAdmin } from "../../services/authAdminApi";
 import { useNavigate } from "react-router-dom";
+import { useAdmin } from "../../AdminContext";
 
 const AdminHeaderDropDown = () => {
+  const [adminAvatar, setAdminAvatar] = useState(avatar);
+  const { admin } = useAdmin();
   const navigate = useNavigate();
+  useEffect(() => {
+    if (admin != null && admin.status >= 400) {
+      navigate("/adminlogin");
+    } else {
+      const fetchImage = async () => {
+        // const response = await fetch(
+        //   `http://localhost:8000/images/${admin.data?.profileimg}`
+        // );
+        // const blob = await response.blob();
+        // const url = URL.createObjectURL(blob);
+        // setAdminAvatar(url);
+
+        fetch(`http://localhost:8000/images/${admin.data?.profileimg}`).then(
+          (response) => {
+            if (response.ok) {
+              const blob = response.blob();
+              const url = URL.createObjectURL(blob);
+              setAdminAvatar(url);
+            } else {
+              setAdminAvatar(avatar);
+            }
+          }
+        );
+      };
+      fetchImage();
+    }
+  }, [admin]);
+
   let logoutAdmin = async () => {
     await authAdmin.logout();
     navigate("/adminlogin");
@@ -35,11 +66,11 @@ const AdminHeaderDropDown = () => {
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={avatar2} size="md" />
+        <CAvatar src={adminAvatar} size="md" />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">
-          Account
+          Account : {admin?.data.email}
         </CDropdownHeader>
         <CDropdownItem href="#">
           <CIcon icon={cilBell} className="me-2" />
@@ -72,7 +103,7 @@ const AdminHeaderDropDown = () => {
         <CDropdownHeader className="bg-light fw-semibold py-2">
           Settings
         </CDropdownHeader>
-        <CDropdownItem href="#">
+        <CDropdownItem href="/admin/myprofile">
           <CIcon icon={cilUser} className="me-2" />
           Profile
         </CDropdownItem>

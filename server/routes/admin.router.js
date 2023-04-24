@@ -11,6 +11,11 @@ router.get('/get', authAdmin,controller.getAdmin)
 router.post('/banClient', authAdmin,controller.banClient)
 router.post('/banAgent', authAdmin,controller.banAgent)
 router.post('/approve', authAdmin,controller.approve)
+router.post('/forgot',controller.forgot)
+router.post('/reset',controller.reset)
+router.post('/change',authAdmin,controller.change)
+router.put('/updateAdmin',authAdmin,controller.updateAdmin)
+
 
 
 

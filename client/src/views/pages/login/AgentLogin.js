@@ -12,25 +12,48 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CModalTitle,
+  CModalHeader,
+  CModalBody,
+  CModalFooter,
+  CModal,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilLockLocked, cilUser, cilLockUnlocked } from "@coreui/icons";
-import { authAgent } from "../../../services/Api";
+import {
+  cilLockLocked,
+  cilUser,
+  cilLockUnlocked,
+  cilCheckCircle,
+  cilWarning,
+} from "@coreui/icons";
+import { authAgent } from "../../../services/authAgentApi";
 import { Link, useNavigate } from "react-router-dom";
 
 function AgentLogin() {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [showalert, setShowAlert] = useState(false);
   const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [emailSendAlert, setEmailSendAlert] = useState({
+    show: false,
+    color: "",
+    msg: "",
+    icon: null,
+  });
   const { email, password } = formData;
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
+  };
+  const handleForgotPasswordEmailChange = (event) => {
+    setForgotPasswordEmail(event.target.value);
   };
   const handleTogglePassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -79,16 +102,53 @@ function AgentLogin() {
     //   event.stopPropagation();
     // }
     // setValidated(true);
-    if (validatePassword(password).isValid && isValidEmail(email)) {
-      const res = await authAgent.login(formData);
-      if (res.status === 200) navigate("/agent");
-      else {
-        setError(true);
-        setAlertMessage(res.data.msg);
-        setTimeout(() => {
-          setError((prev) => !prev);
-        }, 2000);
-      }
+
+    // if (validatePassword(password).isValid && isValidEmail(email)) {
+    const res = await authAgent.login(formData);
+    if (res.status === 200) navigate("/agent");
+    else {
+      setError(true);
+      setAlertMessage(res.data.msg);
+      setTimeout(() => {
+        setError((prev) => !prev);
+      }, 2000);
+    }
+    // }
+  };
+  const handleSend = async (event) => {
+    event.preventDefault();
+    const data = {
+      email: forgotPasswordEmail,
+    };
+    const res = await authAgent.forgot(data);
+    if (res.status === 200) {
+      setEmailSendAlert({
+        show: true,
+        msg: "Email Sent , Please check your Inbox",
+        color: "success",
+        icon: cilCheckCircle,
+      });
+      setTimeout(() => {
+        setEmailSendAlert({
+          show: false,
+          msg: "",
+        });
+        setVisible(false);
+      }, 2000);
+      setForgotPasswordEmail("");
+    } else {
+      setEmailSendAlert({
+        show: true,
+        msg: res.data.msg,
+        color: "danger",
+        icon: cilWarning,
+      });
+      setTimeout(() => {
+        setEmailSendAlert({
+          show: false,
+          msg: "",
+        });
+      }, 2000);
     }
   };
 
@@ -155,10 +215,66 @@ function AgentLogin() {
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
+                        <CButton
+                          color="link"
+                          className="px-0"
+                          onClick={() => setVisible(!visible)}
+                        >
                           Forgot password?
                         </CButton>
                       </CCol>
+                      <CModal
+                        visible={visible}
+                        onClose={() => setVisible(false)}
+                      >
+                        <CModalHeader onClose={() => setVisible(false)}>
+                          <CModalTitle>Email Address</CModalTitle>
+                        </CModalHeader>
+                        <CModalBody>
+                          {emailSendAlert.show && (
+                            <CAlert
+                              color={emailSendAlert.color}
+                              className="d-flex align-items-center"
+                            >
+                              <CIcon
+                                icon={emailSendAlert.icon}
+                                className="flex-shrink-0 me-2"
+                                width={24}
+                                height={24}
+                              />
+                              <div>{emailSendAlert.msg}</div>
+                            </CAlert>
+                          )}
+                          Please Enter Your Email Address To Reset Your Password
+                          <CInputGroup className="mt-3 mb-3">
+                            <CInputGroupText>@</CInputGroupText>
+                            <CFormInput
+                              placeholder="Email"
+                              autoComplete="email"
+                              onChange={handleForgotPasswordEmailChange}
+                              value={forgotPasswordEmail}
+                            />
+                          </CInputGroup>
+                        </CModalBody>
+                        <CModalFooter>
+                          <CButton
+                            color="secondary"
+                            onClick={() => setVisible(false)}
+                          >
+                            Close
+                          </CButton>
+                          <CButton
+                            color="primary"
+                            disabled={
+                              !isValidEmail(forgotPasswordEmail) ||
+                              forgotPasswordEmail === ""
+                            }
+                            onClick={handleSend}
+                          >
+                            Send
+                          </CButton>
+                        </CModalFooter>
+                      </CModal>
                     </CRow>
                   </CForm>
                 </CCardBody>

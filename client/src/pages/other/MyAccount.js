@@ -226,7 +226,7 @@ const MyAccount = () => {
                                 type="submit"
                                 onClick={() => updateClient(client.data._id)}
                               >
-                                Continue
+                                Save Changes
                               </button>
                             </div>
                           </div>
@@ -352,7 +352,7 @@ const MyAccount = () => {
                                 }}
                                 onClick={changePassword}
                               >
-                                Continue
+                                Save Changes
                               </button>
                             </div>
                           </div>

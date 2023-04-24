@@ -156,7 +156,7 @@ const Register = () => {
           >
             <rect width="100%" height="100%" fill="#ff3333"></rect>
           </svg>
-          <div className="fw-bold me-auto">Register Failed !</div>
+          <div className="fw-bold me-auto">SignUp Failed !</div>
         </CToastHeader>
         <CToastBody>{message}</CToastBody>
       </CToast>
@@ -164,14 +164,14 @@ const Register = () => {
   };
   return (
     <Fragment>
-      <SEO titleTemplate="Register" description="EcoFit Register Page." />
+      <SEO titleTemplate="SignUp" description="EcoFit SignUp Page." />
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
         <Breadcrumb
           pages={[
             { label: "Home", path: process.env.PUBLIC_URL + "/" },
             {
-              label: "Register",
+              label: "Sign Up",
               //   path: process.env.PUBLIC_URL + pathname,
             },
           ]}
@@ -185,7 +185,7 @@ const Register = () => {
                     <Nav variant="pills" className="login-register-tab-list">
                       <Nav.Item>
                         <Nav.Link eventKey="register">
-                          <h4>Register</h4>
+                          <h4>Sign Up</h4>
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>

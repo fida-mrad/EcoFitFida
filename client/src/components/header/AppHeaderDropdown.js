@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CAvatar,
   CBadge,
@@ -22,12 +22,30 @@ import {
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 
-import avatar2 from "./../../assets/images/avatars/2.jpg";
+import avatar from "./../../assets/images/avatars/user.jpg";
 import { authAgent } from "../../services/Api";
 import { useNavigate } from "react-router-dom";
+import { useAgent } from "../../AgentContext";
 
 const AppHeaderDropdown = () => {
+  const [agentAvatar, setAgentAvatar] = useState(avatar);
+  const { agent } = useAgent();
   const navigate = useNavigate();
+  useEffect(() => {
+    if (agent != null && agent.status >= 400) {
+      navigate("/agentlogin");
+    } else {
+      const fetchImage = async () => {
+        const response = await fetch(
+          `http://localhost:8000/images/${agent.data?.profileimg}`
+        );
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        setAgentAvatar(url);
+      };
+      fetchImage();
+    }
+  }, [agent]);
   let logoutAgent = async () => {
     await authAgent.logout();
     navigate("/agentlogin");
@@ -35,11 +53,11 @@ const AppHeaderDropdown = () => {
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={avatar2} size="md" />
+        <CAvatar src={agentAvatar} size="md" />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">
-          Account
+          Account : {agent?.data.email}
         </CDropdownHeader>
         <CDropdownItem href="#">
           <CIcon icon={cilBell} className="me-2" />
@@ -72,7 +90,7 @@ const AppHeaderDropdown = () => {
         <CDropdownHeader className="bg-light fw-semibold py-2">
           Settings
         </CDropdownHeader>
-        <CDropdownItem href="#">
+        <CDropdownItem href="/agent/myprofile">
           <CIcon icon={cilUser} className="me-2" />
           Profile
         </CDropdownItem>
