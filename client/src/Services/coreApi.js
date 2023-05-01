@@ -35,6 +35,12 @@ export const productsController = {
         return err.response;
       });
   },
+  async getAll() {
+    return axios.get(`${url}/products/getall`).catch((err) => {
+      console.log(err);
+      return err.response;
+    });
+  },
   async getProductById(id) {
     return axios
       .post(`${url}/products/getById`, id, {
@@ -62,6 +68,38 @@ export const clientController = {
   async updateClient(updatedData) {
     return axios
       .put(`${url}/client/updateClient`, updatedData, { withCredentials: true })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  },
+};
+export const ordersController = {
+  async addOrder(data) {
+    return axios
+      .post(`${url}/orders/addOrders`, data, {
+        withCredentials: true,
+      })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  },
+  async getOrdersByClient() {
+    return axios
+      .get(`${url}/orders/getOrdersByClient`, {
+        withCredentials: true,
+      })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  },
+  async cancelOrder(id) {
+    return axios
+      .delete(`${url}/orders/deleteOrder/${id}`, {
+        withCredentials: true,
+      })
       .catch((err) => {
         console.log(err);
         return err.response;

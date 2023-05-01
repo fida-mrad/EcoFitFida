@@ -12,17 +12,31 @@ import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import "./assets/scss/style.scss";
 import "./i18n";
+import { productsController } from "./services/coreApi";
 
+productsController.getAll().then(res=>{
+  // console.log(res.data[1].variation[0].color);
+  // console.log(res.data);
+  store.dispatch(setProducts(res.data));
+});
+// Make API call to retrieve products from database
+// axios.get('http://localhost:8000/products/getall')
+//   .then(response => {
+//     store.dispatch(setProducts(response.data)); // Dispatch retrieved products to store
+//   })
+//   .catch(error => {
+//     console.log(error); // Handle error
+//   });
 
-store.dispatch(setProducts(products));
+// store.dispatch(setProducts(products));
 
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
     <Provider store={store}>
-      <PersistProvider>
+      {/* <PersistProvider> */}
         <App />
-      </PersistProvider>
+      {/* </PersistProvider> */}
     </Provider>
 );
 

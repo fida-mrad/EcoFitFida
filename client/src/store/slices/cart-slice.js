@@ -11,7 +11,8 @@ const cartSlice = createSlice({
         addToCart(state, action) {
             const product = action.payload;
             if(!product.variation){
-                const cartItem = state.cartItems.find(item => item.id === product.id);
+                // const cartItem = state.cartItems.find(item => item.id === product.id);
+                const cartItem = state.cartItems.find(item => item._id === product._id);
                 if(!cartItem){
                     state.cartItems.push({
                         ...product,
@@ -33,7 +34,8 @@ const cartSlice = createSlice({
             } else {
                 const cartItem = state.cartItems.find(
                     item =>
-                        item.id === product.id &&
+                        // item.id === product.id &&
+                        item._id === product._id &&
                         product.selectedProductColor &&
                         product.selectedProductColor === item.selectedProductColor &&
                         product.selectedProductSize &&

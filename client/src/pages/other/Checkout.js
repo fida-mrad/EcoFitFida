@@ -1,17 +1,79 @@
-import { Fragment } from "react";
+import React, { Fragment, useState, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getDiscountPrice } from "../../helpers/product";
 import SEO from "../../components/seo";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
+import PhoneInput from "react-phone-number-input";
+import "./phone-input.css"; // import your custom CSS file
+import Select from "react-select";
+import countryList from "react-select-country-list";
+import { ordersController } from "../../services/coreApi";
+import { deleteAllFromCart } from "../../store/slices/cart-slice";
 
 const Checkout = () => {
   let cartTotalPrice = 0;
+  const [phoneNumber, setphoneNumber] = useState("");
+  const dispatch = useDispatch();
+  const [formFields, setformFields] = useState({
+    firstname: "",
+    lastname: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    additionalInfo: "",
+  });
+  const [country, setCountry] = useState("");
+  const [countryLabel, setCountryLabel] = useState("");
+  const options = useMemo(() => countryList().getData(), []);
+
+  const countryChangeHandler = (value) => {
+    setCountry(value);
+    setCountryLabel(value.label);
+  };
 
   let { pathname } = useLocation();
   const currency = useSelector((state) => state.currency);
   const { cartItems } = useSelector((state) => state.cart);
+
+  const handleChange = (text) => (e) => {
+    setformFields({ ...formFields, [text]: e.target.value });
+  };
+  const addOrder = async () => {
+    console.log(cartItems);
+    let data = {
+      orderItems: cartItems.map((item) => ({
+        _id: item._id,
+        name: item.name,
+        // quantity: item.quantity,
+        // image: item.image,
+        image: item.image[0],
+        // price: item.price,
+        variation: {
+          color: item.selectedProductColor,
+          size: item.selectedProductSize,
+          quantity: item.quantity,
+        },
+      })),
+      shippingAddress: {
+        fullName: formFields.firstname + " " + formFields.lastname,
+        address: formFields.address,
+        city: formFields.city,
+        postalCode: formFields.postalCode,
+        country: countryLabel,
+      },
+      additionalInfo: formFields.additionalInfo,
+      totalPrice: cartTotalPrice.toFixed(2),
+    };
+    console.log(data);
+    // ordersController.addOrder(data);
+    const res = await ordersController.addOrder(data);
+    console.log(res);
+    if (res.status === 201) {
+      dispatch(deleteAllFromCart());
+    }
+  };
 
   return (
     <Fragment>
@@ -21,11 +83,11 @@ const Checkout = () => {
       />
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
-        <Breadcrumb 
+        <Breadcrumb
           pages={[
-            {label: "Home", path: process.env.PUBLIC_URL + "/" },
-            {label: "Checkout", path: process.env.PUBLIC_URL + pathname }
-          ]} 
+            { label: "Home", path: process.env.PUBLIC_URL + "/" },
+            { label: "Checkout", path: process.env.PUBLIC_URL + pathname },
+          ]}
         />
         <div className="checkout-area pt-95 pb-100">
           <div className="container">
@@ -38,76 +100,67 @@ const Checkout = () => {
                       <div className="col-lg-6 col-md-6">
                         <div className="billing-info mb-20">
                           <label>First Name</label>
-                          <input type="text" />
+                          <input
+                            type="text"
+                            onChange={handleChange("firstname")}
+                          />
                         </div>
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="billing-info mb-20">
                           <label>Last Name</label>
-                          <input type="text" />
-                        </div>
-                      </div>
-                      <div className="col-lg-12">
-                        <div className="billing-info mb-20">
-                          <label>Company Name</label>
-                          <input type="text" />
+                          <input
+                            type="text"
+                            onChange={handleChange("lastname")}
+                          />
                         </div>
                       </div>
                       <div className="col-lg-12">
                         <div className="billing-select mb-20">
                           <label>Country</label>
-                          <select>
-                            <option>Select a country</option>
-                            <option>Azerbaijan</option>
-                            <option>Bahamas</option>
-                            <option>Bahrain</option>
-                            <option>Bangladesh</option>
-                            <option>Barbados</option>
-                          </select>
+                          <Select
+                            options={options}
+                            value={country}
+                            onChange={countryChangeHandler}
+                          />
                         </div>
                       </div>
                       <div className="col-lg-12">
                         <div className="billing-info mb-20">
-                          <label>Street Address</label>
+                          <label>Address</label>
                           <input
                             className="billing-address"
-                            placeholder="House number and street name"
+                            placeholder="House number and street name if possible"
                             type="text"
+                            onChange={handleChange("address")}
                           />
-                          <input
-                            placeholder="Apartment, suite, unit etc."
-                            type="text"
-                          />
-                        </div>
-                      </div>
-                      <div className="col-lg-12">
-                        <div className="billing-info mb-20">
-                          <label>Town / City</label>
-                          <input type="text" />
                         </div>
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="billing-info mb-20">
-                          <label>State / County</label>
-                          <input type="text" />
+                          <label>Town / City</label>
+                          <input type="text" onChange={handleChange("city")} />
                         </div>
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="billing-info mb-20">
                           <label>Postcode / ZIP</label>
-                          <input type="text" />
+                          <input
+                            type="text"
+                            onChange={handleChange("postalCode")}
+                          />
                         </div>
                       </div>
-                      <div className="col-lg-6 col-md-6">
+                      <div className="col-lg-12">
                         <div className="billing-info mb-20">
                           <label>Phone</label>
-                          <input type="text" />
-                        </div>
-                      </div>
-                      <div className="col-lg-6 col-md-6">
-                        <div className="billing-info mb-20">
-                          <label>Email Address</label>
-                          <input type="text" />
+                          {/* <input type="text" /> */}
+                          <PhoneInput
+                            placeholder="Enter phone number"
+                            name="phone"
+                            value={phoneNumber}
+                            onChange={setphoneNumber}
+                          />
                         </div>
                       </div>
                     </div>
@@ -120,6 +173,7 @@ const Checkout = () => {
                           placeholder="Notes about your order, e.g. special notes for delivery. "
                           name="message"
                           defaultValue={""}
+                          onChange={handleChange("additionalInfo")}
                         />
                       </div>
                     </div>
@@ -197,7 +251,9 @@ const Checkout = () => {
                       <div className="payment-method"></div>
                     </div>
                     <div className="place-order mt-25">
-                      <button className="btn-hover">Place Order</button>
+                      <button className="btn-hover" onClick={addOrder}>
+                        Place Order
+                      </button>
                     </div>
                   </div>
                 </div>

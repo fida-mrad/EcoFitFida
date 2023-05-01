@@ -5,6 +5,7 @@ const Brand = require("../models/brand");
 const productsController = {
   getAll: async (req, res) => {
     const products = await Product.find();
+    // console.log(products[1]);
     return res.status(200).send(products);
   },
   getByBrand: async (req, res) => {

@@ -41,6 +41,7 @@ const AppHeaderDropdown = () => {
         );
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
+        console.log(url);
         setAgentAvatar(url);
       };
       fetchImage();

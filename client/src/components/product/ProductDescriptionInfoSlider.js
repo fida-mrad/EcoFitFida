@@ -20,13 +20,13 @@ const ProductDescriptionInfoSlider = ({
 }) => {
   const dispatch = useDispatch();
   const [selectedProductColor, setSelectedProductColor] = useState(
-    product.variation ? product.variation[0].color : ""
+    product.variation.length!==0 ? product.variation[0].color : ""
   );
   const [selectedProductSize, setSelectedProductSize] = useState(
-    product.variation ? product.variation[0].size[0].name : ""
+    product.variation.length!==0 ? product.variation[0].size[0].name : ""
   );
   const [productStock, setProductStock] = useState(
-    product.variation ? product.variation[0].size[0].stock : product.stock
+    product.variation.length!==0 ? product.variation[0].size[0].stock : product.stock
   );
   const [quantityCount, setQuantityCount] = useState(1);
 
@@ -135,17 +135,29 @@ const ProductDescriptionInfoSlider = ({
         ""
       )}
       {product.affiliateLink ? (
-        <div className="pro-details-quality justify-content-center">
-          <div className="pro-details-cart btn-hover ml-0">
-            <a
-              href={product.affiliateLink}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Buy Now
-            </a>
-          </div>
+        // <div className="pro-details-quality justify-content-center">
+        //   <div className="pro-details-cart btn-hover ml-0">
+        //     <a
+        //       href={product.affiliateLink}
+        //       rel="noopener noreferrer"
+        //       target="_blank"
+        //     >
+        //       Buy Now
+        //     </a>
+        //   </div>
+        // </div>
+        <div className="pro-details-quality">
+        <div className="pro-details-cart btn-hover" onClick={()=>console.log("Buy Nom")}>
+          {/* <a
+            // href={product.affiliateLink}
+            href="#!"
+            rel="noopener noreferrer"
+            target="_blank"
+          > */}
+            Buy Now PDInfoSlider
+          {/* </a> */}
         </div>
+      </div>
       ) : (
         <div className="pro-details-quality justify-content-center">
           <div className="cart-plus-minus">

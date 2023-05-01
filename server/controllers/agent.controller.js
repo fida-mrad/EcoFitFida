@@ -6,16 +6,24 @@ const transporter = require("../middleware/transporter");
 const _ = require("lodash");
 const mongoose = require("mongoose");
 const Brand = require("../models/brand");
+const cloudinary = require('../helpers/cloudinary');
 require("dotenv").config();
 
 const agentController = {
   register: async (req, res) => {
     try {
+      console.log(req.file);
       const firstname = req.body.firstname;
       const lastname = req.body.lastname;
       const email = req.body.email;
       const password = req.body.password;
-      const profileimg = req.file.path;
+      const uploadedImage = await cloudinary.uploader.upload(
+        req.file.path,
+        { folder: 'ecofit' }
+      );
+      let profileimg = uploadedImage.secure_url;
+      console.log(profileimg);
+      // const profileimg = req.file.path;
       const brand = req.body.brand;
       if (
         !firstname ||

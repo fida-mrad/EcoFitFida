@@ -3,8 +3,9 @@ import ScrollToTop from "./helpers/scroll-top";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./scss/style.scss";
 import { ProvideClient } from "./ClientContext";
-import SignIn from "./components/Sign-In";
 import ResetPasswordAdmin from "./components/ResetPasswordAdmin";
+import MatsRange from "./components/MaterialsRange";
+import MyOrders from "./pages/other/MyOrders";
 
 // home pages
 const HomeFashion = lazy(() => import("./pages/home/HomeFashion"));
@@ -58,7 +59,6 @@ const AdminLayout = lazy(() => import("./layout/AdminLayout"));
 const ResetPassword = lazy(() => import("./components/ResetPassword"));
 const ForgotPassword = lazy(() => import("./pages/other/ForgotPassword"));
 const Register = lazy(() => import("./pages/other/Register"));
-const SignUp = lazy(() => import("./components/SignUp"));
 
 const App = () => {
   return (
@@ -77,6 +77,7 @@ const App = () => {
           <ProvideClient>
             <Routes>
               <Route path="/agent/*" name="Home" element={<DefaultLayout />} />
+              <Route path="/myOrders" name="My Orders" element={<MyOrders />} />
               <Route
                 exact
                 path="/agentregister"

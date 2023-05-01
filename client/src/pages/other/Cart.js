@@ -2,11 +2,10 @@ import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import SEO from "../../components/seo";
-import { getDiscountPrice } from "../../helpers/product";
+import { getDiscountPrice, cartItemStock } from "../../helpers/product";
 import LayoutOne from "../../layouts/LayoutOne";
 import Breadcrumb from "../../wrappers/breadcrumb/Breadcrumb";
 import { addToCart, decreaseQuantity, deleteFromCart, deleteAllFromCart } from "../../store/slices/cart-slice";
-import { cartItemStock } from "../../helpers/product";
 
 const Cart = () => {
   let cartTotalPrice = 0;
