@@ -24,23 +24,23 @@ const ProductGridTwo = ({
     <Fragment>
       {prods?.map((product) => {
         return (
-          <div className="col-xl-3 col-md-6 col-lg-4 col-sm-6" key={product.id}>
+          <div className="col-xl-3 col-md-6 col-lg-4 col-sm-6" key={product._id}>
             <ProductGridSingleTwo
               spaceBottomClass={spaceBottomClass}
               colorClass={colorClass}
               product={product}
               currency={currency}
               cartItem={
-                cartItems.find((cartItem) => cartItem.id === product.id)
+                cartItems.find((cartItem) => cartItem.id === product._id)
               }
               wishlistItem={
                 wishlistItems.find(
-                  (wishlistItem) => wishlistItem.id === product.id
+                  (wishlistItem) => wishlistItem.id === product._id
                 )
               }
               compareItem={
                 compareItems.find(
-                  (compareItem) => compareItem.id === product.id
+                  (compareItem) => compareItem.id === product._id
                 )
               }
               titlePriceClass={titlePriceClass}

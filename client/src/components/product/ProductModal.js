@@ -75,7 +75,8 @@ function ProductModal({ product, currency, discountedPrice, finalProductPrice, f
                     <SwiperSlide key={i}>
                       <div className="single-image">
                         <img
-                          src={process.env.PUBLIC_URL + img}
+                          // src={process.env.PUBLIC_URL + img}
+                          src={"http://localhost:8000/images/"+img}
                           className="img-fluid"
                           alt="Product"
                         />
@@ -93,7 +94,8 @@ function ProductModal({ product, currency, discountedPrice, finalProductPrice, f
                     <SwiperSlide key={i}>
                       <div className="single-image">
                         <img
-                          src={process.env.PUBLIC_URL + img}
+                          // src={process.env.PUBLIC_URL + img}
+                          src={"http://localhost:8000/images/"+img}
                           className="img-fluid"
                           alt=""
                         />
@@ -142,7 +144,8 @@ function ProductModal({ product, currency, discountedPrice, finalProductPrice, f
                     {product.variation.map((single, key) => {
                       return (
                         <label
-                          className={`pro-details-color-content--single ${single.color}`}
+                          // className={`pro-details-color-content--single ${single.color}`}
+                          className={`pro-details-color-content--single red`}
                           key={key}
                         >
                           <input

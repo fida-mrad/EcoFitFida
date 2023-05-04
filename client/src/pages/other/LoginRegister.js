@@ -25,9 +25,11 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilCheckCircle } from "@coreui/icons";
+import { useClient } from "../../ClientContext";
 
 const LoginRegister = () => {
   let { pathname } = useLocation();
+  const { client, setClient } = useClient();
   const captchaRef = useRef(null);
   const navigate = useNavigate();
   const [toast, addToast] = useState(0);
@@ -100,6 +102,7 @@ const LoginRegister = () => {
         localStorage.removeItem("email");
       }
       if (res.status === 200) {
+        setClient(res);
         captchaRef.current.reset();
         navigate("/");
       } else {

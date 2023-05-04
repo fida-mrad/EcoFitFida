@@ -51,6 +51,16 @@ export const productsController = {
         return err.response;
       });
   },
+  async addReview(data) {
+    return axios
+      .post(`${url}/products/addReview`, data, {
+        withCredentials: true,
+      })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  },
 };
 
 export const clientController = {

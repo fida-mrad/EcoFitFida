@@ -623,6 +623,7 @@
         margin: 0 0 15px;
       }
       .pro-details-color-content {
+        $check-color: white;
         ul {
           li {
             position: relative;
@@ -660,6 +661,10 @@
             &.yellow {
               border: 1px solid #e28b37;
               background-color: #e28b37;
+            }
+            &.#{$check-color} {
+              border: 1px solid $check-color;
+              background-color: $check-color;
             }
           }
         }
@@ -729,6 +734,10 @@
           &.brown {
             border: 1px solid brown;
             background-color: brown;
+          }
+          &.#{$check-color} {
+            border: 1px solid $check-color;
+            background-color: $check-color;
           }
           .checkmark {
             position: relative;

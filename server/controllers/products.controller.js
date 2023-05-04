@@ -42,7 +42,8 @@ const productsController = {
             console.log(err);
             return res.status(400).send({ msg: "Product Not Found" });
           } else {
-            if (!product) return res.status(400).send({ msg: "Product Not Found" });
+            if (!product)
+              return res.status(400).send({ msg: "Product Not Found" });
             res.status(200).send(product);
           }
         });
@@ -53,55 +54,51 @@ const productsController = {
   addProduct: async (req, res) => {
     const name = req.body.name;
     const price = req.body.price;
-    const ref = req.body.ref;
-    const size = req.body.size;
     const imageFiles = req.files;
     const images = imageFiles.map((file) => {
       return file.path;
     });
-    const description = req.body.description;
-    const quantity = req.body.quantity;
+    const shortDescription = req.body.shortDescription;
+    const fullDescription = req.body.fullDescription;
     const category = req.body.category;
     const materials = req.body.materials;
-    const colors = req.body.colors;
     const brand = req.body.brand;
+    const variation = req.body.variations;
     if (
       !name ||
       !price ||
-      !ref ||
-      !size ||
       !images ||
-      !description ||
-      !quantity ||
+      !shortDescription ||
+      !fullDescription ||
+      !variation ||
       !category ||
       !materials ||
-      !colors ||
       !brand
     )
       return res.status(400).json({ msg: "Please fill in all fields." });
-    const product = await Product.findOne({ ref });
+    // const product = await Product.findOne({ ref });
+    const product = await Product.findOne({ name });
     if (product)
       return res.status(400).json({ msg: "Product already exists." });
     try {
       const newProduct = new Product({
         name: name,
         price: price,
-        ref: ref,
-        size: size,
-        images: images,
-        description: description,
-        quantity: quantity,
+        image: images,
+        shortDescription: shortDescription,
+        fullDescription: fullDescription,
         category: category,
         materials: materials,
-        colors: colors,
         brand: brand,
+        variation : variation,
       });
+      console.log(newProduct);
       await newProduct.save();
-      return res.status(201).json({
+      return res.status(201).send({
         msg: "Product Added Successfully.",
       });
     } catch (err) {
-      return res.status(500).json({ msg: err.message });
+      return res.status(500).send({ msg: err.message });
     }
   },
   updateProduct: async (req, res) => {
@@ -158,6 +155,38 @@ const productsController = {
         res.status(201).send({ msg: "Product Updated Successfully" });
       });
     });
+  },
+  addReview: async (req, res) => {
+    try {
+      const id = req.body.id;
+      if (!req.body.rating || !req.body.comment)
+        return res.status(400).send({ msg: "Please Fill in All Fields" });
+      const review = {
+        client: id,
+        rating: req.body.rating,
+        comment: req.body.comment,
+      };
+      const productId = req.body.productId;
+      const product = await Product.findById(productId);
+      if (!product) {
+        return res.status(400).send({ msg: "Product Not Found" });
+      }
+      // Check if client has already reviewed the product
+      const existingReview = product.reviews.find((r) => r.client == id);
+      if (existingReview) {
+        // Update existing review
+        existingReview.rating = review.rating;
+        existingReview.comment = review.comment;
+      } else {
+        // Add new review to reviews array
+        product.reviews.push(review);
+      }
+      await product.save();
+      return res.status(201).send({ msg: "Review Sent" });
+    } catch (error) {
+      console.log(error.message);
+      return res.send({ msg: error.message });
+    }
   },
 };
 module.exports = productsController;

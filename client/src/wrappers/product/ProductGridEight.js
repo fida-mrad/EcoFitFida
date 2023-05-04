@@ -42,23 +42,23 @@ const ProductGridEight = ({
     <Swiper options={settings}>
       {prods.map((product) => {
         return (
-          <SwiperSlide key={product.id}>
+          <SwiperSlide key={product._id}>
             <ProductGridSingleEight
               spaceBottomClass={spaceBottomClass}
               colorClass={colorClass}
               product={product}
               currency={currency}
               cartItem={
-                cartItems.find((cartItem) => cartItem.id === product.id)
+                cartItems.find((cartItem) => cartItem.id === product._id)
               }
               wishlistItem={
                 wishlistItems.find(
-                  (wishlistItem) => wishlistItem.id === product.id
+                  (wishlistItem) => wishlistItem.id === product._id
                 )
               }
               compareItem={
                 compareItems.find(
-                  (compareItem) => compareItem.id === product.id
+                  (compareItem) => compareItem.id === product._id
                 )
               }
             />

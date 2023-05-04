@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import clsx from "clsx";
 import MenuCart from "./sub-components/MenuCart";
 import { authClientApi } from "../../services/authClientApi";
+import { useClient } from "../../ClientContext";
 
 const IconGroup = ({ iconWhiteClass }) => {
   const handleClick = (e) => {
@@ -16,11 +17,13 @@ const IconGroup = ({ iconWhiteClass }) => {
     );
     offcanvasMobileMenu.classList.add("active");
   };
+  const { client, setClient } = useClient();
   const { compareItems } = useSelector((state) => state.compare);
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { cartItems } = useSelector((state) => state.cart);
   let logoutClient = async (event) => {
     await authClientApi.logout();
+    setClient(null);
   };
   return (
     <div className={clsx("header-right-wrap", iconWhiteClass)}>
@@ -57,6 +60,13 @@ const IconGroup = ({ iconWhiteClass }) => {
             <li>
               <Link to={process.env.PUBLIC_URL + "/my-account"}>
                 my account
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={process.env.PUBLIC_URL + "/myOrders"}
+              >
+                My Orders
               </Link>
             </li>
             <li>
@@ -104,6 +114,11 @@ const IconGroup = ({ iconWhiteClass }) => {
           </span>
         </Link>
       </div>
+      {/* <div className="same-style cart-wrap d-block d-lg-none">
+        <Link className="icon-cart" to={process.env.PUBLIC_URL + "/myOrders"}>
+          <i className="pe-7s-cash" />
+        </Link>
+      </div> */}
       <div className="same-style mobile-off-canvas d-block d-lg-none">
         <button
           className="mobile-aside-button"

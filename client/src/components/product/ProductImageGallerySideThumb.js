@@ -12,7 +12,8 @@ const ProductImageGalleryLeftThumb = ({ product, thumbPosition }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [index, setIndex] = useState(-1);
   const slides = product?.image.map((img, i) => ({
-      src: process.env.PUBLIC_URL + img,
+      // src: process.env.PUBLIC_URL + img,
+      src:"http://localhost:8000/images/"+img,
       key: i,
   }));
 
@@ -86,11 +87,13 @@ const ProductImageGalleryLeftThumb = ({ product, thumbPosition }) => {
                 {product?.image.map((single, key) => (
                   <SwiperSlide key={key}>
                     <button className="lightgallery-button" onClick={() => setIndex(key)}>
+                    {/* <button className="lightgallery-button" onClick={() => setIndex(product._id)}> */}
                       <i className="pe-7s-expand1"></i>
                     </button>
                     <div className="single-image">
                       <img
-                        src={process.env.PUBLIC_URL + single}
+                        // src={process.env.PUBLIC_URL + single}
+                        src={"http://localhost:8000/images/"+single}
                         className="img-fluid"
                         alt=""
                       />
@@ -120,7 +123,8 @@ const ProductImageGalleryLeftThumb = ({ product, thumbPosition }) => {
                   <SwiperSlide key={key}>
                     <div className="single-image">
                       <img
-                        src={process.env.PUBLIC_URL + single}
+                        // src={process.env.PUBLIC_URL + single}
+                        src={"http://localhost:8000/images/"+single}
                         className="img-fluid"
                         alt=""
                       />

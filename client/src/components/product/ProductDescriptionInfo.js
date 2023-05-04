@@ -73,7 +73,8 @@ const ProductDescriptionInfo = ({
               {product.variation.map((single, key) => {
                 return (
                   <label
-                    className={`pro-details-color-content--single ${single.color}`}
+                    // className={`pro-details-color-content--single ${single.color}`}
+                    className={`pro-details-color-content--single red`}
                     key={key}
                   >
                     <input

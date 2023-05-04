@@ -5,7 +5,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { authClientApi } from "./services/Api";
+import { authClientApi } from "./services/authClientApi";
 
 const clientContext = createContext({
   client: null,
@@ -13,6 +13,7 @@ const clientContext = createContext({
 
 const Store = () => {
   const [client, setClient] = useState(null);
+  const [loading, setLoading] = useState(true); // add loading state
 
   useEffect(() => {
     authClientApi
@@ -20,16 +21,19 @@ const Store = () => {
       .then((res) => {
         // if (res.status === 200||res.status===304||res.status === 204) {
         setClient(res);
+        setLoading(false); // update loading state
         // }
       })
       .catch((err) => {
+        console.log("err.response : ");
         console.log(err.response);
+        setLoading(false); // update loading state
         setClient(err.response);
       });
   }, []);
 
   return {
-    client,setClient
+    client,setClient,loading
   };
 };
 

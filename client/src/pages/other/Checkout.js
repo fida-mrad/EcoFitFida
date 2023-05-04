@@ -11,6 +11,8 @@ import Select from "react-select";
 import countryList from "react-select-country-list";
 import { ordersController } from "../../services/coreApi";
 import { deleteAllFromCart } from "../../store/slices/cart-slice";
+import { store } from "../../store/store";
+import { setProducts } from "../../store/slices/product-slice";
 
 const Checkout = () => {
   let cartTotalPrice = 0;
@@ -72,6 +74,7 @@ const Checkout = () => {
     console.log(res);
     if (res.status === 201) {
       dispatch(deleteAllFromCart());
+      store.dispatch(setProducts(res.data.products));
     }
   };
 

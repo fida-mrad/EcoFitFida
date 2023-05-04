@@ -81,10 +81,11 @@ const Cart = () => {
                                   >
                                     <img
                                       className="img-fluid"
-                                      src={
-                                        process.env.PUBLIC_URL +
-                                        cartItem.image[0]
-                                      }
+                                      // src={
+                                      //   process.env.PUBLIC_URL +
+                                      //   cartItem.image[0]
+                                      // }
+                                      src={"http://localhost:8000/images/"+cartItem.image[0]}
                                       alt=""
                                     />
                                   </Link>

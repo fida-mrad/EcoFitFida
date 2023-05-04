@@ -6,9 +6,9 @@ const AppFooter = () => {
     <CFooter>
       <div>
         <a href="https://coreui.io" target="_blank" rel="noopener noreferrer">
-          CoreUI
+          EcoFit
         </a>
-        <span className="ms-1">&copy; 2023 creativeLabs.</span>
+        <span className="ms-1">&copy; 2023 BinaryBrains.</span>
       </div>
       <div className="ms-auto">
         <span className="me-1">Powered by</span>

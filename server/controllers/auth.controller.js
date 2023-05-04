@@ -217,7 +217,19 @@ const clientController = {
         maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
       });
 
-      res.send({ msg: "Login success!" });
+      res.send(
+        // msg: "Login success!",
+        // client: _.pick(client, [
+        _.pick(client, [
+          "_id",
+          "firstname",
+          "lastname",
+          "email",
+          "username",
+          "phone",
+          "birthdate",
+        ])
+      );
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }

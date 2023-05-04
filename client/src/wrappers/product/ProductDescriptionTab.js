@@ -2,8 +2,49 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
+import { useState } from "react";
+import { productsController } from "../../services/coreApi";
+import { useParams } from "react-router-dom";
 
 const ProductDescriptionTab = ({ spaceBottomClass, productFullDesc }) => {
+  const [rating, setRating] = useState(0);
+  const { id } = useParams();
+  const [comment, setComment] = useState("");
+  const handleStarClick = (index) => {
+    setRating(index + 1);
+  };
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+  const renderStars = () => {
+    let stars = [];
+
+    for (let i = 0; i < 5; i++) {
+      const className = i < rating ? "fa fa-star" : "fa fa-star-o";
+      stars.push(
+        <i key={i} className={className} onClick={() => handleStarClick(i)} />
+      );
+    }
+
+    return stars;
+  };
+  const addReview = async (event) => {
+    event.preventDefault();
+    console.log({
+      productId: id,
+      rating: rating,
+      comment: comment,
+    });
+    const res = await productsController.addReview({
+      productId: id,
+      rating: rating,
+      comment: comment,
+    });
+    if(res.status===200){
+      setComment("");
+      setRating(0);
+    }
+  };
   return (
     <div className={clsx("description-review-area", spaceBottomClass)}>
       <div className="container">
@@ -131,34 +172,19 @@ const ProductDescriptionTab = ({ spaceBottomClass, productFullDesc }) => {
                     <div className="ratting-form-wrapper pl-50">
                       <h3>Add a Review</h3>
                       <div className="ratting-form">
-                        <form action="#">
+                        <form action="#" onSubmit={addReview}>
                           <div className="star-box">
                             <span>Your rating:</span>
-                            <div className="ratting-star">
-                              <i className="fa fa-star" />
-                              <i className="fa fa-star" />
-                              <i className="fa fa-star" />
-                              <i className="fa fa-star" />
-                              <i className="fa fa-star" />
-                            </div>
+                            <div className="ratting-star">{renderStars()}</div>
                           </div>
                           <div className="row">
-                            <div className="col-md-6">
-                              <div className="rating-form-style mb-10">
-                                <input placeholder="Name" type="text" />
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="rating-form-style mb-10">
-                                <input placeholder="Email" type="email" />
-                              </div>
-                            </div>
                             <div className="col-md-12">
                               <div className="rating-form-style form-submit">
                                 <textarea
                                   name="Your Review"
                                   placeholder="Message"
-                                  defaultValue={""}
+                                  value={comment}
+                                  onChange={handleCommentChange}
                                 />
                                 <input type="submit" defaultValue="Submit" />
                               </div>
@@ -180,7 +206,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, productFullDesc }) => {
 
 ProductDescriptionTab.propTypes = {
   productFullDesc: PropTypes.string,
-  spaceBottomClass: PropTypes.string
+  spaceBottomClass: PropTypes.string,
 };
 
 export default ProductDescriptionTab;

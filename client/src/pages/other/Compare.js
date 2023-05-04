@@ -61,16 +61,17 @@ const Compare = () => {
                                     to={
                                       process.env.PUBLIC_URL +
                                       "/product/" +
-                                      compareItem.id
+                                      compareItem._id
                                     }
                                     className="image"
                                   >
                                     <img
                                       className="img-fluid"
-                                      src={
-                                        process.env.PUBLIC_URL +
-                                        compareItem.image[0]
-                                      }
+                                      // src={
+                                      //   process.env.PUBLIC_URL +
+                                      //   compareItem.image[0]
+                                      // }
+                                      src={"http://localhost:8000/images/"+compareItem.image[0]}
                                       alt=""
                                     />
                                   </Link>
@@ -79,7 +80,7 @@ const Compare = () => {
                                       to={
                                         process.env.PUBLIC_URL +
                                         "/product/" +
-                                        compareItem.id
+                                        compareItem._id
                                       }
                                     >
                                       {compareItem.name}
@@ -98,7 +99,7 @@ const Compare = () => {
                                     ) : compareItem.variation &&
                                       compareItem.variation.length >= 1 ? (
                                       <Link
-                                        to={`${process.env.PUBLIC_URL}/product/${compareItem.id}`}
+                                        to={`${process.env.PUBLIC_URL}/product/${compareItem._id}`}
                                       >
                                         Select Option
                                       </Link>

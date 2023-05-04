@@ -16,14 +16,15 @@ import { useClient } from "../../ClientContext";
 import { Button } from "react-bootstrap";
 
 const MyOrders = () => {
-  let cartTotalPrice = 0;
-  const client = useClient();
+  const { client, setClient } = useClient();
   const navigate = useNavigate();
   const [quantityCount] = useState(1);
   const dispatch = useDispatch();
   let { pathname } = useLocation();
   const [orders, setOrders] = useState([]);
-  const getProducts = async () => {
+  const [clientState, setClientState] = useState(null);
+
+  const getOrders = async () => {
     const res = await ordersController.getOrdersByClient();
     console.log(res);
     if (res.status === 200) {
@@ -33,13 +34,24 @@ const MyOrders = () => {
     }
   };
   useEffect(() => {
-    if (client != null && client.status > 400) {
-      console.log("not logged in");
-      navigate("/");
+    if (client == null) {
+      navigate("/login");
     } else {
-      console.log("Logged In");
+      // if (client != null && client.status > 400) {
+      if (client.status > 400) {
+        console.log("not logged in");
+        navigate("/login");
+      } else {
+        setClientState((prevState) => ({
+          ...prevState,
+          firstname: client?.data.firstname,
+          lastname: client?.data.lastname,
+          username: client?.data.username,
+        }));
+        console.log("Logged In");
+        getOrders();
+      }
     }
-    getProducts();
   }, [client]);
   const cancelOrder = async (id) => {
     const res = await ordersController.cancelOrder(id);
@@ -67,7 +79,10 @@ const MyOrders = () => {
           <div className="container">
             {orders && orders.length >= 1 ? (
               <Fragment>
-                <h3 className="cart-page-title">Your Orders :</h3>
+                {/* <h3 className="cart-page-title">Hello Your Orders :</h3> */}
+                <h3 className="cart-page-title">
+                  Hello {clientState?.firstname} Your Orders :
+                </h3>
                 <div className="row">
                   <div className="col-12">
                     <div className="table-content table-responsive cart-table-content">
@@ -160,109 +175,16 @@ const MyOrders = () => {
                 <div className="row">
                   <div className="col-lg-12">
                     <div className="cart-shiping-update-wrapper">
-                      <div className="cart-shiping-update">
-                        <Link
-                          to={process.env.PUBLIC_URL + "/shop-grid-standard"}
-                        >
-                          Continue Shopping
-                        </Link>
-                      </div>
                       <div className="cart-clear">
                         <button onClick={() => dispatch(deleteAllFromCart())}>
                           Clear Shopping Cart
                         </button>
                       </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-lg-4 col-md-6">
-                    <div className="cart-tax">
-                      <div className="title-wrap">
-                        <h4 className="cart-bottom-title section-bg-gray">
-                          Estimate Shipping And Tax
-                        </h4>
+                      <div className="cart-shiping-update">
+                        <Link to={process.env.PUBLIC_URL + "/checkout"}>
+                          Proceed to Checkout
+                        </Link>
                       </div>
-                      <div className="tax-wrapper">
-                        <p>
-                          Enter your destination to get a shipping estimate.
-                        </p>
-                        <div className="tax-select-wrapper">
-                          <div className="tax-select">
-                            <label>* Country</label>
-                            <select className="email s-email s-wid">
-                              <option>Bangladesh</option>
-                              <option>Albania</option>
-                              <option>Åland Islands</option>
-                              <option>Afghanistan</option>
-                              <option>Belgium</option>
-                            </select>
-                          </div>
-                          <div className="tax-select">
-                            <label>* Region / State</label>
-                            <select className="email s-email s-wid">
-                              <option>Bangladesh</option>
-                              <option>Albania</option>
-                              <option>Åland Islands</option>
-                              <option>Afghanistan</option>
-                              <option>Belgium</option>
-                            </select>
-                          </div>
-                          <div className="tax-select">
-                            <label>* Zip/Postal Code</label>
-                            <input type="text" />
-                          </div>
-                          <button className="cart-btn-2" type="submit">
-                            Get A Quote
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-lg-4 col-md-6">
-                    <div className="discount-code-wrapper">
-                      <div className="title-wrap">
-                        <h4 className="cart-bottom-title section-bg-gray">
-                          Use Coupon Code
-                        </h4>
-                      </div>
-                      <div className="discount-code">
-                        <p>Enter your coupon code if you have one.</p>
-                        <form>
-                          <input type="text" required name="name" />
-                          <button className="cart-btn-2" type="submit">
-                            Apply Coupon
-                          </button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-lg-4 col-md-12">
-                    <div className="grand-totall">
-                      <div className="title-wrap">
-                        <h4 className="cart-bottom-title section-bg-gary-cart">
-                          Cart Total
-                        </h4>
-                      </div>
-                      <h5>
-                        Total products{" "}
-                        <span>
-                          {currency.currencySymbol + cartTotalPrice.toFixed(2)}
-                        </span>
-                      </h5>
-
-                      <h4 className="grand-totall-title">
-                        Grand Total{" "}
-                        <span>
-                          {currency.currencySymbol + cartTotalPrice.toFixed(2)}
-                        </span>
-                      </h4>
-                      <Link to={process.env.PUBLIC_URL + "/checkout"}>
-                        Proceed to Checkout
-                      </Link>
                     </div>
                   </div>
                 </div>

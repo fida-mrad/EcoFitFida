@@ -36,24 +36,29 @@ const MyAccount = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   useEffect(() => {
-    console.log(client);
-    if (client != null && client.status >= 400) {
+    if (client == null) {
       navigate("/login");
     } else {
-      setformFields((prevState) => ({
-        ...prevState,
-        firstname: client?.data.firstname,
-        lastname: client?.data.lastname,
-        username: client?.data.username,
-        phone: client?.data.phone,
-      }));
-      setClientState((prevState) => ({
-        ...prevState,
-        firstname: client?.data.firstname,
-        lastname: client?.data.lastname,
-        username: client?.data.username,
-        phone: client?.data.phone,
-      }));
+      // console.log(client);
+      // if (client != null && client.status >= 400) {
+      if (client.status >= 400) {
+        navigate("/login");
+      } else {
+        setformFields((prevState) => ({
+          ...prevState,
+          firstname: client?.data.firstname,
+          lastname: client?.data.lastname,
+          username: client?.data.username,
+          phone: client?.data.phone,
+        }));
+        setClientState((prevState) => ({
+          ...prevState,
+          firstname: client?.data.firstname,
+          lastname: client?.data.lastname,
+          username: client?.data.username,
+          phone: client?.data.phone,
+        }));
+      }
     }
   }, [client]);
   const handleChange = (text) => (e) => {

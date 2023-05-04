@@ -76,10 +76,11 @@ const Wishlist = () => {
                                   >
                                     <img
                                       className="img-fluid"
-                                      src={
-                                        process.env.PUBLIC_URL +
-                                        wishlistItem.image[0]
-                                      }
+                                      // src={
+                                      //   process.env.PUBLIC_URL +
+                                      //   wishlistItem.image[0]
+                                      // }
+                                      src={"http://localhost:8000/images/"+wishlistItem.image[0]}
                                       alt=""
                                     />
                                   </Link>

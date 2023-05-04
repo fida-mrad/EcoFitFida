@@ -15,7 +15,7 @@ const ProductGridSingle = ({
   cartItem,
   wishlistItem,
   compareItem,
-  spaceBottomClass
+  spaceBottomClass,
 }) => {
   const [modalShow, setModalShow] = useState(false);
   const discountedPrice = getDiscountPrice(product.price, product.discount);
@@ -29,16 +29,18 @@ const ProductGridSingle = ({
     <Fragment>
       <div className={clsx("product-wrap", spaceBottomClass)}>
         <div className="product-img">
-          <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
+          <Link to={process.env.PUBLIC_URL + "/product/" + product._id}>
             <img
               className="default-img"
-              src={process.env.PUBLIC_URL + product.image[0]}
+              // src={process.env.PUBLIC_URL + product.image[0]}
+              src={"http://localhost:8000/images/" + product.image[0]}
               alt=""
             />
             {product.image.length > 1 ? (
               <img
                 className="hover-img"
-                src={process.env.PUBLIC_URL + product.image[1]}
+                // src={process.env.PUBLIC_URL + product.image[1]}
+                src={"http://localhost:8000/images/" + product.image[1]}
                 alt=""
               />
             ) : (
@@ -84,7 +86,7 @@ const ProductGridSingle = ({
                   Buy now{" "}
                 </a>
               ) : product.variation && product.variation.length >= 1 ? (
-                <Link to={`${process.env.PUBLIC_URL}/product/${product.id}`}>
+                <Link to={`${process.env.PUBLIC_URL}/product/${product._id}`}>
                   Select Option
                 </Link>
               ) : product.stock && product.stock > 0 ? (
@@ -121,7 +123,7 @@ const ProductGridSingle = ({
         </div>
         <div className="product-content text-center">
           <h3>
-            <Link to={process.env.PUBLIC_URL + "/product/" + product.id}>
+            <Link to={process.env.PUBLIC_URL + "/product/" + product._id}>
               {product.name}
             </Link>
           </h3>

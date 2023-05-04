@@ -6,49 +6,77 @@ const client = require("../models/client");
 const Product = require("../models/product");
 const ordersController = {
   addOrders: async (req, res, next) => {
-    try {
-      console.log(req.body);
-      const newOrder = new Order({
-        _id: new mongoose.Types.ObjectId(),
-        orderItems: req.body.orderItems.map((item) => ({
-          _id: item._id,
-          name: item.name,
-          // quantity: item.quantity,
-          image: item.image,
-          // price: item.price,
-          variation: item.variation,
-          // variation: {
-          //   color: item.selectedProductSize,
-          //   size: item.selectedProductSize,
-          //   quantity: item.quantity,
-          // },
-        })),
-        shippingAddress: {
-          fullName: req.body.shippingAddress.fullName,
-          address: req.body.shippingAddress.address,
-          city: req.body.shippingAddress.city,
-          postalCode: req.body.shippingAddress.postalCode,
-          country: req.body.shippingAddress.country,
-        },
-        // paymentMethod: req.body.paymentMethod,
-        // itemsPrice: req.body.itemsPrice,
-        // shippingPrice: req.body.shippingPrice,
-        // taxPrice: req.body.taxPrice,
-        totalPrice: req.body.totalPrice,
-        client: req.body.id,
+    // try {
+    // console.log(req.body);
+    const newOrder = new Order({
+      _id: new mongoose.Types.ObjectId(),
+      orderItems: req.body.orderItems.map((item) => ({
+        _id: item._id,
+        name: item.name,
+        // quantity: item.quantity,
+        image: item.image,
+        // price: item.price,
+        variation: item.variation,
+        // variation: {
+        //   color: item.selectedProductColor,
+        //   size: item.selectedProductSize,
+        //   quantity: item.quantity,
+        // },
+      })),
+      shippingAddress: {
+        fullName: req.body.shippingAddress.fullName,
+        address: req.body.shippingAddress.address,
+        city: req.body.shippingAddress.city,
+        postalCode: req.body.shippingAddress.postalCode,
+        country: req.body.shippingAddress.country,
+      },
+      // paymentMethod: req.body.paymentMethod,
+      // itemsPrice: req.body.itemsPrice,
+      // shippingPrice: req.body.shippingPrice,
+      // taxPrice: req.body.taxPrice,
+      totalPrice: req.body.totalPrice,
+      client: req.body.id,
+    });
+    // console.log(newOrder);
+
+    const result = await newOrder.save();
+
+    if (!result) {
+      return res.status(400).send({ msg: "Order Not Saved" });
+      // const error = new Error('Failed to add the order');
+      // error.statusCode = 500;
+      // throw error;
+    } else {
+      let orderItems = req.body.orderItems;
+      orderItems.forEach((item) => {
+        console.log(item);
+        Product.findById(item._id, (err, product) => {
+          const variation = product.variation.find(
+            (v) => v.color == item.variation.color
+            // &&
+            // v.size.some(
+            //   (s) => s.name == item.variation.size
+            // )
+          );
+
+          if (variation) {
+            variation.size.forEach((s) => {
+              if (s.name === item.variation.size) {
+                s.stock -= item.variation.quantity;
+              }
+            });
+
+            product.save((err) => {
+              if (err) {
+                return res.status(400).send({ msg: err.message });
+              }
+            });
+          }
+        });
       });
-      console.log(newOrder);
 
-      const result = await newOrder.save();
-
-      if (!result) {
-        return res.status(400).send({ msg: "Order Not Saved" });
-        // const error = new Error('Failed to add the order');
-        // error.statusCode = 500;
-        // throw error;
-      }
-
-      const addedOrder = await Order.findById(result._id);
+      // const addedOrder = await Order.findById(result._id);
+      const products = await Product.find();
 
       //   if (!addedOrder) {
       //     const error = new Error('Failed to retrieve the added order');
@@ -56,15 +84,16 @@ const ordersController = {
       //     throw error;
       //   }
 
-      return res.status(201).send({
-        message: "Created an order using POST request",
-        createdItem: addedOrder,
-      });
-    } catch (err) {
-      console.log(err.message);
-      return res.status(500).send({ msg: err.message });
-      //   next(err);
+      // return res.status(201).send({
+      //   message: "Created an order using POST request",
+      //   createdItem: addedOrder,
+      // });
+      return res.status(201).send({products});
     }
+    // } catch (err) {
+    //   console.log(err.message);
+    //   return res.status(500).send({ msg: err.message });
+    // }
   },
 
   getOrders: async (req, res, next) => {

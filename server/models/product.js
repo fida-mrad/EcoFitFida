@@ -1,50 +1,3 @@
-// const mongoose = require("mongoose");
-// const productSchema = new mongoose.Schema({
-//   name: {
-//     type: String,
-//     required: true,
-//   },
-//   price: {
-//     type: Number,
-//     required: true,
-//   },
-//   ref: {
-//     type: String,
-//     required: true,
-//     unique : true
-//   },
-//   size: {
-//     type: Number,
-//     required: true,
-//   },
-//   images: {
-//     type: [String],
-//     required: true,
-//   },
-//   description: {
-//     type: String,
-//   },
-//   quantity: {
-//     type: Number,
-//     required: true,
-//   },
-//   category: {
-//     type: String,
-//     required: true,
-//   },
-//   materials: {
-//     type: [String],
-//   },
-//   colors: {
-//     type: String,
-//   },
-//   brand: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'brand',
-//     required: true,
-//   },
-// });
-// module.exports = mongoose.model("product", productSchema);
 const mongoose = require("mongoose");
 const reviewSchema = new mongoose.Schema(
   {
@@ -84,7 +37,7 @@ const productSchema = new mongoose.Schema({
   offerEnd: { type: Date, required: false },
   new: { type: Boolean, required: false },
   // rating: { type: Number, required: false },
-  // saleCount: { type: Number, required: false },
+  saleCount: { type: Number, required: false, default: 0 },
   // quantity: { type: Number },
   // size: { type: String },
   category: { type: [String], required: false },
@@ -93,7 +46,6 @@ const productSchema = new mongoose.Schema({
     type: [
       {
         color: { type: String },
-        image: { type: String },
         size: [
           {
             name: { type: String },
@@ -103,19 +55,11 @@ const productSchema = new mongoose.Schema({
       },
     ],
   },
-  images: {
+  image: {
     type: [String],
     required: true,
   },
   reviews: [reviewSchema],
-  // rating: {
-  //   type: Number,
-  //   default: 0,
-  // },
-  // numReviews: {
-  //   type: Number,
-  //   default: 0,
-  // },
   shortDescription: { type: String },
   fullDescription: { type: String },
   materials: {

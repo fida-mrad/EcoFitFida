@@ -5,7 +5,6 @@ import "./scss/style.scss";
 import { ProvideClient } from "./ClientContext";
 import ResetPasswordAdmin from "./components/ResetPasswordAdmin";
 import MatsRange from "./components/MaterialsRange";
-import MyOrders from "./pages/other/MyOrders";
 
 // home pages
 const HomeFashion = lazy(() => import("./pages/home/HomeFashion"));
@@ -39,6 +38,7 @@ const BlogDetailsStandard = lazy(() =>
 const About = lazy(() => import("./pages/other/About"));
 const Contact = lazy(() => import("./pages/other/Contact"));
 const MyAccount = lazy(() => import("./pages/other/MyAccount"));
+const MyOrders = lazy(() => import("./pages/other/MyOrders"));
 const LoginRegister = lazy(() => import("./pages/other/LoginRegister"));
 
 const Cart = lazy(() => import("./pages/other/Cart"));
@@ -77,7 +77,6 @@ const App = () => {
           <ProvideClient>
             <Routes>
               <Route path="/agent/*" name="Home" element={<DefaultLayout />} />
-              <Route path="/myOrders" name="My Orders" element={<MyOrders />} />
               <Route
                 exact
                 path="/agentregister"
@@ -190,6 +189,10 @@ const App = () => {
               <Route
                 path={process.env.PUBLIC_URL + "/my-account"}
                 element={<MyAccount />}
+              />
+              <Route
+                path={process.env.PUBLIC_URL + "/myOrders"}
+                element={<MyOrders />}
               />
 
               <Route
