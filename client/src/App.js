@@ -40,6 +40,10 @@ const Contact = lazy(() => import("./pages/other/Contact"));
 const MyAccount = lazy(() => import("./pages/other/MyAccount"));
 const MyOrders = lazy(() => import("./pages/other/MyOrders"));
 const LoginRegister = lazy(() => import("./pages/other/LoginRegister"));
+// const BlogDetailsStandard = lazy(() =>
+//   import("./pages/blog/BlogDetailsStandard")
+// );
+const BlogNew = lazy(() =>import("./wrappers/blog/AddBlog"));
 
 const Cart = lazy(() => import("./pages/other/Cart"));
 const Wishlist = lazy(() => import("./pages/other/Wishlist"));
@@ -203,6 +207,14 @@ const App = () => {
               <Route
                 path={process.env.PUBLIC_URL + "/cart"}
                 element={<Cart />}
+              />
+                            <Route
+                  path={process.env.PUBLIC_URL + "/blog-new"}
+                  element={<BlogNew />}
+              />
+              <Route
+                  path={process.env.PUBLIC_URL + "/blog-details-standard/:id"}
+                  element={<BlogDetailsStandard />}
               />
               <Route
                 path={process.env.PUBLIC_URL + "/wishlist"}

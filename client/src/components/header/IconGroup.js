@@ -5,6 +5,7 @@ import clsx from "clsx";
 import MenuCart from "./sub-components/MenuCart";
 import { authClientApi } from "../../services/authClientApi";
 import { useClient } from "../../ClientContext";
+import { useEffect, useState } from "react";
 
 const IconGroup = ({ iconWhiteClass }) => {
   const handleClick = (e) => {
@@ -21,6 +22,16 @@ const IconGroup = ({ iconWhiteClass }) => {
   const { compareItems } = useSelector((state) => state.compare);
   const { wishlistItems } = useSelector((state) => state.wishlist);
   const { cartItems } = useSelector((state) => state.cart);
+  const [clientState, setClientState] = useState(null);
+  useEffect(() => {
+    if (client != null && client.status === 200) {
+      setClientState((prevState) => ({
+        ...prevState,
+        firstname: client?.data.firstname,
+        lastname: client?.data.lastname,
+      }));
+    }
+  }, [client]);
   let logoutClient = async (event) => {
     await authClientApi.logout();
     setClient(null);
@@ -53,30 +64,30 @@ const IconGroup = ({ iconWhiteClass }) => {
               <Link to={process.env.PUBLIC_URL + "/login"}>Login</Link>
             </li>
             <li>
-              <Link to={process.env.PUBLIC_URL + "/register"}>
-              Sign Up
-              </Link>
+              <Link to={process.env.PUBLIC_URL + "/register"}>Sign Up</Link>
             </li>
-            <li>
-              <Link to={process.env.PUBLIC_URL + "/my-account"}>
-                my account
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={process.env.PUBLIC_URL + "/myOrders"}
-              >
-                My Orders
-              </Link>
-            </li>
-            <li>
-              <Link
-                onClick={logoutClient}
-                to={process.env.PUBLIC_URL + "/login"}
-              >
-                Logout
-              </Link>
-            </li>
+            {clientState && (
+              <>
+                <li>
+                  <Link to={process.env.PUBLIC_URL + "/my-account"}>
+                    my account
+                  </Link>
+                </li>
+                <li>
+                  <Link to={process.env.PUBLIC_URL + "/myOrders"}>
+                    My Orders
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    onClick={logoutClient}
+                    to={process.env.PUBLIC_URL + "/login"}
+                  >
+                    Logout
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

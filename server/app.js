@@ -9,7 +9,7 @@ const passport = require("passport");
 // const session = require('express-session');
 // require('dotenv').config();
 const cookieSession = require("cookie-session");
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 var indexRouter = require("./routes/index");
 var authRouter = require("./routes/auth.router");
@@ -18,6 +18,7 @@ var adminRouter = require("./routes/admin.router");
 var clientRouter = require("./routes/client.router");
 var productsRouter = require("./routes/products.router");
 var ordersRouter = require('./routes/orders.router');
+var blogsRouter = require("./routes/blog.router");
 const db = require("./config/dbconnection");
 var app = express();
 
@@ -26,6 +27,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/uploads" , express.static(__dirname + "/uploads"))
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 // Initialise a session
 app.use(
@@ -71,6 +76,8 @@ app.use("/admin", adminRouter);
 app.use("/client", clientRouter);
 app.use("/products", productsRouter);
 app.use('/orders', ordersRouter);
+app.use("/blogs" , blogsRouter);
+app.use('/api', require('./routes/upload'))
 
 // login facebook
 app.use(passport.initialize());

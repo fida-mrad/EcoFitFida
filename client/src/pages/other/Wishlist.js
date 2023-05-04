@@ -131,7 +131,7 @@ const Wishlist = () => {
                                   ) : wishlistItem.variation &&
                                     wishlistItem.variation.length >= 1 ? (
                                     <Link
-                                      to={`${process.env.PUBLIC_URL}/product/${wishlistItem.id}`}
+                                      to={`${process.env.PUBLIC_URL}/product/${wishlistItem._id}`}
                                     >
                                       Select option
                                     </Link>
@@ -172,7 +172,7 @@ const Wishlist = () => {
                                 <td className="product-remove">
                                   <button
                                     onClick={() =>
-                                      dispatch(deleteFromWishlist(wishlistItem.id))
+                                      dispatch(deleteFromWishlist(wishlistItem._id))
                                     }
                                   >
                                     <i className="fa fa-times"></i>

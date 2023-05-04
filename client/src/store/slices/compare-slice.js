@@ -12,7 +12,8 @@ const compareSlice = createSlice({
             cogoToast.success("Added To compare", {position: "bottom-left"});
         },
         deleteFromCompare(state, action){
-            state.compareItems = state.compareItems.filter(item => item.id !== action.payload);
+            console.log(state.compareItems);
+            state.compareItems = state.compareItems.filter(item => item._id !== action.payload);
             cogoToast.error("Removed From Compare", {position: "bottom-left"});
         }
     },

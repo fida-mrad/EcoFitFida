@@ -144,8 +144,8 @@ function ProductModal({ product, currency, discountedPrice, finalProductPrice, f
                     {product.variation.map((single, key) => {
                       return (
                         <label
-                          // className={`pro-details-color-content--single ${single.color}`}
-                          className={`pro-details-color-content--single red`}
+                          className={`pro-details-color-content--single ${single.color}`}
+                          // className={`pro-details-color-content--single red`}
                           key={key}
                         >
                           <input

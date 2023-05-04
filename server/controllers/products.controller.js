@@ -2,10 +2,31 @@ const Product = require("../models/product");
 const _ = require("lodash");
 const mongoose = require("mongoose");
 const Brand = require("../models/brand");
+const twilio = require("twilio");
+const accountSid = "ACfe57609f0902b9d2a40c61057289e577";
+const authToken = "14e20c42d08ab06982974241b483054a";
+const client = new twilio(accountSid, authToken);
+function sendSMS(name, shortDescription, price) {
+  client.messages
+    .create({
+      body: `Ecofit  new product has been added in our platform  name : ${name}\nDescription: ${shortDescription}\n . The original price was ${price} $`,
+      from: "+16205291737",
+      to: "+21625603156",
+    })
+    .then((message) => console.log(message.sid))
+    .catch((error) => console.error(error));
+}
 const productsController = {
   getAll: async (req, res) => {
-    const products = await Product.find();
-    // console.log(products[1]);
+    // const products = await Product.find();
+    const products = await Product.find().populate({
+      path: "reviews",
+      populate: {
+        path: "client",
+        model: "client",
+        select: 'firstname lastname username email _id'
+      },
+    });
     return res.status(200).send(products);
   },
   getByBrand: async (req, res) => {
@@ -90,10 +111,11 @@ const productsController = {
         category: category,
         materials: materials,
         brand: brand,
-        variation : variation,
+        variation: variation,
       });
       console.log(newProduct);
       await newProduct.save();
+      sendSMS(name, shortDescription, fullDescription, price);
       return res.status(201).send({
         msg: "Product Added Successfully.",
       });

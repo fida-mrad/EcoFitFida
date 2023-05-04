@@ -15,7 +15,7 @@ import "./i18n";
 import { productsController } from "./services/coreApi";
 
 productsController.getAll().then(res=>{
-  // console.log(res.data);
+  console.log(res.data);
   store.dispatch(setProducts(res.data));
 });
 // Make API call to retrieve products from database

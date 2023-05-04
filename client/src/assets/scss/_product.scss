@@ -623,7 +623,6 @@
         margin: 0 0 15px;
       }
       .pro-details-color-content {
-        $check-color: white;
         ul {
           li {
             position: relative;
@@ -642,29 +641,590 @@
             &:last-child {
               margin-right: 0;
             }
-            &.blue {
-              border: 1px solid #4798f3;
-              background-color: #4798f3;
+            // &.blue {
+            //   border: 1px solid #4798f3;
+            //   background-color: #4798f3;
+            // }
+            &.aliceblue {
+              border: 1px solid #f0f8ff;
+              background-color: #f0f8ff;
             }
-            &.maroon {
-              border: 1px solid #736751;
-              background-color: #736751;
+            &.antiquewhite {
+              border: 1px solid #faebd7;
+              background-color: #faebd7;
+            }
+            &.aqua {
+              border: 1px solid #00ffff;
+              background-color: #00ffff;
+            }
+            &.aquamarine {
+              border: 1px solid #7fffd4;
+              background-color: #7fffd4;
+            }
+            &.azure {
+              border: 1px solid #f0ffff;
+              background-color: #f0ffff;
+            }
+            &.beige {
+              border: 1px solid #f5f5dc;
+              background-color: #f5f5dc;
+            }
+            &.bisque {
+              border: 1px solid #ffe4c4;
+              background-color: #ffe4c4;
+            }
+            &.black {
+              border: 1px solid #000000;
+              background-color: #000000;
+            }
+            &.blanchedalmond {
+              border: 1px solid #ffebcd;
+              background-color: #ffebcd;
+            }
+            &.blue {
+              border: 1px solid #0000ff;
+              background-color: #0000ff;
+            }
+            &.blueviolet {
+              border: 1px solid #8a2be2;
+              background-color: #8a2be2;
+            }
+            &.brown {
+              border: 1px solid #a52a2a;
+              background-color: #a52a2a;
+            }
+            &.burlywood {
+              border: 1px solid #deb887;
+              background-color: #deb887;
+            }
+            &.cadetblue {
+              border: 1px solid #5f9ea0;
+              background-color: #5f9ea0;
+            }
+            &.chartreuse {
+              border: 1px solid #7fff00;
+              background-color: #7fff00;
+            }
+            &.chocolate {
+              border: 1px solid #d2691e;
+              background-color: #d2691e;
+            }
+            &.coral {
+              border: 1px solid #ff7f50;
+              background-color: #ff7f50;
+            }
+            &.cornflowerblue {
+              border: 1px solid #6495ed;
+              background-color: #6495ed;
+            }
+            &.cornsilk {
+              border: 1px solid #fff8dc;
+              background-color: #fff8dc;
+            }
+            &.crimson {
+              border: 1px solid #dc143c;
+              background-color: #dc143c;
+            }
+            &.cyan {
+              border: 1px solid #00ffff;
+              background-color: #00ffff;
+            }
+            &.darkblue {
+              border: 1px solid #00008b;
+              background-color: #00008b;
+            }
+            &.darkcyan {
+              border: 1px solid #008b8b;
+              background-color: #008b8b;
+            }
+            &.darkgoldenrod {
+              border: 1px solid #b8860b;
+              background-color: #b8860b;
+            }
+            &.darkgray {
+              border: 1px solid #a9a9a9;
+              background-color: #a9a9a9;
+            }
+            &.darkgreen {
+              border: 1px solid #006400;
+              background-color: #006400;
+            }
+            &.darkkhaki {
+              border: 1px solid #bdb76b;
+              background-color: #bdb76b;
+            }
+            &.darkmagenta {
+              border: 1px solid #8b008b;
+              background-color: #8b008b;
+            }
+            &.darkolivegreen {
+              border: 1px solid #556b2f;
+              background-color: #556b2f;
+            }
+            &.darkorange {
+              border: 1px solid #ff8c00;
+              background-color: #ff8c00;
+            }
+            &.darkorchid {
+              border: 1px solid #9932cc;
+              background-color: #9932cc;
+            }
+            &.darkred {
+              border: 1px solid #8b0000;
+              background-color: #8b0000;
+            }
+            &.darksalmon {
+              border: 1px solid #e9967a;
+              background-color: #e9967a;
+            }
+            &.darkseagreen {
+              border: 1px solid #8fbc8f;
+              background-color: #8fbc8f;
+            }
+            &.darkslateblue {
+              border: 1px solid #483d8b;
+              background-color: #483d8b;
+            }
+            &.darkslategray {
+              border: 1px solid #2f4f4f;
+              background-color: #2f4f4f;
+            }
+            &.darkturquoise {
+              border: 1px solid #00ced1;
+              background-color: #00ced1;
+            }
+            &.darkviolet {
+              border: 1px solid #9400d3;
+              background-color: #9400d3;
+            }
+            &.deeppink {
+              border: 1px solid #ff1493;
+              background-color: #ff1493;
+            }
+            &.deepskyblue {
+              border: 1px solid #00bfff;
+              background-color: #00bfff;
+            }
+            &.dimgray {
+              border: 1px solid #696969;
+              background-color: #696969;
+            }
+            &.dodgerblue {
+              border: 1px solid #1e90ff;
+              background-color: #1e90ff;
+            }
+            &.firebrick {
+              border: 1px solid #b22222;
+              background-color: #b22222;
+            }
+            &.floralwhite {
+              border: 1px solid #fffaf0;
+              background-color: #fffaf0;
+            }
+            &.forestgreen {
+              border: 1px solid #228b22;
+              background-color: #228b22;
+            }
+            &.fuchsia {
+              border: 1px solid #ff00ff;
+              background-color: #ff00ff;
+            }
+            &.gainsboro {
+              border: 1px solid #dcdcdc;
+              background-color: #dcdcdc;
+            }
+            &.ghostwhite {
+              border: 1px solid #f8f8ff;
+              background-color: #f8f8ff;
+            }
+            &.gold {
+              border: 1px solid #ffd700;
+              background-color: #ffd700;
+            }
+            &.goldenrod {
+              border: 1px solid #daa520;
+              background-color: #daa520;
             }
             &.gray {
+              border: 1px solid #808080;
+              background-color: #808080;
+            }
+            &.green {
+              border: 1px solid #008000;
+              background-color: #008000;
+            }
+            &.greenyellow {
+              border: 1px solid #adff2f;
+              background-color: #adff2f;
+            }
+            &.honeydew {
+              border: 1px solid #f0fff0;
+              background-color: #f0fff0;
+            }
+            &.hotpink {
+              border: 1px solid #ff69b4;
+              background-color: #ff69b4;
+            }
+            &.indianred {
+              border: 1px solid #cd5c5c;
+              background-color: #cd5c5c;
+            }
+            &.indigo {
+              border: 1px solid #4b0082;
+              background-color: #4b0082;
+            }
+            &.ivory {
+              border: 1px solid #fffff0;
+              background-color: #fffff0;
+            }
+            &.khaki {
+              border: 1px solid #f0e68c;
+              background-color: #f0e68c;
+            }
+            &.lavender {
+              border: 1px solid #e6e6fa;
+              background-color: #e6e6fa;
+            }
+            &.lavenderblush {
+              border: 1px solid #fff0f5;
+              background-color: #fff0f5;
+            }
+            &.lawngreen {
+              border: 1px solid #7cfc00;
+              background-color: #7cfc00;
+            }
+            &.lemonchiffon {
+              border: 1px solid #fffacd;
+              background-color: #fffacd;
+            }
+            &.lightblue {
+              border: 1px solid #add8e6;
+              background-color: #add8e6;
+            }
+            &.lightcoral {
+              border: 1px solid #f08080;
+              background-color: #f08080;
+            }
+            &.lightcyan {
+              border: 1px solid #e0ffff;
+              background-color: #e0ffff;
+            }
+            &.lightgoldenrodyellow {
+              border: 1px solid #fafad2;
+              background-color: #fafad2;
+            }
+            &.lightgray {
+              border: 1px solid #d3d3d3;
+              background-color: #d3d3d3;
+            }
+            &.lightgreen {
+              border: 1px solid #90ee90;
+              background-color: #90ee90;
+            }
+            &.lightpink {
+              border: 1px solid #ffb6c1;
+              background-color: #ffb6c1;
+            }
+            &.lightsalmon {
+              border: 1px solid #ffa07a;
+              background-color: #ffa07a;
+            }
+            &.lightseagreen {
+              border: 1px solid #20b2aa;
+              background-color: #20b2aa;
+            }
+            &.lightskyblue {
+              border: 1px solid #87cefa;
+              background-color: #87cefa;
+            }
+            &.lightslategray {
+              border: 1px solid #708090;
+              background-color: #708090;
+            }
+            &.lightsteelblue {
+              border: 1px solid #b0c4de;
+              background-color: #b0c4de;
+            }
+            &.lightyellow {
+              border: 1px solid #ffffe0;
+              background-color: #ffffe0;
+            }
+            &.lime {
+              border: 1px solid #00ff00;
+              background-color: #00ff00;
+            }
+            &.limegreen {
+              border: 1px solid #32cd32;
+              background-color: #32cd32;
+            }
+            &.linen {
+              border: 1px solid #faf0e6;
+              background-color: #faf0e6;
+            }
+            &.magenta {
+              border: 1px solid #ff00ff;
+              background-color: #ff00ff;
+            }
+            &.maroon {
+              border: 1px solid #800000;
+              background-color: #800000;
+            }
+            &.mediumaquamarine {
+              border: 1px solid #66cdaa;
+              background-color: #66cdaa;
+            }
+            &.mediumblue {
+              border: 1px solid #0000cd;
+              background-color: #0000cd;
+            }
+            &.mediumorchid {
+              border: 1px solid #ba55d3;
+              background-color: #ba55d3;
+            }
+            &.mediumpurple {
+              border: 1px solid #9370db;
+              background-color: #9370db;
+            }
+            &.mediumseagreen {
+              border: 1px solid #3cb371;
+              background-color: #3cb371;
+            }
+            &.mediumslateblue {
+              border: 1px solid #7b68ee;
+              background-color: #7b68ee;
+            }
+            &.mediumspringgreen {
+              border: 1px solid #00fa9a;
+              background-color: #00fa9a;
+            }
+            &.mediumturquoise {
+              border: 1px solid #48d1cc;
+              background-color: #48d1cc;
+            }
+            &.mediumvioletred {
+              border: 1px solid #c71585;
+              background-color: #c71585;
+            }
+            &.midnightblue {
+              border: 1px solid #191970;
+              background-color: #191970;
+            }
+            &.mintcream {
+              border: 1px solid #f5fffa;
+              background-color: #f5fffa;
+            }
+            &.mistyrose {
+              border: 1px solid #ffe4e1;
+              background-color: #ffe4e1;
+            }
+            &.moccasin {
+              border: 1px solid #ffe4b5;
+              background-color: #ffe4b5;
+            }
+            &.navajowhite {
+              border: 1px solid #ffdead;
+              background-color: #ffdead;
+            }
+            &.navy {
+              border: 1px solid #000080;
+              background-color: #000080;
+            }
+            &.oldlace {
+              border: 1px solid #fdf5e6;
+              background-color: #fdf5e6;
+            }
+            &.olive {
+              border: 1px solid #808000;
+              background-color: #808000;
+            }
+            &.olivedrab {
+              border: 1px solid #6b8e23;
+              background-color: #6b8e23;
+            }
+            &.orange {
+              border: 1px solid #ffa500;
+              background-color: #ffa500;
+            }
+  
+            &.orangered {
+              border: 1px solid #ff4500;
+              background-color: #ff4500;
+            }
+  
+            &.orchid {
+              border: 1px solid #da70d6;
+              background-color: #da70d6;
+            }
+  
+            &.palegoldenrod {
+              border: 1px solid #eee8aa;
+              background-color: #eee8aa;
+            }
+  
+            &.palegreen {
+              border: 1px solid #98fb98;
+              background-color: #98fb98;
+            }
+  
+            &.paleturquoise {
+              border: 1px solid #afeeee;
+              background-color: #afeeee;
+            }
+  
+            &.palevioletred {
+              border: 1px solid #db7093;
+              background-color: #db7093;
+            }
+  
+            &.papayawhip {
+              border: 1px solid #ffefd5;
+              background-color: #ffefd5;
+            }
+  
+            &.peachpuff {
+              border: 1px solid #ffdab9;
+              background-color: #ffdab9;
+            }
+  
+            &.peru {
+              border: 1px solid #cd853f;
+              background-color: #cd853f;
+            }
+  
+            &.pink {
+              border: 1px solid #ffc0cb;
+              background-color: #ffc0cb;
+            }
+  
+            &.plum {
+              border: 1px solid #dda0dd;
+              background-color: #dda0dd;
+            }
+  
+            &.powderblue {
+              border: 1px solid #b0e0e6;
+              background-color: #b0e0e6;
+            }
+  
+            &.purple {
+              border: 1px solid #800080;
+              background-color: #800080;
+            }
+            &.rebeccapurple {
+              border: 1px solid #663399;
+              background-color: #663399;
+            }
+            &.red {
+              border: 1px solid #ff0000;
+              background-color: #ff0000;
+            }
+            &.rosybrown {
+              border: 1px solid #bc8f8f;
+              background-color: #bc8f8f;
+            }
+            &.royalblue {
+              border: 1px solid #4169e1;
+              background-color: #4169e1;
+            }
+            &.saddlebrown {
+              border: 1px solid #8b4513;
+              background-color: #8b4513;
+            }
+            &.salmon {
+              border: 1px solid #fa8072;
+              background-color: #fa8072;
+            }
+            &.sandybrown {
+              border: 1px solid #f4a460;
+              background-color: #f4a460;
+            }
+            &.seagreen {
+              border: 1px solid #2e8b57;
+              background-color: #2e8b57;
+            }
+            &.seashell {
+              border: 1px solid #fff5ee;
+              background-color: #fff5ee;
+            }
+            &.sienna {
+              border: 1px solid #a0522d;
+              background-color: #a0522d;
+            }
+            &.silver {
               border: 1px solid #c0c0c0;
               background-color: #c0c0c0;
             }
-            &.green {
-              border: 1px solid #139c57;
-              background-color: #139c57;
+            &.skyblue {
+              border: 1px solid #87ceeb;
+              background-color: #87ceeb;
+            }
+            &.slateblue {
+              border: 1px solid #6a5acd;
+              background-color: #6a5acd;
+            }
+            &.slategray {
+              border: 1px solid #708090;
+              background-color: #708090;
+            }
+            &.snow {
+              border: 1px solid #fffafa;
+              background-color: #fffafa;
+            }
+            &.springgreen {
+              border: 1px solid #00ff7f;
+              background-color: #00ff7f;
+            }
+            &.steelblue {
+              border: 1px solid #4682b4;
+              background-color: #4682b4;
+            }
+            &.tan {
+              border: 1px solid #d2b48c;
+              background-color: #d2b48c;
+            }
+            &.teal {
+              border: 1px solid #008080;
+              background-color: #008080;
+            }
+            &.thistle {
+              border: 1px solid #d8bfd8;
+              background-color: #d8bfd8;
+            }
+            &.tomato {
+              border: 1px solid #ff6347;
+              background-color: #ff6347;
+            }
+            &.turquoise {
+              border: 1px solid #40e0d0;
+              background-color: #40e0d0;
+            }
+            &.violet {
+              border: 1px solid #ee82ee;
+              background-color: #ee82ee;
+            }
+            &.wheat {
+              border: 1px solid #f5deb3;
+              background-color: #f5deb3;
+            }
+            // &.white {
+            //   border: 1px solid #ffffff;
+            //   background-color: #ffffff;
+            // }
+            &.white {
+              border: 1px solid #333;
+              background-color: #fff;
+            }
+            &.whitesmoke {
+              border: 1px solid #f5f5f5;
+              background-color: #f5f5f5;
             }
             &.yellow {
-              border: 1px solid #e28b37;
-              background-color: #e28b37;
+              border: 1px solid #ffff00;
+              background-color: #ffff00;
             }
-            &.#{$check-color} {
-              border: 1px solid $check-color;
-              background-color: $check-color;
+            &.yellowgreen {
+              border: 1px solid #9acd32;
+              background-color: #9acd32;
             }
           }
         }
@@ -703,41 +1263,598 @@
               }
             }
           }
-          &.blue {
-            border: 1px solid #4798f3;
-            background-color: #4798f3;
+          // &.blue {
+          //   border: 1px solid #4798f3;
+          //   background-color: #4798f3;
+          // }
+          &.aliceblue {
+            border: 1px solid #f0f8ff;
+            background-color: #f0f8ff;
           }
-          &.maroon {
-            border: 1px solid #736751;
-            background-color: #736751;
+          &.antiquewhite {
+            border: 1px solid #faebd7;
+            background-color: #faebd7;
+          }
+          &.aqua {
+            border: 1px solid #00ffff;
+            background-color: #00ffff;
+          }
+          &.aquamarine {
+            border: 1px solid #7fffd4;
+            background-color: #7fffd4;
+          }
+          &.azure {
+            border: 1px solid #f0ffff;
+            background-color: #f0ffff;
+          }
+          &.beige {
+            border: 1px solid #f5f5dc;
+            background-color: #f5f5dc;
+          }
+          &.bisque {
+            border: 1px solid #ffe4c4;
+            background-color: #ffe4c4;
+          }
+          &.black {
+            border: 1px solid #000000;
+            background-color: #000000;
+          }
+          &.blanchedalmond {
+            border: 1px solid #ffebcd;
+            background-color: #ffebcd;
+          }
+          &.blue {
+            border: 1px solid #0000ff;
+            background-color: #0000ff;
+          }
+          &.blueviolet {
+            border: 1px solid #8a2be2;
+            background-color: #8a2be2;
+          }
+          &.brown {
+            border: 1px solid #a52a2a;
+            background-color: #a52a2a;
+          }
+          &.burlywood {
+            border: 1px solid #deb887;
+            background-color: #deb887;
+          }
+          &.cadetblue {
+            border: 1px solid #5f9ea0;
+            background-color: #5f9ea0;
+          }
+          &.chartreuse {
+            border: 1px solid #7fff00;
+            background-color: #7fff00;
+          }
+          &.chocolate {
+            border: 1px solid #d2691e;
+            background-color: #d2691e;
+          }
+          &.coral {
+            border: 1px solid #ff7f50;
+            background-color: #ff7f50;
+          }
+
+          &.cornflowerblue {
+            border: 1px solid #6495ed;
+            background-color: #6495ed;
+          }
+
+          &.cornsilk {
+            border: 1px solid #fff8dc;
+            background-color: #fff8dc;
+          }
+
+          &.crimson {
+            border: 1px solid #dc143c;
+            background-color: #dc143c;
+          }
+
+          &.cyan {
+            border: 1px solid #00ffff;
+            background-color: #00ffff;
+          }
+
+          &.darkblue {
+            border: 1px solid #00008b;
+            background-color: #00008b;
+          }
+
+          &.darkcyan {
+            border: 1px solid #008b8b;
+            background-color: #008b8b;
+          }
+
+          &.darkgoldenrod {
+            border: 1px solid #b8860b;
+            background-color: #b8860b;
+          }
+
+          &.darkgray {
+            border: 1px solid #a9a9a9;
+            background-color: #a9a9a9;
+          }
+          &.darkgreen {
+            border: 1px solid #006400;
+            background-color: #006400;
+          }
+          &.darkkhaki {
+            border: 1px solid #bdb76b;
+            background-color: #bdb76b;
+          }
+          &.darkmagenta {
+            border: 1px solid #8b008b;
+            background-color: #8b008b;
+          }
+          &.darkolivegreen {
+            border: 1px solid #556b2f;
+            background-color: #556b2f;
+          }
+          &.darkorange {
+            border: 1px solid #ff8c00;
+            background-color: #ff8c00;
+          }
+          &.darkorchid {
+            border: 1px solid #9932cc;
+            background-color: #9932cc;
+          }
+          &.darkred {
+            border: 1px solid #8b0000;
+            background-color: #8b0000;
+          }
+          &.darksalmon {
+            border: 1px solid #e9967a;
+            background-color: #e9967a;
+          }
+          &.darkseagreen {
+            border: 1px solid #8fbc8f;
+            background-color: #8fbc8f;
+          }
+          &.darkslateblue {
+            border: 1px solid #483d8b;
+            background-color: #483d8b;
+          }
+          &.darkslategray {
+            border: 1px solid #2f4f4f;
+            background-color: #2f4f4f;
+          }
+          &.darkturquoise {
+            border: 1px solid #00ced1;
+            background-color: #00ced1;
+          }
+          &.darkviolet {
+            border: 1px solid #9400d3;
+            background-color: #9400d3;
+          }
+          &.deeppink {
+            border: 1px solid #ff1493;
+            background-color: #ff1493;
+          }
+          &.deepskyblue {
+            border: 1px solid #00bfff;
+            background-color: #00bfff;
+          }
+          &.dimgray {
+            border: 1px solid #696969;
+            background-color: #696969;
+          }
+          &.dodgerblue {
+            border: 1px solid #1e90ff;
+            background-color: #1e90ff;
+          }
+          &.firebrick {
+            border: 1px solid #b22222;
+            background-color: #b22222;
+          }
+          &.floralwhite {
+            border: 1px solid #fffaf0;
+            background-color: #fffaf0;
+          }
+          &.forestgreen {
+            border: 1px solid #228b22;
+            background-color: #228b22;
+          }
+          &.fuchsia {
+            border: 1px solid #ff00ff;
+            background-color: #ff00ff;
+          }
+          &.gainsboro {
+            border: 1px solid #dcdcdc;
+            background-color: #dcdcdc;
+          }
+          &.ghostwhite {
+            border: 1px solid #f8f8ff;
+            background-color: #f8f8ff;
+          }
+          &.gold {
+            border: 1px solid #ffd700;
+            background-color: #ffd700;
+          }
+          &.goldenrod {
+            border: 1px solid #daa520;
+            background-color: #daa520;
           }
           &.gray {
+            border: 1px solid #808080;
+            background-color: #808080;
+          }
+          &.green {
+            border: 1px solid #008000;
+            background-color: #008000;
+          }
+          &.greenyellow {
+            border: 1px solid #adff2f;
+            background-color: #adff2f;
+          }
+          &.honeydew {
+            border: 1px solid #f0fff0;
+            background-color: #f0fff0;
+          }
+          &.hotpink {
+            border: 1px solid #ff69b4;
+            background-color: #ff69b4;
+          }
+          &.indianred {
+            border: 1px solid #cd5c5c;
+            background-color: #cd5c5c;
+          }
+          &.indigo {
+            border: 1px solid #4b0082;
+            background-color: #4b0082;
+          }
+          &.ivory {
+            border: 1px solid #fffff0;
+            background-color: #fffff0;
+          }
+          &.khaki {
+            border: 1px solid #f0e68c;
+            background-color: #f0e68c;
+          }
+          &.lavender {
+            border: 1px solid #e6e6fa;
+            background-color: #e6e6fa;
+          }
+          &.lavenderblush {
+            border: 1px solid #fff0f5;
+            background-color: #fff0f5;
+          }
+          &.lawngreen {
+            border: 1px solid #7cfc00;
+            background-color: #7cfc00;
+          }
+          &.lemonchiffon {
+            border: 1px solid #fffacd;
+            background-color: #fffacd;
+          }
+          &.lightblue {
+            border: 1px solid #add8e6;
+            background-color: #add8e6;
+          }
+          &.lightcoral {
+            border: 1px solid #f08080;
+            background-color: #f08080;
+          }
+          &.lightcyan {
+            border: 1px solid #e0ffff;
+            background-color: #e0ffff;
+          }
+          &.lightgoldenrodyellow {
+            border: 1px solid #fafad2;
+            background-color: #fafad2;
+          }
+          &.lightgray {
+            border: 1px solid #d3d3d3;
+            background-color: #d3d3d3;
+          }
+          &.lightgreen {
+            border: 1px solid #90ee90;
+            background-color: #90ee90;
+          }
+          &.lightpink {
+            border: 1px solid #ffb6c1;
+            background-color: #ffb6c1;
+          }
+          &.lightsalmon {
+            border: 1px solid #ffa07a;
+            background-color: #ffa07a;
+          }
+          &.lightseagreen {
+            border: 1px solid #20b2aa;
+            background-color: #20b2aa;
+          }
+          &.lightskyblue {
+            border: 1px solid #87cefa;
+            background-color: #87cefa;
+          }
+          &.lightslategray {
+            border: 1px solid #708090;
+            background-color: #708090;
+          }
+          &.lightsteelblue {
+            border: 1px solid #b0c4de;
+            background-color: #b0c4de;
+          }
+          &.lightyellow {
+            border: 1px solid #ffffe0;
+            background-color: #ffffe0;
+          }
+          &.lime {
+            border: 1px solid #00ff00;
+            background-color: #00ff00;
+          }
+          &.limegreen {
+            border: 1px solid #32cd32;
+            background-color: #32cd32;
+          }
+          &.linen {
+            border: 1px solid #faf0e6;
+            background-color: #faf0e6;
+          }
+          &.magenta {
+            border: 1px solid #ff00ff;
+            background-color: #ff00ff;
+          }
+          &.maroon {
+            border: 1px solid #800000;
+            background-color: #800000;
+          }
+          &.mediumaquamarine {
+            border: 1px solid #66cdaa;
+            background-color: #66cdaa;
+          }
+          &.mediumblue {
+            border: 1px solid #0000cd;
+            background-color: #0000cd;
+          }
+          &.mediumorchid {
+            border: 1px solid #ba55d3;
+            background-color: #ba55d3;
+          }
+          &.mediumpurple {
+            border: 1px solid #9370db;
+            background-color: #9370db;
+          }
+          &.mediumseagreen {
+            border: 1px solid #3cb371;
+            background-color: #3cb371;
+          }
+          &.mediumslateblue {
+            border: 1px solid #7b68ee;
+            background-color: #7b68ee;
+          }
+          &.mediumspringgreen {
+            border: 1px solid #00fa9a;
+            background-color: #00fa9a;
+          }
+          &.mediumturquoise {
+            border: 1px solid #48d1cc;
+            background-color: #48d1cc;
+          }
+          &.mediumvioletred {
+            border: 1px solid #c71585;
+            background-color: #c71585;
+          }
+          &.midnightblue {
+            border: 1px solid #191970;
+            background-color: #191970;
+          }
+          &.mintcream {
+            border: 1px solid #f5fffa;
+            background-color: #f5fffa;
+          }
+          &.mistyrose {
+            border: 1px solid #ffe4e1;
+            background-color: #ffe4e1;
+          }
+          &.moccasin {
+            border: 1px solid #ffe4b5;
+            background-color: #ffe4b5;
+          }
+          &.navajowhite {
+            border: 1px solid #ffdead;
+            background-color: #ffdead;
+          }
+          &.navy {
+            border: 1px solid #000080;
+            background-color: #000080;
+          }
+          &.oldlace {
+            border: 1px solid #fdf5e6;
+            background-color: #fdf5e6;
+          }
+          &.olive {
+            border: 1px solid #808000;
+            background-color: #808000;
+          }
+          &.olivedrab {
+            border: 1px solid #6b8e23;
+            background-color: #6b8e23;
+          }
+          &.orange {
+            border: 1px solid #ffa500;
+            background-color: #ffa500;
+          }
+
+          &.orangered {
+            border: 1px solid #ff4500;
+            background-color: #ff4500;
+          }
+
+          &.orchid {
+            border: 1px solid #da70d6;
+            background-color: #da70d6;
+          }
+
+          &.palegoldenrod {
+            border: 1px solid #eee8aa;
+            background-color: #eee8aa;
+          }
+
+          &.palegreen {
+            border: 1px solid #98fb98;
+            background-color: #98fb98;
+          }
+
+          &.paleturquoise {
+            border: 1px solid #afeeee;
+            background-color: #afeeee;
+          }
+
+          &.palevioletred {
+            border: 1px solid #db7093;
+            background-color: #db7093;
+          }
+
+          &.papayawhip {
+            border: 1px solid #ffefd5;
+            background-color: #ffefd5;
+          }
+
+          &.peachpuff {
+            border: 1px solid #ffdab9;
+            background-color: #ffdab9;
+          }
+
+          &.peru {
+            border: 1px solid #cd853f;
+            background-color: #cd853f;
+          }
+
+          &.pink {
+            border: 1px solid #ffc0cb;
+            background-color: #ffc0cb;
+          }
+
+          &.plum {
+            border: 1px solid #dda0dd;
+            background-color: #dda0dd;
+          }
+
+          &.powderblue {
+            border: 1px solid #b0e0e6;
+            background-color: #b0e0e6;
+          }
+
+          &.purple {
+            border: 1px solid #800080;
+            background-color: #800080;
+          }
+          &.rebeccapurple {
+            border: 1px solid #663399;
+            background-color: #663399;
+          }
+          &.red {
+            border: 1px solid #ff0000;
+            background-color: #ff0000;
+          }
+          &.rosybrown {
+            border: 1px solid #bc8f8f;
+            background-color: #bc8f8f;
+          }
+          &.royalblue {
+            border: 1px solid #4169e1;
+            background-color: #4169e1;
+          }
+          &.saddlebrown {
+            border: 1px solid #8b4513;
+            background-color: #8b4513;
+          }
+          &.salmon {
+            border: 1px solid #fa8072;
+            background-color: #fa8072;
+          }
+          &.sandybrown {
+            border: 1px solid #f4a460;
+            background-color: #f4a460;
+          }
+          &.seagreen {
+            border: 1px solid #2e8b57;
+            background-color: #2e8b57;
+          }
+          &.seashell {
+            border: 1px solid #fff5ee;
+            background-color: #fff5ee;
+          }
+          &.sienna {
+            border: 1px solid #a0522d;
+            background-color: #a0522d;
+          }
+          &.silver {
             border: 1px solid #c0c0c0;
             background-color: #c0c0c0;
           }
-          &.green {
-            border: 1px solid #139c57;
-            background-color: #139c57;
+          &.skyblue {
+            border: 1px solid #87ceeb;
+            background-color: #87ceeb;
           }
-          &.yellow {
-            border: 1px solid #e28b37;
-            background-color: #e28b37;
+          &.slateblue {
+            border: 1px solid #6a5acd;
+            background-color: #6a5acd;
           }
+          &.slategray {
+            border: 1px solid #708090;
+            background-color: #708090;
+          }
+          &.snow {
+            border: 1px solid #fffafa;
+            background-color: #fffafa;
+          }
+          &.springgreen {
+            border: 1px solid #00ff7f;
+            background-color: #00ff7f;
+          }
+          &.steelblue {
+            border: 1px solid #4682b4;
+            background-color: #4682b4;
+          }
+          &.tan {
+            border: 1px solid #d2b48c;
+            background-color: #d2b48c;
+          }
+          &.teal {
+            border: 1px solid #008080;
+            background-color: #008080;
+          }
+          &.thistle {
+            border: 1px solid #d8bfd8;
+            background-color: #d8bfd8;
+          }
+          &.tomato {
+            border: 1px solid #ff6347;
+            background-color: #ff6347;
+          }
+          &.turquoise {
+            border: 1px solid #40e0d0;
+            background-color: #40e0d0;
+          }
+          &.violet {
+            border: 1px solid #ee82ee;
+            background-color: #ee82ee;
+          }
+          &.wheat {
+            border: 1px solid #f5deb3;
+            background-color: #f5deb3;
+          }
+          // &.white {
+          //   border: 1px solid #ffffff;
+          //   background-color: #ffffff;
+          // }
           &.white {
             border: 1px solid #333;
             background-color: #fff;
           }
-          &.black {
-            border: 1px solid #333;
-            background-color: #333;
+          &.whitesmoke {
+            border: 1px solid #f5f5f5;
+            background-color: #f5f5f5;
           }
-          &.brown {
-            border: 1px solid brown;
-            background-color: brown;
+          &.yellow {
+            border: 1px solid #ffff00;
+            background-color: #ffff00;
           }
-          &.#{$check-color} {
-            border: 1px solid $check-color;
-            background-color: $check-color;
+          &.yellowgreen {
+            border: 1px solid #9acd32;
+            background-color: #9acd32;
           }
           .checkmark {
             position: relative;
@@ -1131,7 +2248,6 @@
   }
 }
 
-
 /*  prodduct 2     */
 
 .tab-filter-wrap {
@@ -1370,14 +2486,14 @@
     border-radius: 50px;
     background: #dbdbdb none repeat scroll 0 0;
     span {
-      transition: all 0.0s ease 0s;
+      transition: all 0s ease 0s;
     }
     .ui-slider-range {
       position: absolute;
 
       display: block;
 
-      transition: all 0.0s ease 0s;
+      transition: all 0s ease 0s;
 
       border: none;
       background: #fa6bff none repeat scroll 0 0;
@@ -1712,7 +2828,6 @@
   }
 }
 
-
 /* product hm3 */
 
 .section-padding-1 .container-fluid {
@@ -1730,7 +2845,6 @@
     padding: 0 15px;
   }
 }
-
 
 /* product hm4 */
 
@@ -1811,7 +2925,6 @@
     }
   }
 }
-
 
 /* product hm5 */
 
@@ -1992,9 +3105,6 @@
     opacity: 1;
   }
 }
-
-
-
 
 /* product hm6 */
 
@@ -2453,7 +3563,6 @@
     }
   }
 
-
   .product-content {
     flex-basis: calc(100% - 200px);
     h3 {
@@ -2783,7 +3892,6 @@
     }
   }
 
-
   .product-content {
     flex-basis: calc(100% - 200px);
     h3 {
@@ -3112,7 +4220,6 @@
   }
 }
 
-
 .product-wrap-10 {
   position: relative;
 
@@ -3301,7 +4408,6 @@
     transform: translateX(0);
   }
 
-
   &--style2 {
     .product-img {
       .product-action-2 {
@@ -3405,8 +4511,6 @@
   }
 }
 
-
-
 /* product hm9 */
 
 .hm9-section-padding {
@@ -3497,7 +4601,6 @@
     max-width: 50%;
   }
 }
-
 
 /*------- home 14 ----------*/
 
@@ -3591,7 +4694,6 @@
     }
   }
 }
-
 
 .product-tab-list-6 {
   @media #{$xs-layout} {
@@ -3760,7 +4862,6 @@
   }
 }
 
-
 .pro-view-more {
   margin-top: 30px;
   @media #{$xs-layout} {
@@ -3788,7 +4889,6 @@
     }
   }
 }
-
 
 .bg-png-1 {
   position: absolute;

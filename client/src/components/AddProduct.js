@@ -45,7 +45,6 @@ const colors = {
   darkcyan: "#008B8B",
   darkgoldenrod: "#B8860B",
   darkgray: "#A9A9A9",
-  darkgrey: "#A9A9A9",
   darkgreen: "#006400",
   darkkhaki: "#BDB76B",
   darkmagenta: "#8B008B",
@@ -57,13 +56,11 @@ const colors = {
   darkseagreen: "#8FBC8F",
   darkslateblue: "#483D8B",
   darkslategray: "#2F4F4F",
-  darkslategrey: "#2F4F4F",
   darkturquoise: "#00CED1",
   darkviolet: "#9400D3",
   deeppink: "#FF1493",
   deepskyblue: "#00BFFF",
   dimgray: "#696969",
-  dimgrey: "#696969",
   dodgerblue: "#1E90FF",
   firebrick: "#B22222",
   floralwhite: "#FFFAF0",
@@ -74,7 +71,6 @@ const colors = {
   gold: "#FFD700",
   goldenrod: "#DAA520",
   gray: "#808080",
-  grey: "#808080",
   green: "#008000",
   greenyellow: "#ADFF2F",
   honeydew: "#F0FFF0",
@@ -92,14 +88,12 @@ const colors = {
   lightcyan: "#E0FFFF",
   lightgoldenrodyellow: "#FAFAD2",
   lightgray: "#D3D3D3",
-  lightgrey: "#D3D3D3",
   lightgreen: "#90EE90",
   lightpink: "#FFB6C1",
   lightsalmon: "#FFA07A",
   lightseagreen: "#20B2AA",
   lightskyblue: "#87CEFA",
   lightslategray: "#778899",
-  lightslategrey: "#778899",
   lightsteelblue: "#B0C4DE",
   lightyellow: "#FFFFE0",
   lime: "#00FF00",
@@ -153,7 +147,6 @@ const colors = {
   skyblue: "#87CEEB",
   slateblue: "#6A5ACD",
   slategray: "#708090",
-  slategrey: "#708090",
   snow: "#FFFAFA",
   springgreen: "#00FF7F",
   steelblue: "#4682B4",
@@ -274,9 +267,9 @@ function AddProduct() {
     event.preventDefault();
     let category = [...categories, "fashion"];
     // const uniqueArray = Array.from(new Set(category));
-    const uniqueArray = Array.from(
-      new Set(category.map((str) => str.toUpperCase()))
-    );
+    // const uniqueArray = Array.from(
+    //   new Set(category.map((str) => str.toUpperCase()))
+    // );
     const colorMap = nearestColor.from(colors);
     const updatedVariations = variations.map((v) => {
       const closestColorName = colorMap(v.color).name;
@@ -292,13 +285,14 @@ function AddProduct() {
       //   };
       // }
     });
-    console.log(updatedVariations);
+    // console.log(updatedVariations);
     const data = {
       ...formData,
       materials,
       brand: brandId,
       // category: [...category, "fashion"],
-      category: uniqueArray,
+      // category: uniqueArray,
+      category: category,
       variations : updatedVariations,
       tags,
     };

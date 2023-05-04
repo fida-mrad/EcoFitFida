@@ -18,6 +18,7 @@
     "debug": "~2.6.9",
     "dotenv": "^16.0.3",
     "express": "~4.16.1",
+    "express-fileupload": "^1.4.0",
     "express-validator": "^6.15.0",
     "googleapi": "^1.0.2",
     "googleapis": "^112.0.0",
@@ -37,6 +38,7 @@
     "qrcode": "^1.5.1",
     "speakeasy": "^2.0.0",
     "twig": "~0.10.3",
+    "twilio": "^4.11.0",
     "validator": "^13.9.0"
   }
 }

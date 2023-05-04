@@ -51,7 +51,7 @@ const Compare = () => {
                                   <div className="compare-remove">
                                     <button
                                       onClick={() =>
-                                        dispatch(deleteFromCompare(compareItem.id))
+                                        dispatch(deleteFromCompare(compareItem._id))
                                       }
                                     >
                                       <i className="pe-7s-trash" />

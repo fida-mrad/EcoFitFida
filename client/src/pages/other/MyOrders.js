@@ -131,10 +131,11 @@ const MyOrders = () => {
                                             <td className="product-thumbnail">
                                               <img
                                                 className="img-fluid"
-                                                src={
-                                                  process.env.PUBLIC_URL +
-                                                  item.image
-                                                }
+                                                // src={
+                                                //   process.env.PUBLIC_URL +
+                                                //   item.image
+                                                // }
+                                                src={"http://localhost:8000/images/"+item.image}
                                                 alt=""
                                               />
                                             </td>
@@ -175,11 +176,11 @@ const MyOrders = () => {
                 <div className="row">
                   <div className="col-lg-12">
                     <div className="cart-shiping-update-wrapper">
-                      <div className="cart-clear">
+                      {/* <div className="cart-clear">
                         <button onClick={() => dispatch(deleteAllFromCart())}>
                           Clear Shopping Cart
                         </button>
-                      </div>
+                      </div> */}
                       <div className="cart-shiping-update">
                         <Link to={process.env.PUBLIC_URL + "/checkout"}>
                           Proceed to Checkout

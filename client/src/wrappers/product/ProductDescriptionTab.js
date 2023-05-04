@@ -6,7 +6,15 @@ import { useState } from "react";
 import { productsController } from "../../services/coreApi";
 import { useParams } from "react-router-dom";
 
-const ProductDescriptionTab = ({ spaceBottomClass, productFullDesc }) => {
+const ProductDescriptionTab = ({
+  spaceBottomClass,
+  productFullDesc,
+  productReviews,
+  productMaterials,
+}) => {
+  const filteredMaterials = productMaterials.filter(
+    (material) => material.percentage > 0
+  );
   const [rating, setRating] = useState(0);
   const { id } = useParams();
   const [comment, setComment] = useState("");
@@ -40,7 +48,7 @@ const ProductDescriptionTab = ({ spaceBottomClass, productFullDesc }) => {
       rating: rating,
       comment: comment,
     });
-    if(res.status===200){
+    if (res.status === 200) {
       setComment("");
       setRating(0);
     }
@@ -60,7 +68,9 @@ const ProductDescriptionTab = ({ spaceBottomClass, productFullDesc }) => {
                 <Nav.Link eventKey="productDescription">Description</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="productReviews">Reviews(2)</Nav.Link>
+                <Nav.Link eventKey="productReviews">
+                  Reviews({productReviews.length})
+                </Nav.Link>
               </Nav.Item>
             </Nav>
             <Tab.Content className="description-review-bottom">
@@ -74,7 +84,10 @@ const ProductDescriptionTab = ({ spaceBottomClass, productFullDesc }) => {
                       <span>Dimensions</span>10 x 10 x 15 cm{" "}
                     </li>
                     <li>
-                      <span>Materials</span> 60% cotton, 40% polyester
+                      <span>Materials</span>{" "}
+                      {filteredMaterials.map((mat) => {
+                        return mat.name + ": " + mat.percentage+'% ';
+                      })}
                     </li>
                     <li>
                       <span>Other Info</span> American heirloom jean shorts pug
@@ -90,82 +103,110 @@ const ProductDescriptionTab = ({ spaceBottomClass, productFullDesc }) => {
                 <div className="row">
                   <div className="col-lg-7">
                     <div className="review-wrapper">
-                      <div className="single-review">
-                        <div className="review-img">
-                          <img
-                            src={
-                              process.env.PUBLIC_URL +
-                              "/assets/img/testimonial/1.jpg"
-                            }
-                            alt=""
-                          />
-                        </div>
-                        <div className="review-content">
-                          <div className="review-top-wrap">
-                            <div className="review-left">
-                              <div className="review-name">
-                                <h4>White Lewis</h4>
+                      {productReviews.map((review, index) => {
+                        return (
+                          <>
+                            {index % 2 === 0 ? (
+                              <div key={index} className="single-review">
+                                <div className="review-img">
+                                  <img
+                                    src={
+                                      process.env.PUBLIC_URL +
+                                      "/assets/img/testimonial/1.jpg"
+                                    }
+                                    alt=""
+                                  />
+                                </div>
+                                <div className="review-content">
+                                  <div className="review-top-wrap">
+                                    <div className="review-left">
+                                      <div className="review-name">
+                                        <h4>
+                                          {review.client.firstname}{" "}
+                                          {review.client.lastname}
+                                        </h4>
+                                      </div>
+                                      <div className="review-rating">
+                                        {[...Array(review.rating)].map(
+                                          (star, index) => (
+                                            <i
+                                              key={index}
+                                              className="fa fa-star"
+                                            ></i>
+                                          )
+                                        )}
+                                        {[...Array(5 - review.rating)].map(
+                                          (star, index) => (
+                                            <i
+                                              key={review.rating + index}
+                                              className="fa fa-star-o"
+                                            ></i>
+                                          )
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div className="review-left">
+                                      <button>Reply</button>
+                                    </div>
+                                  </div>
+                                  <div className="review-bottom">
+                                    <p>{review.comment}</p>
+                                  </div>
+                                </div>
                               </div>
-                              <div className="review-rating">
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
+                            ) : (
+                              <div className="single-review child-review">
+                                <div className="review-img">
+                                  <img
+                                    src={
+                                      process.env.PUBLIC_URL +
+                                      "/assets/img/testimonial/2.jpg"
+                                    }
+                                    alt=""
+                                  />
+                                </div>
+                                <div className="review-content">
+                                  <div className="review-top-wrap">
+                                    <div className="review-left">
+                                      <div className="review-name">
+                                        <h4>
+                                          {" "}
+                                          {review.client.firstname}{" "}
+                                          {review.client.lastname}
+                                        </h4>
+                                      </div>
+                                      <div className="review-rating">
+                                        {[...Array(review.rating)].map(
+                                          (star, index) => (
+                                            <i
+                                              key={index}
+                                              className="fa fa-star"
+                                            ></i>
+                                          )
+                                        )}
+                                        {[...Array(5 - review.rating)].map(
+                                          (star, index) => (
+                                            <i
+                                              key={review.rating + index}
+                                              className="fa fa-star-o"
+                                            ></i>
+                                          )
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div className="review-left">
+                                      <button>Reply</button>
+                                    </div>
+                                  </div>
+                                  <div className="review-bottom">
+                                    <p>{review.comment}</p>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                            <div className="review-left">
-                              <button>Reply</button>
-                            </div>
-                          </div>
-                          <div className="review-bottom">
-                            <p>
-                              Vestibulum ante ipsum primis aucibus orci
-                              luctustrices posuere cubilia Curae Suspendisse
-                              viverra ed viverra. Mauris ullarper euismod
-                              vehicula. Phasellus quam nisi, congue id nulla.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="single-review child-review">
-                        <div className="review-img">
-                          <img
-                            src={
-                              process.env.PUBLIC_URL +
-                              "/assets/img/testimonial/2.jpg"
-                            }
-                            alt=""
-                          />
-                        </div>
-                        <div className="review-content">
-                          <div className="review-top-wrap">
-                            <div className="review-left">
-                              <div className="review-name">
-                                <h4>White Lewis</h4>
-                              </div>
-                              <div className="review-rating">
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                              </div>
-                            </div>
-                            <div className="review-left">
-                              <button>Reply</button>
-                            </div>
-                          </div>
-                          <div className="review-bottom">
-                            <p>
-                              Vestibulum ante ipsum primis aucibus orci
-                              luctustrices posuere cubilia Curae Suspendisse
-                              viverra ed viverra. Mauris ullarper euismod
-                              vehicula. Phasellus quam nisi, congue id nulla.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+                            )}
+                          </>
+                        );
+                      })}
                     </div>
                   </div>
                   <div className="col-lg-5">
