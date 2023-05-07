@@ -2,16 +2,19 @@ import PropTypes from "prop-types";
 
 
 const productImageGallerySticky = ({ product }) => {
+  let currentDate = new Date();
+  let createdAtDate = new Date(product.createdAt);
+  let diffInDays = (currentDate-createdAtDate)/(1000 * 60 * 60 * 24);
   return (
     <div className="product-large-image-wrapper product-large-image-wrapper--sticky">
-      {product.discount || product.new ? (
+      {product.discount || diffInDays < 1 ? (
         <div className="product-img-badges">
           {product.discount ? (
             <span className="pink">-{product.discount}%</span>
           ) : (
             ""
           )}
-          {product.new ? <span className="purple">New</span> : ""}
+          {diffInDays < 1 ? <span className="purple">New</span> : ""}
         </div>
       ) : (
         ""

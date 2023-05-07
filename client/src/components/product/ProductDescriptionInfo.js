@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { FacebookShareButton, PinterestShareButton, TwitterShareButton } from "react-share";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getProductCartQuantity } from "../../helpers/product";
@@ -18,16 +19,33 @@ const ProductDescriptionInfo = ({
   wishlistItem,
   compareItem,
 }) => {
+  const url = window.location.href;
   const dispatch = useDispatch();
   const [selectedProductColor, setSelectedProductColor] = useState(
-    product.variation.length!==0 ? product.variation[0].color : ""
+    product.variation.length !== 0 ? product.variation[0].color : ""
   );
   const [selectedProductSize, setSelectedProductSize] = useState(
-    product.variation.length!==0 ? product.variation[0].size[0].name : ""
+    product.variation.length !== 0 ? product.variation[0].size[0].name : ""
   );
   const [productStock, setProductStock] = useState(
-    product.variation.length!==0 ? product.variation[0].size[0].stock : product.stock
+    product.variation.length !== 0
+      ? product.variation[0].size[0].stock
+      : product.stock
   );
+  useEffect(() => {
+    setSelectedProductColor(
+      product.variation.length !== 0 ? product.variation[0].color : ""
+    );
+    setSelectedProductSize(
+      product.variation.length !== 0 ? product.variation[0].size[0].name : ""
+    );
+    setProductStock(
+      product.variation.length !== 0
+        ? product.variation[0].size[0].stock
+        : product.stock
+    );
+  }, [product]);
+
   const [quantityCount, setQuantityCount] = useState(1);
 
   const productCartQty = getProductCartQuantity(
@@ -65,7 +83,7 @@ const ProductDescriptionInfo = ({
         <p>{product.shortDescription}</p>
       </div>
 
-      {product.variation.length!==0 ? (
+      {product.variation.length !== 0 ? (
         <div className="pro-details-size-color">
           <div className="pro-details-color-wrap">
             <span>Color</span>
@@ -147,17 +165,20 @@ const ProductDescriptionInfo = ({
         //   </div>
         // </div>
         <div className="pro-details-quality">
-        <div className="pro-details-cart btn-hover" onClick={()=>console.log("Buy Nom")}>
-          {/* <a
+          <div
+            className="pro-details-cart btn-hover"
+            onClick={() => console.log("Buy Nom")}
+          >
+            {/* <a
             // href={product.affiliateLink}
             href="#!"
             rel="noopener noreferrer"
             target="_blank"
           > */}
             Buy Now ProductDescriptionInfo
-          {/* </a> */}
+            {/* </a> */}
+          </div>
         </div>
-      </div>
       ) : (
         <div className="pro-details-quality">
           <div className="cart-plus-minus">
@@ -287,29 +308,51 @@ const ProductDescriptionInfo = ({
 
       <div className="pro-details-social">
         <ul>
-          <li>
+          {/* <li>
             <a href="#!">
               <i className="fa fa-facebook" />
             </a>
+          </li> */}
+          <li>
+            <FacebookShareButton
+              // url={url}  maybe after deploy
+              url="https://example.com/blogpost"
+              quote="Check out this awesome Product on EcoFit!"
+              hashtag="#EcoFit"
+              socialMedia="facebook"
+            >
+              <a href="#!">
+                <i className="fa fa-facebook" />
+              </a>
+            </FacebookShareButton>
+          </li>
+          <li>
+            <PinterestShareButton
+              url="https://example.com/blogpost"
+              quote="Check out this awesome Product on EcoFit!"
+              hashtag="#EcoFit"
+              socialMedia="facebook"
+            >
+              <a href="#!">
+                <i className="fa fa-pinterest-p" />
+              </a>
+            </PinterestShareButton>
+          </li>
+          <li>
+            <TwitterShareButton
+              url="https://example.com/blogpost"
+              quote="Check out this awesome Product on EcoFit!"
+              hashtag="#EcoFit"
+              socialMedia="twitter"
+            >
+              <a href="#!">
+                <i className="fa fa-twitter" />
+              </a>
+            </TwitterShareButton>
           </li>
           <li>
             <a href="#!">
-              <i className="fa fa-dribbble" />
-            </a>
-          </li>
-          <li>
-            <a href="#!">
-              <i className="fa fa-pinterest-p" />
-            </a>
-          </li>
-          <li>
-            <a href="#!">
-              <i className="fa fa-twitter" />
-            </a>
-          </li>
-          <li>
-            <a href="#!">
-              <i className="fa fa-linkedin" />
+              <i className="fa fa-whatsapp" />
             </a>
           </li>
         </ul>

@@ -7,27 +7,192 @@ import {
   CFormInput,
   CFormSelect,
   CRow,
+  CFormTextarea,
+  CFormLabel,
+  CInputGroup,
+  CInputGroupText,
 } from "@coreui/react";
+import { InputTags } from "react-bootstrap-tagsinput";
+import "react-bootstrap-tagsinput/dist/index.css";
+import nearestColor from "nearest-color";
 import { productsController } from "../services/Api";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
+const colors = {
+  aliceblue: "#F0F8FF",
+  antiquewhite: "#FAEBD7",
+  aqua: "#00FFFF",
+  aquamarine: "#7FFFD4",
+  azure: "#F0FFFF",
+  beige: "#F5F5DC",
+  bisque: "#FFE4C4",
+  black: "#000000",
+  blanchedalmond: "#FFEBCD",
+  blue: "#0000FF",
+  blueviolet: "#8A2BE2",
+  brown: "#A52A2A",
+  burlywood: "#DEB887",
+  cadetblue: "#5F9EA0",
+  chartreuse: "#7FFF00",
+  chocolate: "#D2691E",
+  coral: "#FF7F50",
+  cornflowerblue: "#6495ED",
+  cornsilk: "#FFF8DC",
+  crimson: "#DC143C",
+  cyan: "#00FFFF",
+  darkblue: "#00008B",
+  darkcyan: "#008B8B",
+  darkgoldenrod: "#B8860B",
+  darkgray: "#A9A9A9",
+  darkgreen: "#006400",
+  darkkhaki: "#BDB76B",
+  darkmagenta: "#8B008B",
+  darkolivegreen: "#556B2F",
+  darkorange: "#FF8C00",
+  darkorchid: "#9932CC",
+  darkred: "#8B0000",
+  darksalmon: "#E9967A",
+  darkseagreen: "#8FBC8F",
+  darkslateblue: "#483D8B",
+  darkslategray: "#2F4F4F",
+  darkturquoise: "#00CED1",
+  darkviolet: "#9400D3",
+  deeppink: "#FF1493",
+  deepskyblue: "#00BFFF",
+  dimgray: "#696969",
+  dodgerblue: "#1E90FF",
+  firebrick: "#B22222",
+  floralwhite: "#FFFAF0",
+  forestgreen: "#228B22",
+  fuchsia: "#FF00FF",
+  gainsboro: "#DCDCDC",
+  ghostwhite: "#F8F8FF",
+  gold: "#FFD700",
+  goldenrod: "#DAA520",
+  gray: "#808080",
+  green: "#008000",
+  greenyellow: "#ADFF2F",
+  honeydew: "#F0FFF0",
+  hotpink: "#FF69B4",
+  indianred: "#CD5C5C",
+  indigo: "#4B0082",
+  ivory: "#FFFFF0",
+  khaki: "#F0E68C",
+  lavender: "#E6E6FA",
+  lavenderblush: "#FFF0F5",
+  lawngreen: "#7CFC00",
+  lemonchiffon: "#FFFACD",
+  lightblue: "#ADD8E6",
+  lightcoral: "#F08080",
+  lightcyan: "#E0FFFF",
+  lightgoldenrodyellow: "#FAFAD2",
+  lightgray: "#D3D3D3",
+  lightgreen: "#90EE90",
+  lightpink: "#FFB6C1",
+  lightsalmon: "#FFA07A",
+  lightseagreen: "#20B2AA",
+  lightskyblue: "#87CEFA",
+  lightslategray: "#778899",
+  lightsteelblue: "#B0C4DE",
+  lightyellow: "#FFFFE0",
+  lime: "#00FF00",
+  limegreen: "#32CD32",
+  linen: "#FAF0E6",
+  magenta: "#FF00FF",
+  maroon: "#800000",
+  mediumaquamarine: "#66CDAA",
+  mediumblue: "#0000CD",
+  mediumorchid: "#BA55D3",
+  mediumpurple: "#9370DB",
+  mediumseagreen: "#3CB371",
+  mediumslateblue: "#7B68EE",
+  mediumspringgreen: "#00FA9A",
+  mediumturquoise: "#48D1CC",
+  mediumvioletred: "#C71585",
+  midnightblue: "#191970",
+  mintcream: "#F5FFFA",
+  mistyrose: "#FFE4E1",
+  moccasin: "#FFE4B5",
+  navajowhite: "#FFDEAD",
+  navy: "#000080",
+  oldlace: "#FDF5E6",
+  olive: "#808000",
+  olivedrab: "#6B8E23",
+  orange: "#FFA500",
+  orangered: "#FF4500",
+  orchid: "#DA70D6",
+  palegoldenrod: "#EEE8AA",
+  palegreen: "#98FB98",
+  paleturquoise: "#AFEEEE",
+  palevioletred: "#DB7093",
+  papayawhip: "#FFEFD5",
+  peachpuff: "#FFDAB9",
+  peru: "#CD853F",
+  pink: "#FFC0CB",
+  plum: "#DDA0DD",
+  powderblue: "#B0E0E6",
+  purple: "#800080",
+  rebeccapurple: "#663399",
+  red: "#FF0000",
+  rosybrown: "#BC8F8F",
+  royalblue: "#4169E1",
+  saddlebrown: "#8B4513",
+  salmon: "#FA8072",
+  sandybrown: "#F4A460",
+  seagreen: "#2E8B57",
+  seashell: "#FFF5EE",
+  sienna: "#A0522D",
+  silver: "#C0C0C0",
+  skyblue: "#87CEEB",
+  slateblue: "#6A5ACD",
+  slategray: "#708090",
+  snow: "#FFFAFA",
+  springgreen: "#00FF7F",
+  steelblue: "#4682B4",
+  tan: "#D2B48C",
+  teal: "#008080",
+  thistle: "#D8BFD8",
+  tomato: "#FF6347",
+  turquoise: "#40E0D0",
+  violet: "#EE82EE",
+  wheat: "#F5DEB3",
+  white: "#FFFFFF",
+  whitesmoke: "#F5F5F5",
+  yellow: "#FFFF00",
+  yellowgreen: "#9ACD32",
+};
 function UpdateProduct() {
   let { id } = useParams();
   const navigate = useNavigate();
   const [error, setError] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [variations, setVariations] = useState([
+    { color: "#000000", size: [{ name: "", stock: "" }] },
+  ]);
   const [formData, setFormData] = useState({
     name: "",
     price: 0,
-    ref: "",
-    size: 0,
     images: [],
-    description: "",
-    quantity: 0,
-    category: "",
-    colors: "#000000",
+    shortDescription: "",
+    fullDescription: "",
   });
+  const [materials, setMaterials] = useState([
+    { name: "Cotton", percentage: 0 },
+    // { name: "Hemp", percentage: 0 },
+    { name: "Linen", percentage: 0 },
+    { name: "Silk", percentage: 0 },
+    { name: "Wool", percentage: 0 },
+    // { name: "Cashmere", percentage: 0 },
+    { name: "Polyester", percentage: 0 },
+  ]);
+  const handlePercentageChange = (event, index) => {
+    const newMaterials = [...materials];
+    newMaterials[index].percentage = parseInt(event.target.value);
+    setMaterials(newMaterials);
+  };
+
   useEffect(() => {
     axios
       .post(
@@ -44,37 +209,74 @@ function UpdateProduct() {
           ...prevState,
           name: product.name,
           price: product.price,
-          description: product.description,
-          ref: product.ref,
-          size: product.size,
-          quantity: product.quantity,
-          category: product.category,
-          colors: product.colors,
-          images: product.images,
+          shortDescription: product.shortDescription,
+          fullDescription: product.fullDescription,
+          images: product.image,
         }));
+        setTags(product.tag);
+        setCategories(product.category);
+        const newVariations = product.variation.map((v) => {
+          const newColor = colors[v.color] || v.color;
+          return {
+            ...v,
+            color: newColor,
+          };
+        });
+        setVariations(newVariations);
+        setMaterials(product.materials);
       })
       .catch((err) => {
         console.log(err);
         return err.response;
       });
   }, [id]);
-  const { name, price, ref, size, description, quantity, category, colors } =
-    formData;
+  const handleVariationChange = (index, colorIndex, field, value) => {
+    setVariations((prevState) => {
+      const updatedVariations = [...prevState];
+      if (field === "color" && prevState.some((v) => v.color === value)) {
+        return prevState; // color already exists, do not update
+      } else {
+        if (colorIndex === null) {
+          updatedVariations[index] = {
+            ...updatedVariations[index],
+            [field]: value,
+          };
+        } else {
+          updatedVariations[index].size[colorIndex] = {
+            ...updatedVariations[index].size[colorIndex],
+            [field]: value,
+          };
+        }
+        return updatedVariations;
+      }
+    });
+  };
+
+  const handleAddVariation = () => {
+    setVariations((prevState) => [
+      ...prevState,
+      { color: "#000000", size: [{ name: "", stock: "" }] },
+    ]);
+  };
+
+  const handleAddSize = (index) => {
+    setVariations((prevState) => {
+      const updatedVariations = [...prevState];
+      const lastColorIndex = updatedVariations[index].size.length - 1;
+      const lastColor = updatedVariations[index].size[lastColorIndex];
+      if (lastColor.name === "" && lastColor.stock === "") {
+        return prevState; // last size fields are empty, do not add new size
+      } else {
+        updatedVariations[index].size.push({ name: "", stock: "" });
+        return updatedVariations;
+      }
+    });
+  };
+  const { name, price, images, shortDescription, fullDescription } = formData;
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
-  const [selectedMaterials, setSelectedMaterials] = useState([]);
 
-  const handleMaterialsChange = (event) => {
-    const options = event.target.selectedOptions;
-    const values = [];
-    if (options) {
-      for (let i = 0; i < options.length; i++) {
-        values.push(options.item(i).value);
-      }
-      setSelectedMaterials(values);
-    }
-  };
   const handleFileInput = (e) => {
     setFormData({
       ...formData,
@@ -82,16 +284,33 @@ function UpdateProduct() {
     });
   };
   const handleSubmit = async (event) => {
-    console.log(id);
     event.preventDefault();
+    let category = [...categories, "fashion"];
+    const uniqueArray = Array.from(
+      new Set(category.map((str) => str[0].toUpperCase() + str.slice(1)))
+    );
+    const colorMap = nearestColor.from(colors);
+    const updatedVariations = variations.map((v) => {
+      const closestColorName = colorMap(v.color).name;
+      return {
+        ...v,
+        color: closestColorName,
+      };
+    });
     const data = {
       ...formData,
-      materials: selectedMaterials,
       id: id,
+      materials,
+      // category: [...category, "fashion"],
+      category: uniqueArray,
+      // category: category,
+      variations: updatedVariations,
+      tags,
     };
+    console.log("Data : ");
     console.log(data);
-    const res = await productsController.updateProduct(data);
-    console.log(res);
+    // const res = await productsController.updateProduct(data);
+    // console.log(res);
     // if (res.status === 201) navigate("/agent");
     // else {
     //   setError(true);
@@ -101,12 +320,6 @@ function UpdateProduct() {
     //   }, 2000);
     // }
   };
-  const options = [
-    { isDisabled: true, label: "Category" },
-    { value: "men", label: "Men" },
-    { value: "women", label: "Women" },
-    { value: "children", label: "Children" },
-  ];
   return (
     <>
       {error && <CAlert color="danger">{alertMessage}</CAlert>}
@@ -118,7 +331,7 @@ function UpdateProduct() {
               aria-label="First name"
               label="Name :"
               onChange={handleChange("name")}
-              value={formData.name || ""}
+              value={name}
             />
           </CCol>
           <CCol xs>
@@ -135,67 +348,30 @@ function UpdateProduct() {
         </CRow>
         <CRow className="mt-1 g-3">
           <CCol xs>
-            <CFormInput
-              placeholder="Ref"
-              aria-label="Ref"
-              label="Ref :"
-              name="ref"
-              onChange={handleChange("ref")}
-              value={ref}
+            <CFormTextarea
+              placeholder="Short Description"
+              aria-label="shortDescription"
+              label="Short Description :"
+              name="shortDescription"
+              onChange={handleChange("shortDescription")}
+              value={shortDescription}
+              rows={5}
             />
           </CCol>
           <CCol xs>
-            {/* <CFormInput placeholder="Category" aria-label="Category" type="text" label="Category :" name="category"/> */}
-            <CFormSelect
-              aria-label="Category"
-              label="Category"
-              name="category"
-              onChange={handleChange("category")}
-              value={category}
-              options={options}
-            >
-              {/* <option disabled selected>Open this select menu</option> */}
-              {/* <option value="men">Men</option>
-              <option value="women">Women</option>
-              <option value="children">Children</option> */}
-            </CFormSelect>
-          </CCol>
-        </CRow>
-        <CRow className="mt-1 g-3">
-          <CCol xs>
-            <CFormInput
-              placeholder="Desc"
-              aria-label="Desc"
-              label="Desc :"
-              name="description"
-              onChange={handleChange("description")}
-              value={description}
-            />
-          </CCol>
-          <CCol xs>
-            <CFormInput
-              placeholder="Quantity"
-              aria-label="Quantity"
+            <CFormTextarea
+              placeholder="Full Description"
+              aria-label="fullDescription"
               type="number"
-              label="Quantity :"
-              name="quantity"
-              onChange={handleChange("quantity")}
-              value={quantity}
+              label="Full Description :"
+              name="fullDescription"
+              onChange={handleChange("fullDescription")}
+              value={fullDescription}
+              rows={5}
             />
           </CCol>
         </CRow>
         <CRow className="mt-1 g-3">
-          <CCol xs>
-            <CFormInput
-              placeholder="Size"
-              aria-label="Size"
-              label="Size :"
-              name="size"
-              type="number"
-              onChange={handleChange("size")}
-              value={size}
-            />
-          </CCol>
           <CCol xs>
             <CFormInput
               type="file"
@@ -207,35 +383,134 @@ function UpdateProduct() {
         </CRow>
         <CRow className="mt-1 g-3">
           <CCol xs>
-            {/* <CFormSelect aria-label="Default select example" onChange={handleChange("materials")} value={materials}> */}
-            <CFormSelect
-              aria-label="Default select example"
-              name="materials"
-              multiple
-              onChange={handleMaterialsChange}
-            >
-              <option disabled>Materials</option>
-              <option value="Cotton">Cotton</option>
-              <option value="Wool">Wool</option>
-              <option value="Hemp">Hemp</option>
-            </CFormSelect>
+            <CFormLabel htmlFor="categories">Categories :</CFormLabel>
+            <InputTags
+              values={categories}
+              onTags={(value) => {
+                setCategories(value.values);
+              }}
+            />
           </CCol>
           <CCol xs>
-            <CFormInput
-              type="color"
-              id="exampleColorInput"
-              // defaultValue="#563d7c"
-              label="Dominant Color"
-              title="Choose your color"
-              name="colors"
-              onChange={handleChange("colors")}
-              value={colors}
+            <CFormLabel htmlFor="tags">Tags :</CFormLabel>
+            <InputTags
+              values={tags}
+              onTags={(value) => {
+                setTags(value.values);
+              }}
             />
           </CCol>
         </CRow>
-        <CButton color="success" type="submit">
-          Update Product
-        </CButton>
+        <CRow className="mt-1 g-3">
+          <CCol xs>
+            {variations.map((variation, index) => (
+              <div key={index}>
+                <CFormInput
+                  label="Color :"
+                  type="color"
+                  value={variation.color}
+                  onChange={(e) =>
+                    handleVariationChange(index, null, "color", e.target.value)
+                  }
+                ></CFormInput>
+                {variation.size.map((size, colorIndex) => (
+                  <CRow key={colorIndex}>
+                    <CCol md={5}>
+                      <CFormInput
+                        label="Size :"
+                        placeholder="Size"
+                        type="text"
+                        value={size.name}
+                        onChange={(e) =>
+                          handleVariationChange(
+                            index,
+                            colorIndex,
+                            "name",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </CCol>
+                    <CCol md={5}>
+                      <CFormInput
+                        label="Stock :"
+                        placeholder="Stock"
+                        type="number"
+                        min={0}
+                        value={size.stock}
+                        onChange={(e) =>
+                          handleVariationChange(
+                            index,
+                            colorIndex,
+                            "stock",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </CCol>
+                    {colorIndex === variation.size.length - 1 && (
+                      <CCol md={2} xs={12}>
+                        <CButton
+                          color="warning"
+                          onClick={() => handleAddSize(index)}
+                        >
+                          +
+                        </CButton>
+                      </CCol>
+                    )}
+                  </CRow>
+                ))}
+              </div>
+            ))}
+          </CCol>
+          <CRow>
+            <CCol md={3}>
+              <CButton
+                color="primary"
+                onClick={handleAddVariation}
+                style={{ marginTop: "2px", marginBottom: "2px" }}
+              >
+                Add Variation
+              </CButton>
+            </CCol>
+          </CRow>
+        </CRow>
+        <CRow>
+          {/* <div> */}
+          {materials.map((material, index) => (
+            <div key={material.name}>
+              {/* <label htmlFor={material.name}>{material.name}</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={material.percentage}
+                  onChange={(event) => handlePercentageChange(event, index)}
+                /> */}
+              <CInputGroup className="mb-3">
+                <CInputGroupText id={material.name}>
+                  {material.name}
+                </CInputGroupText>
+                <CFormInput
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={material.percentage}
+                  onChange={(event) => handlePercentageChange(event, index)}
+                  aria-describedby="basic-addon1"
+                />
+              </CInputGroup>
+            </div>
+          ))}
+          {/* </div> */}
+        </CRow>
+        <CRow>
+          <CCol md={3}>
+            <CButton color="success" type="submit">
+              Add Product
+            </CButton>
+          </CCol>
+        </CRow>
       </CForm>
     </>
   );

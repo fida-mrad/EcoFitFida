@@ -18,7 +18,6 @@ function sendSMS(name, shortDescription, price) {
 }
 const productsController = {
   getAll: async (req, res) => {
-    // const products = await Product.find();
     const products = await Product.find().populate({
       path: "reviews",
       populate: {
@@ -43,8 +42,6 @@ const productsController = {
           } else {
             if (!products)
               return res.status(400).send({ msg: "No Products Found" });
-            // const jsonProducts = JSON.stringify(products);
-            // console.log(jsonProducts);
             res.status(200).send(products);
           }
         });

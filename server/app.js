@@ -5,11 +5,12 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
 const passport = require("passport");
+const stripe = require('stripe')(process.env.STRIPE_SERCRET_KEY);
 //require('./passport-config');
 // const session = require('express-session');
 // require('dotenv').config();
 const cookieSession = require("cookie-session");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 
 var indexRouter = require("./routes/index");
 var authRouter = require("./routes/auth.router");
@@ -17,7 +18,7 @@ var agentRouter = require("./routes/agent.router");
 var adminRouter = require("./routes/admin.router");
 var clientRouter = require("./routes/client.router");
 var productsRouter = require("./routes/products.router");
-var ordersRouter = require('./routes/orders.router');
+var ordersRouter = require("./routes/orders.router");
 var blogsRouter = require("./routes/blog.router");
 const db = require("./config/dbconnection");
 var app = express();
@@ -28,8 +29,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/uploads" , express.static(__dirname + "/uploads"))
-app.use(bodyParser.urlencoded({extended: false}));
+app.use("/uploads", express.static(__dirname + "/uploads"));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Initialise a session
@@ -66,7 +67,7 @@ app.use(cors(corsOptions));
 app.use("/images/:path/:filename", (req, res) => {
   const filename = req.params.filename;
   // const filePath = path.join(__dirname, 'uploads',filename);
-  const filePath = path.join(__dirname,req.params.path,filename);
+  const filePath = path.join(__dirname, req.params.path, filename);
   res.sendFile(filePath);
 });
 app.use("/", indexRouter);
@@ -75,9 +76,35 @@ app.use("/agent", agentRouter);
 app.use("/admin", adminRouter);
 app.use("/client", clientRouter);
 app.use("/products", productsRouter);
-app.use('/orders', ordersRouter);
-app.use("/blogs" , blogsRouter);
-app.use('/api', require('./routes/upload'))
+app.use("/orders", ordersRouter);
+app.use("/blogs", blogsRouter);
+app.use("/api", require("./routes/upload"));
+
+app.post("/checkout", async (req, res) => {
+  console.log(req.body);
+  const items = req.body.items;
+  let lineItems = [];
+  items.forEach((item) => {
+    lineItems.push({
+      price: item.id,
+      quantity: item.quantity,
+    });
+  });
+
+  const session = await stripe.checkout.sessions.create({
+    line_items: lineItems,
+    mode: "payment",
+    success_url: "http://localhost:3000/success",
+    cancel_url: "http://localhost:3000/cancel",
+  });
+
+  //show the user the session that stripe create for them
+  res.send(
+    JSON.stringify({
+      url: session.url,
+    })
+  );
+});
 
 // login facebook
 app.use(passport.initialize());

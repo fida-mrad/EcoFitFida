@@ -37,6 +37,7 @@
     "passport-google-oauth20": "^2.0.0",
     "qrcode": "^1.5.1",
     "speakeasy": "^2.0.0",
+    "stripe": "^12.4.0",
     "twig": "~0.10.3",
     "twilio": "^4.11.0",
     "validator": "^13.9.0"

@@ -196,23 +196,12 @@ function AddProduct() {
     images: [],
     shortDescription: "",
     fullDescription: "",
-    // category: "",
-    // colors: "#000000",
   });
-  const {
-    name,
-    price,
-    images,
-    shortDescription,
-    fullDescription,
-    // category,
-    // colors,
-  } = formData;
+  const { name, price, images, shortDescription, fullDescription } = formData;
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
   const handleCategoryChange = (e) => {
-    // setCategory((prevState) => [...prevState, e.target.value]);
     setCategory([e.target.value]);
   };
   const handleVariationChange = (index, colorIndex, field, value) => {
@@ -267,9 +256,9 @@ function AddProduct() {
     event.preventDefault();
     let category = [...categories, "fashion"];
     // const uniqueArray = Array.from(new Set(category));
-    // const uniqueArray = Array.from(
-    //   new Set(category.map((str) => str.toUpperCase()))
-    // );
+    const uniqueArray = Array.from(
+      new Set(category.map((str) => str[0].toUpperCase() + str.slice(1)))
+    );
     const colorMap = nearestColor.from(colors);
     const updatedVariations = variations.map((v) => {
       const closestColorName = colorMap(v.color).name;
@@ -291,9 +280,9 @@ function AddProduct() {
       materials,
       brand: brandId,
       // category: [...category, "fashion"],
-      // category: uniqueArray,
-      category: category,
-      variations : updatedVariations,
+      category: uniqueArray,
+      // category: category,
+      variations: updatedVariations,
       tags,
     };
     console.log("Data : ");
@@ -309,12 +298,6 @@ function AddProduct() {
       }, 2000);
     }
   };
-  const options = [
-    { isDisabled: true, label: "Category" },
-    { value: "men", label: "Men" },
-    { value: "women", label: "Women" },
-    { value: "children", label: "Children" },
-  ];
   return (
     <>
       {error && <CAlert color="danger">{alertMessage}</CAlert>}

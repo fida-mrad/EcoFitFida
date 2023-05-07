@@ -8,6 +8,9 @@ import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import Swiper, { SwiperSlide } from "../../components/swiper";
 
 const ProductImageGallery = ({ product }) => {
+  let currentDate = new Date();
+  let createdAtDate = new Date(product.createdAt);
+  let diffInDays = (currentDate-createdAtDate)/(1000 * 60 * 60 * 24);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [index, setIndex] = useState(-1);
   const slides = product?.image.map((img, i) => ({
@@ -42,14 +45,14 @@ const ProductImageGallery = ({ product }) => {
   return (
     <Fragment>
       <div className="product-large-image-wrapper">
-        {product.discount || product.new ? (
+        {product.discount || diffInDays < 1 ? (
           <div className="product-img-badges">
             {product.discount ? (
               <span className="pink">-{product.discount}%</span>
             ) : (
               ""
             )}
-            {product.new ? <span className="purple">New</span> : ""}
+            {diffInDays < 1 ? <span className="purple">New</span> : ""}
           </div>
         ) : (
           ""
@@ -63,7 +66,6 @@ const ProductImageGallery = ({ product }) => {
                 </button>
                 <div className="single-image">
                   <img
-                    // src={process.env.PUBLIC_URL + single}
                     src={"http://localhost:8000/images/"+single}
                     className="img-fluid"
                     alt=""
@@ -89,7 +91,6 @@ const ProductImageGallery = ({ product }) => {
               <SwiperSlide key={key}>
                 <div className="single-image">
                   <img
-                    // src={process.env.PUBLIC_URL + single}
                     src={"http://localhost:8000/images/"+single}
                     className="img-fluid"
                     alt=""

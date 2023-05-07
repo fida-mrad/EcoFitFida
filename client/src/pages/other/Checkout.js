@@ -13,6 +13,7 @@ import { ordersController } from "../../services/coreApi";
 import { deleteAllFromCart } from "../../store/slices/cart-slice";
 import { store } from "../../store/store";
 import { setProducts } from "../../store/slices/product-slice";
+const stripe = require('stripe')('sk_test_51N2WnWAjlSGuPHxBk55yEix0U7ISI0DYyddQptPLhkD8op06HYPdRgyV64bIbYyFibm25pnsWoXah6Vh1Q7yhIaG00gJ7SomlO');
 
 const Checkout = () => {
   let cartTotalPrice = 0;
@@ -42,6 +43,24 @@ const Checkout = () => {
   const handleChange = (text) => (e) => {
     setformFields({ ...formFields, [text]: e.target.value });
   };
+  const checkout = async () => {
+    await fetch('http://localhost:8000/checkout', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + stripe.apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ items: cartItems }),
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then((response) => {
+        if (response.url) {
+          window.location.assign(response.url) // Forwarding user to Stripe
+        }
+      })
+  }
   const addOrder = async () => {
     console.log(cartItems);
     let data = {
@@ -69,7 +88,6 @@ const Checkout = () => {
       totalPrice: cartTotalPrice.toFixed(2),
     };
     console.log(data);
-    // ordersController.addOrder(data);
     const res = await ordersController.addOrder(data);
     console.log(res);
     if (res.status === 201) {
@@ -256,6 +274,11 @@ const Checkout = () => {
                     <div className="place-order mt-25">
                       <button className="btn-hover" onClick={addOrder}>
                         Place Order
+                      </button>
+                    </div>
+                    <div className="place-order mt-25">
+                      <button className="btn-hover" onClick={checkout}>
+                        Pay
                       </button>
                     </div>
                   </div>

@@ -9,6 +9,9 @@ import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import Swiper, { SwiperSlide } from "../../components/swiper";
 
 const ProductImageGalleryLeftThumb = ({ product, thumbPosition }) => {
+  let currentDate = new Date();
+  let createdAtDate = new Date(product.createdAt);
+  let diffInDays = (currentDate-createdAtDate)/(1000 * 60 * 60 * 24);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [index, setIndex] = useState(-1);
   const slides = product?.image.map((img, i) => ({
@@ -70,14 +73,14 @@ const ProductImageGalleryLeftThumb = ({ product, thumbPosition }) => {
               : "col-xl-10")}
         >
           <div className="product-large-image-wrapper">
-            {product.discount || product.new ? (
+            {product.discount || diffInDays < 1 ? (
               <div className="product-img-badges">
                 {product.discount ? (
                   <span className="pink">-{product.discount}%</span>
                 ) : (
                   ""
                 )}
-                {product.new ? <span className="purple">New</span> : ""}
+                {diffInDays < 1 ? <span className="purple">New</span> : ""}
               </div>
             ) : (
               ""

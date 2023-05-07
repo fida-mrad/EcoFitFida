@@ -17,6 +17,10 @@ const ProductGridSingle = ({
   compareItem,
   spaceBottomClass,
 }) => {
+  let currentDate = new Date();
+  let createdAtDate = new Date(product.createdAt);
+  let diffInDays = (currentDate - createdAtDate) / (1000 * 60 * 60 * 24);
+
   const [modalShow, setModalShow] = useState(false);
   const discountedPrice = getDiscountPrice(product.price, product.discount);
   const finalProductPrice = +(product.price * currency.currencyRate).toFixed(2);
@@ -32,14 +36,12 @@ const ProductGridSingle = ({
           <Link to={process.env.PUBLIC_URL + "/product/" + product._id}>
             <img
               className="default-img"
-              // src={process.env.PUBLIC_URL + product.image[0]}
               src={"http://localhost:8000/images/" + product.image[0]}
               alt=""
             />
             {product.image.length > 1 ? (
               <img
                 className="hover-img"
-                // src={process.env.PUBLIC_URL + product.image[1]}
                 src={"http://localhost:8000/images/" + product.image[1]}
                 alt=""
               />
@@ -47,14 +49,14 @@ const ProductGridSingle = ({
               ""
             )}
           </Link>
-          {product.discount || product.new ? (
+          {product.discount || diffInDays < 1 ? (
             <div className="product-img-badges">
               {product.discount ? (
                 <span className="pink">-{product.discount}%</span>
               ) : (
                 ""
               )}
-              {product.new ? <span className="purple">New</span> : ""}
+              {diffInDays < 1 ? <span className="purple">New</span> : ""}
             </div>
           ) : (
             ""

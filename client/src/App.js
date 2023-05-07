@@ -5,6 +5,9 @@ import "./scss/style.scss";
 import { ProvideClient } from "./ClientContext";
 import ResetPasswordAdmin from "./components/ResetPasswordAdmin";
 import MatsRange from "./components/MaterialsRange";
+import CancelPayment from "./paymentComponents/CancelPayment";
+import SuccessPayment from "./paymentComponents/SuccessPayment";
+import Chat from "./components/Chat";
 
 // home pages
 const HomeFashion = lazy(() => import("./pages/home/HomeFashion"));
@@ -37,13 +40,14 @@ const BlogDetailsStandard = lazy(() =>
 // other pages
 const About = lazy(() => import("./pages/other/About"));
 const Contact = lazy(() => import("./pages/other/Contact"));
+const Claim = lazy(() => import("./pages/other/Claim"));
 const MyAccount = lazy(() => import("./pages/other/MyAccount"));
 const MyOrders = lazy(() => import("./pages/other/MyOrders"));
 const LoginRegister = lazy(() => import("./pages/other/LoginRegister"));
 // const BlogDetailsStandard = lazy(() =>
 //   import("./pages/blog/BlogDetailsStandard")
 // );
-const BlogNew = lazy(() =>import("./wrappers/blog/AddBlog"));
+const BlogNew = lazy(() => import("./wrappers/blog/AddBlog"));
 
 const Cart = lazy(() => import("./pages/other/Cart"));
 const Wishlist = lazy(() => import("./pages/other/Wishlist"));
@@ -81,6 +85,8 @@ const App = () => {
           <ProvideClient>
             <Routes>
               <Route path="/agent/*" name="Home" element={<DefaultLayout />} />
+              <Route path="/success" element={<SuccessPayment />} />
+              <Route path="/cancel" element={<CancelPayment />} />
               <Route
                 exact
                 path="/agentregister"
@@ -191,6 +197,10 @@ const App = () => {
                 element={<Contact />}
               />
               <Route
+                path={process.env.PUBLIC_URL + "/claim"}
+                element={<Claim />}
+              />
+              <Route
                 path={process.env.PUBLIC_URL + "/my-account"}
                 element={<MyAccount />}
               />
@@ -208,13 +218,13 @@ const App = () => {
                 path={process.env.PUBLIC_URL + "/cart"}
                 element={<Cart />}
               />
-                            <Route
-                  path={process.env.PUBLIC_URL + "/blog-new"}
-                  element={<BlogNew />}
+              <Route
+                path={process.env.PUBLIC_URL + "/blog-new"}
+                element={<BlogNew />}
               />
               <Route
-                  path={process.env.PUBLIC_URL + "/blog-details-standard/:id"}
-                  element={<BlogDetailsStandard />}
+                path={process.env.PUBLIC_URL + "/blog-details-standard/:id"}
+                element={<BlogDetailsStandard />}
               />
               <Route
                 path={process.env.PUBLIC_URL + "/wishlist"}
@@ -234,6 +244,7 @@ const App = () => {
           </ProvideClient>
         </Suspense>
       </ScrollToTop>
+      <Chat />
     </Router>
   );
 };
