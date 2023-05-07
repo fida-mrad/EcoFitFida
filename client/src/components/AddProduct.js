@@ -252,6 +252,54 @@ function AddProduct() {
       [e.target.name]: e.target.files,
     });
   };
+  const validateForm = () => {
+    let result = { status: false, message: "Please Fill In All Fields !" };
+    if (!formData.name || formData.name === "") {
+      result.message = "Please Enter A Product Name";
+      return result;
+    }
+    if (!formData.price || formData.price === "") {
+      result.message = "Please Enter The Product's Price";
+      return result;
+    }
+    if (!formData.shortDescription || formData.shortDescription === "") {
+      result.message = "Please Enter A Short Description";
+      return result;
+    }
+    if (!formData.fullDescription || formData.fullDescription === "") {
+      result.message = "Please Enter A Full Description";
+      return result;
+    }
+    if (!formData.images || formData.images.length === 0) {
+      result.message = "Please Enter The Product's Images";
+      return result;
+    }
+    if (!categories || categories.length === 0) {
+      result.message = "Please Choose Your Prodcut's Categories";
+      return result;
+    }
+    if (!tags || tags.length === 0) {
+      result.message = "Please Choose Your Prodcut's Tags";
+      return result;
+    }
+    let totalPercentage = materials.reduce((total, mat) => {
+      return total + mat.percentage;
+    }, 0);
+    if (totalPercentage !== 100) {
+      result.message = "Make Sure that the Materials Total is 100%";
+      return result;
+    }
+    const hasEmptyFields = variations.some((variation) =>
+      variation.size.some(({ name, stock }) => name === "" || stock === "")
+    );
+    if (hasEmptyFields) {
+      console.log(variations);
+      result.message = "Please Fill In Your Varitions Correctly";
+      return result;
+    }
+    result = true;
+    return result;
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     let category = [...categories, "fashion"];
@@ -275,27 +323,37 @@ function AddProduct() {
       // }
     });
     // console.log(updatedVariations);
-    const data = {
-      ...formData,
-      materials,
-      brand: brandId,
-      // category: [...category, "fashion"],
-      category: uniqueArray,
-      // category: category,
-      variations: updatedVariations,
-      tags,
-    };
-    console.log("Data : ");
-    console.log(data);
-    const res = await productsController.addProduct(data);
-    console.log(res);
-    if (res.status === 201) navigate("/agent");
-    else {
+    let fromIsValid = validateForm();
+    if (fromIsValid.status) {
+      const data = {
+        ...formData,
+        materials,
+        brand: brandId,
+        // category: [...category, "fashion"],
+        category: uniqueArray,
+        // category: category,
+        variations: updatedVariations,
+        tags,
+      };
+      console.log("Data : ");
+      console.log(data);
+      const res = await productsController.addProduct(data);
+      console.log(res);
+      if (res.status === 201) {
+        navigate("/agent/products");
+      } else {
+        setError(true);
+        setAlertMessage(res.data.msg);
+        setTimeout(() => {
+          setError(false);
+        }, 2000);
+      }
+    } else {
       setError(true);
-      setAlertMessage(res.data.msg);
+      setAlertMessage(fromIsValid.message);
       setTimeout(() => {
         setError(false);
-      }, 2000);
+      }, 3000);
     }
   };
   return (

@@ -168,6 +168,7 @@ function UpdateProduct() {
   const [alertMessage, setAlertMessage] = useState("");
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
+  const [imageFiles, setImageFiles] = useState([]);
   const [variations, setVariations] = useState([
     { color: "#000000", size: [{ name: "", stock: "" }] },
   ]);
@@ -277,11 +278,71 @@ function UpdateProduct() {
     setFormData({ ...formData, [text]: e.target.value });
   };
 
+  // const handleFileInput = (e) => {
+  //   setFormData({
+  //     ...formData,
+  //     [e.target.name]: e.target.files,
+  //   });
+  // };
   const handleFileInput = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.files,
-    });
+    setImageFiles(e.target.files);
+  };
+  const validateForm = () => {
+    let result = { status: true, message: "Looks Good" };
+    if (!formData.name || formData.name === "") {
+      result.status = false;
+      result.message = "Please Enter A Product Name";
+      return result;
+    }
+    if (!formData.price || formData.price === "") {
+      result.status = false;
+      result.message = "Please Enter The Product's Price";
+      return result;
+    }
+    if (!formData.shortDescription || formData.shortDescription === "") {
+      result.status = false;
+      result.message = "Please Enter A Short Description";
+      return result;
+    }
+    if (!formData.fullDescription || formData.fullDescription === "") {
+      result.status = false;
+      result.message = "Please Enter A Full Description";
+      return result;
+    }
+    if (imageFiles.length === 0 && formData.images.length === 0) {
+      result.status = false;
+      result.message = "Please Select The Product's Images";
+      return result;
+    }
+    if (!categories || categories.length === 0) {
+      result.status = false;
+      result.message = "Please Choose Your Prodcut's Categories";
+      return result;
+    }
+    if (!tags || tags.length === 0) {
+      result.status = false;
+      result.message = "Please Choose Your Prodcut's Tags";
+      return result;
+    }
+    let totalPercentage = materials.reduce((total, mat) => {
+      return total + mat.percentage;
+    }, 0);
+    if (totalPercentage !== 100) {
+      result.status = false;
+      result.message = "Make Sure that the Materials Total is 100%";
+      return result;
+    }
+    const hasEmptyFields = variations.some((variation) =>
+      variation.size.some(({ name, stock }) => name === "" || stock === "")
+    );
+    if (hasEmptyFields) {
+      console.log(variations);
+      result.status = false;
+      result.message = "Please Fill In Your Varitions Correctly";
+      return result;
+    }
+    // result = true;
+    return result;
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -297,28 +358,45 @@ function UpdateProduct() {
         color: closestColorName,
       };
     });
-    const data = {
-      ...formData,
-      id: id,
-      materials,
-      // category: [...category, "fashion"],
-      category: uniqueArray,
-      // category: category,
-      variations: updatedVariations,
-      tags,
-    };
-    console.log("Data : ");
-    console.log(data);
-    // const res = await productsController.updateProduct(data);
-    // console.log(res);
-    // if (res.status === 201) navigate("/agent");
-    // else {
-    //   setError(true);
-    //   setAlertMessage(res.data.msg);
-    //   setTimeout(() => {
-    //     setError((prev) => !prev);
-    //   }, 2000);
-    // }
+    let fromIsValid = validateForm();
+    console.log(fromIsValid);
+    if (fromIsValid.status) {
+      const data = {
+        ...formData,
+        id: id,
+        materials,
+        // category: [...category, "fashion"],
+        category: uniqueArray,
+        // category: category,
+        variations: updatedVariations,
+        tags,
+        imageFiles,
+      };
+      console.log("Data : ");
+      console.log(data);
+      const res = await productsController.updateProduct(data);
+      console.log(res);
+      if (res.status === 201) navigate("/agent/products");
+      else {
+        setError(true);
+        setAlertMessage(res.data.msg);
+        setTimeout(() => {
+          setError(false);
+        }, 3000);
+      }
+    } else {
+      console.log(fromIsValid);
+      setError(true);
+      setAlertMessage(fromIsValid.message);
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
+  const handleDelete = (index) => {
+    const newList = [...formData.images];
+    newList.splice(index, 1);
+    setFormData((prev) => ({ ...prev, images: newList }));
   };
   return (
     <>
@@ -371,12 +449,32 @@ function UpdateProduct() {
             />
           </CCol>
         </CRow>
+        <CRow className="mt-3 mb-3">
+          {formData.images.map((image, index) => (
+            <CCol sm={3} key={index}>
+              <img
+                height={400}
+                width={300}
+                src={"http://localhost:8000/images/" + image}
+                alt={`Image ${index}`}
+              />
+              <i
+                onClick={() => handleDelete(index)}
+                className="fa fa-times"
+                style={{
+                  position: "absolute",
+                  transform: "translate3d(274px, -386px, 10px)",
+                }}
+              ></i>
+            </CCol>
+          ))}
+        </CRow>
         <CRow className="mt-1 g-3">
           <CCol xs>
             <CFormInput
               type="file"
               multiple
-              name="images"
+              name="imageFiles"
               onChange={handleFileInput}
             />
           </CCol>
@@ -507,11 +605,12 @@ function UpdateProduct() {
         <CRow>
           <CCol md={3}>
             <CButton color="success" type="submit">
-              Add Product
+              Update Product
             </CButton>
           </CCol>
         </CRow>
       </CForm>
+      {error && <CAlert color="danger">{alertMessage}</CAlert>}
     </>
   );
 }

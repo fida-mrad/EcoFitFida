@@ -23,7 +23,7 @@ const productsController = {
       populate: {
         path: "client",
         model: "client",
-        select: 'firstname lastname username email _id'
+        select: "firstname lastname username email _id",
       },
     });
     return res.status(200).send(products);
@@ -82,6 +82,7 @@ const productsController = {
     const materials = req.body.materials;
     const brand = req.body.brand;
     const variation = req.body.variations;
+    const tags = req.body.tags;
     if (
       !name ||
       !price ||
@@ -91,6 +92,7 @@ const productsController = {
       !variation ||
       !category ||
       !materials ||
+      !tags ||
       !brand
     )
       return res.status(400).json({ msg: "Please fill in all fields." });
@@ -102,6 +104,7 @@ const productsController = {
       const newProduct = new Product({
         name: name,
         price: price,
+        tag: tags,
         image: images,
         shortDescription: shortDescription,
         fullDescription: fullDescription,
@@ -125,50 +128,85 @@ const productsController = {
     Product.findOne({ _id: id }, function (err, product) {
       // Handle errors
       if (err) {
-        // console.error(err);
-        console.log("Error in Product.find : ");
         console.log(err);
-        return res.status(500).send(err.message);
+        return res.status(400).send({ msg: err.message });
       }
 
       // Handle product not found
       if (!product) {
-        return res.status(404).send("Product not found");
+        return res.status(404).send({ msg: "Product not found" });
       }
-      updatedAttributes = _.omit(req.body, "id");
-      // Update the object based on the attributes in the request body
-      // for (let attr in updatedAttributes) {
-      //   product[attr] = updatedAttributes[attr];
+      // updatedAttributes = _.omit(req.body, "id");
+      // if (req.files) {
+      //   const imageFiles = req.files;
+      //   const images = imageFiles.map((file) => {
+      //     return file.path;
+      //   });
+      //   product.images = images;
       // }
-      if (req.files) {
-        const imageFiles = req.files;
-        const images = imageFiles.map((file) => {
-          return file.path;
-        });
-        product.images = images;
-      }
-      for (let attr in updatedAttributes) {
-        const value = updatedAttributes[attr];
+      // for (let attr in updatedAttributes) {
+      //   const value = updatedAttributes[attr];
 
-        // Use array index notation to update array elements
-        if (attr.includes(".")) {
-          const [arrAttr, index] = attr.split(".");
-          product[arrAttr].splice(index, 1, value);
-        } else {
-          product[attr] = value;
-        }
-      }
+      //   // Use array index notation to update array elements
+      //   if (attr.includes(".")) {
+      //     const [arrAttr, index] = attr.split(".");
+      //     product[arrAttr].splice(index, 1, value);
+      //   } else {
+      //     product[attr] = value;
+      //   }
+      // }
 
       // Save the updated object in the database
+
+      const name = req.body.name;
+      const price = req.body.price;
+      // const imageFiles = req.files;
+      const tags = req.body.tags;
+      let combinedImagesArray = [];
+      if (req.body.images && req.body.images.length > 0) {
+        let images = req.body.images;
+        combinedImagesArray.push(...images);
+      }
+      if (req.files && req.files.length > 0) {
+        let newImages = req.files.map((file) => {
+          return file.path;
+        });
+        combinedImagesArray.push(...newImages);
+      }
+      const shortDescription = req.body.shortDescription;
+      const fullDescription = req.body.fullDescription;
+      const category = req.body.category;
+      const materials = req.body.materials;
+      const variation = req.body.variations;
+      if (
+        !name ||
+        !price ||
+        // !images ||
+        !shortDescription ||
+        !fullDescription ||
+        !variation ||
+        !category ||
+        !tags ||
+        !materials
+      )
+        return res.status(400).json({ msg: "Please fill in all fields." });
+
+      product.name = name;
+      product.price = price;
+      product.shortDescription = shortDescription;
+      product.fullDescription = fullDescription;
+      product.variation = variation;
+      product.category = category;
+      // product.image = images;
+      product.image = combinedImagesArray;
+      product.materials = materials;
+      product.tag = tags;
       product.save(function (err, updatedProduct) {
         // Handle errors
         if (err) {
-          // console.error(err);
-          console.log("Error in product.save : ");
           console.log(err);
-          return res.status(500).send(err.message);
+          return res.status(500).send({ msg: err.message });
         }
-
         // Send the updated object in the response
         // console.log(updatedProduct);
         res.status(201).send({ msg: "Product Updated Successfully" });
