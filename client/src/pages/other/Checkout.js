@@ -13,7 +13,9 @@ import { ordersController } from "../../services/coreApi";
 import { deleteAllFromCart } from "../../store/slices/cart-slice";
 import { store } from "../../store/store";
 import { setProducts } from "../../store/slices/product-slice";
-const stripe = require('stripe')('sk_test_51N2WnWAjlSGuPHxBk55yEix0U7ISI0DYyddQptPLhkD8op06HYPdRgyV64bIbYyFibm25pnsWoXah6Vh1Q7yhIaG00gJ7SomlO');
+const stripe = require("stripe")(
+  "sk_test_51N2WnWAjlSGuPHxBk55yEix0U7ISI0DYyddQptPLhkD8op06HYPdRgyV64bIbYyFibm25pnsWoXah6Vh1Q7yhIaG00gJ7SomlO"
+);
 
 const Checkout = () => {
   let cartTotalPrice = 0;
@@ -44,33 +46,33 @@ const Checkout = () => {
     setformFields({ ...formFields, [text]: e.target.value });
   };
   const checkout = async () => {
-    await fetch('http://localhost:8000/checkout', {
-      method: 'POST',
+    await fetch("http://localhost:8000/checkout", {
+      method: "POST",
       headers: {
-        'Authorization': 'Bearer ' + stripe.apiKey,
-        'Content-Type': 'application/json',
+        Authorization: "Bearer " + stripe.apiKey,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ items: cartItems }),
     })
       .then((response) => {
-        return response.json()
+        return response.json();
       })
       .then((response) => {
         if (response.url) {
-          window.location.assign(response.url) // Forwarding user to Stripe
+          window.location.assign(response.url); // Forwarding user to Stripe
         }
-      })
-  }
+      });
+  };
   const addOrder = async () => {
     console.log(cartItems);
     let data = {
       orderItems: cartItems.map((item) => ({
         _id: item._id,
         name: item.name,
-        // quantity: item.quantity,
-        // image: item.image,
         image: item.image[0],
-        // price: item.price,
+        price:
+          getDiscountPrice(item.price, item.discount)?.toFixed(2) ||
+          item.price.toFixed(2),
         variation: {
           color: item.selectedProductColor,
           size: item.selectedProductSize,

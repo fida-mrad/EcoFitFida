@@ -115,7 +115,7 @@ const productsController = {
       });
       console.log(newProduct);
       await newProduct.save();
-      sendSMS(name, shortDescription, fullDescription, price);
+      // sendSMS(name, shortDescription, fullDescription, price);
       return res.status(201).send({
         msg: "Product Added Successfully.",
       });
@@ -240,6 +240,24 @@ const productsController = {
       }
       await product.save();
       return res.status(201).send({ msg: "Review Sent" });
+    } catch (error) {
+      console.log(error.message);
+      return res.send({ msg: error.message });
+    }
+  },
+  setProductOnSale: async (req, res) => {
+    try {
+      if (!req.body.productId || !req.body.discount)
+        return res.status(400).send({ msg: "Please Enter The Disocunt Rate" });
+      const productId = req.body.productId;
+      const product = await Product.findById(productId);
+      if (!product) {
+        return res.status(400).send({ msg: "Product Not Found" });
+      }
+      product.discount = req.body.discount;
+      console.log(product);
+      await product.save();
+      return res.status(201).send({ msg: "Product in Now On Sale" });
     } catch (error) {
       console.log(error.message);
       return res.send({ msg: error.message });

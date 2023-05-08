@@ -11,9 +11,17 @@ import {
   CCarousel,
   CCarouselItem,
   CCol,
+  CFormInput,
   CImage,
+  CInputGroup,
+  CInputGroupText,
   CListGroup,
   CListGroupItem,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
   CRow,
   CTable,
   CTableBody,
@@ -23,7 +31,7 @@ import {
   CTableRow,
 } from "@coreui/react";
 import Rating from "../components/product/sub-components/ProductRating";
-import { productsController } from "../services/Api";
+import { productsController } from "../services/coreApi";
 import { useAgent } from "../AgentContext";
 import { useNavigate } from "react-router-dom";
 import AngularImg from "../assets/images/angular.jpg";
@@ -44,6 +52,9 @@ function BrandProducts({ agent }) {
   }, [agent]);
 
   const [products, setProducts] = useState([]);
+  const [currentProductId, setCurrentProductId] = useState(null);
+  const [showDiscountInput, setShowDiscountInput] = useState(false);
+  const [discount, setDiscount] = useState(0);
   //   const [alert, setAlert] = useState(false);
 
   const getProducts = async () => {
@@ -54,6 +65,19 @@ function BrandProducts({ agent }) {
   };
   const goToUpdateForm = (id) => {
     navigate(`/agent/updateProduct/${id}`);
+  };
+  const handleDiscountChange = (event) => {
+    setDiscount(event.target.value);
+  };
+  const setProductOnSale = async (e) => {
+    e.preventDefault();
+    let data = { productId: currentProductId, discount: discount };
+    console.log(data);
+    const res = await productsController.addReview(data);
+    console.log(res);
+    if (res.status === 201) {
+      setShowDiscountInput(false);
+    }
   };
   return (
     <>
@@ -128,14 +152,54 @@ function BrandProducts({ agent }) {
                     </CListGroupItem>
                   </CListGroup>
                   <CButton>
-                    <i class="fa fa-eye"></i>
+                    <i class="fas fa-eye"></i>
                   </CButton>
                   <CButton
                     color="warning"
                     onClick={() => goToUpdateForm(product._id)}
                   >
-                    <i class="fa fa-pen-square"></i>
+                    <i class="fas fa-pen"></i>
                   </CButton>
+                  <CButton
+                    color="info"
+                    onClick={() => {
+                      setShowDiscountInput(true);
+                      setCurrentProductId(product._id);
+                    }}
+                  >
+                    <i class="fas fa-percentage"></i>
+                  </CButton>
+                  <CModal
+                    visible={showDiscountInput}
+                    onClose={() => setShowDiscountInput(false)}
+                  >
+                    <CModalHeader onClose={() => setShowDiscountInput(false)}>
+                      <CModalTitle>Put Product On Sale</CModalTitle>
+                    </CModalHeader>
+                    <CModalBody>
+                      <CInputGroup className="mb-3">
+                        <CInputGroupText>%</CInputGroupText>
+                        <CFormInput
+                          min={0}
+                          max={90}
+                          placeholder="Discount Rate"
+                          onChange={handleDiscountChange}
+                          value={discount}
+                        />
+                      </CInputGroup>
+                    </CModalBody>
+                    <CModalFooter>
+                      <CButton
+                        color="secondary"
+                        onClick={() => setShowDiscountInput(false)}
+                      >
+                        Close
+                      </CButton>
+                      <CButton color="primary" onClick={setProductOnSale}>
+                        Save changes
+                      </CButton>
+                    </CModalFooter>
+                  </CModal>
                 </CCardBody>
               </CCard>
             </CCol>

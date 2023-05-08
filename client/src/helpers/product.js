@@ -1,10 +1,11 @@
 // get products
 export const getProducts = (products, category, type, limit) => {
-  const finalProducts = category
-    ? products.filter(
-        (product) => product.category.filter((single) => single === category)[0]
-      )
-    : products;
+  const finalProducts = products;
+  // const finalProducts = category
+  //   ? products.filter(
+  //       (product) => product.category.filter((single) => single === category)[0]
+  //     )
+  //   : products;
 
   // if (type && type === "new") {
   //   const newProducts = finalProducts.filter((single) => single.new);
@@ -14,11 +15,8 @@ export const getProducts = (products, category, type, limit) => {
     let currentDate = new Date();
     const newProducts = finalProducts.filter((single) => {
       let createdAtDate = new Date(single.createdAt);
-      console.log(currentDate);
-      console.log(createdAtDate);
       let diffInDays = (currentDate - createdAtDate) / (1000 * 60 * 60 * 24);
-      console.log(diffInDays);
-      return diffInDays < 1;
+      return diffInDays < 3;
     });
     return newProducts.slice(0, limit ? limit : newProducts.length);
   }
@@ -31,9 +29,12 @@ export const getProducts = (products, category, type, limit) => {
       .slice(0, limit ? limit : finalProducts.length);
   }
   if (type && type === "saleItems") {
+    console.log(finalProducts);
     const saleItems = finalProducts.filter(
       (single) => single.discount && single.discount > 0
     );
+    console.log("Sale Items : ");
+    console.log(saleItems);
     return saleItems.slice(0, limit ? limit : saleItems.length);
   }
   return finalProducts.slice(0, limit ? limit : finalProducts.length);

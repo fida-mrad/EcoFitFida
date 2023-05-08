@@ -73,14 +73,14 @@ const ProductImageGalleryLeftThumb = ({ product, thumbPosition }) => {
               : "col-xl-10")}
         >
           <div className="product-large-image-wrapper">
-            {product.discount || diffInDays < 1 ? (
+            {product.discount || diffInDays < 3 ? (
               <div className="product-img-badges">
                 {product.discount ? (
                   <span className="pink">-{product.discount}%</span>
                 ) : (
                   ""
                 )}
-                {diffInDays < 1 ? <span className="purple">New</span> : ""}
+                {diffInDays < 3 ? <span className="purple">New</span> : ""}
               </div>
             ) : (
               ""

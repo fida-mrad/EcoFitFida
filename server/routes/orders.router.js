@@ -9,5 +9,7 @@ router.get("/getOrders", controller.getOrders);
 router.get("/getOrderById/:id", controller.getOrderById);
 router.delete("/deleteOrder/:id", authClient,controller.deleteOrder);
 router.get("/getOrdersByClient", authClient,controller.getOrdersByClient);
+router.get("/getOrdersByBrand/:id", controller.getOrdersByBrand);
+
 
 module.exports = router;

@@ -13,15 +13,9 @@ const ordersController = {
       orderItems: req.body.orderItems.map((item) => ({
         _id: item._id,
         name: item.name,
-        // quantity: item.quantity,
         image: item.image,
-        // price: item.price,
+        price: item.price,
         variation: item.variation,
-        // variation: {
-        //   color: item.selectedProductColor,
-        //   size: item.selectedProductSize,
-        //   quantity: item.quantity,
-        // },
       })),
       shippingAddress: {
         fullName: req.body.shippingAddress.fullName,
@@ -51,6 +45,7 @@ const ordersController = {
       orderItems.forEach((item) => {
         console.log(item);
         Product.findById(item._id, (err, product) => {
+          product.saleCount++;
           const variation = product.variation.find(
             (v) => v.color == item.variation.color
             // &&
@@ -65,7 +60,7 @@ const ordersController = {
                 s.stock -= item.variation.quantity;
               }
             });
-
+            product.saleCount += 1;
             product.save((err) => {
               if (err) {
                 return res.status(400).send({ msg: err.message });
@@ -88,7 +83,7 @@ const ordersController = {
       //   message: "Created an order using POST request",
       //   createdItem: addedOrder,
       // });
-      return res.status(201).send({products});
+      return res.status(201).send({ products });
     }
     // } catch (err) {
     //   console.log(err.message);
@@ -153,6 +148,24 @@ const ordersController = {
       const clientId = mongoose.Types.ObjectId(req.body.id);
       Order.find({ client: clientId });
       const orders = await Order.find({ client: clientId });
+      if (orders) {
+        res.status(200).send(orders);
+      } else {
+        res.status(404).send({ message: "No Orders Found" });
+      }
+    } catch (err) {
+      console.log(err);
+      res.send({ msg: err.message });
+    }
+  },
+  getOrdersByBrand: async (req, res) => {
+    try {
+      const brandId = mongoose.Types.ObjectId(req.params.id);
+      let orders = await Order.find({}).populate({
+        path: "orderItems.product",
+        match: { "brand": brandId },
+      });
+      console.log(orders);
       if (orders) {
         res.status(200).send(orders);
       } else {
