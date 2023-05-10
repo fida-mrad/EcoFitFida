@@ -25,11 +25,11 @@ const Compare = () => {
       />
       <LayoutOne headerTop="visible">
         {/* breadcrumb */}
-        <Breadcrumb 
+        <Breadcrumb
           pages={[
-            {label: "Home", path: process.env.PUBLIC_URL + "/" },
-            {label: "Compare", path: process.env.PUBLIC_URL + pathname }
-          ]} 
+            { label: "Home", path: process.env.PUBLIC_URL + "/" },
+            { label: "Compare", path: process.env.PUBLIC_URL + pathname },
+          ]}
         />
         <div className="compare-main-area pt-90 pb-100">
           <div className="container">
@@ -44,14 +44,16 @@ const Compare = () => {
                             <th className="title-column">Product Info</th>
                             {compareItems.map((compareItem, key) => {
                               const cartItem = cartItems.find(
-                                item => item.id === compareItem.id
+                                (item) => item.id === compareItem.id
                               );
                               return (
                                 <td className="product-image-title" key={key}>
                                   <div className="compare-remove">
                                     <button
                                       onClick={() =>
-                                        dispatch(deleteFromCompare(compareItem._id))
+                                        dispatch(
+                                          deleteFromCompare(compareItem._id)
+                                        )
                                       }
                                     >
                                       <i className="pe-7s-trash" />
@@ -71,7 +73,10 @@ const Compare = () => {
                                       //   process.env.PUBLIC_URL +
                                       //   compareItem.image[0]
                                       // }
-                                      src={"http://localhost:8000/images/"+compareItem.image[0]}
+                                      src={
+                                        "http://localhost:8000/images/" +
+                                        compareItem.image[0]
+                                      }
                                       alt=""
                                     />
                                   </Link>
@@ -195,9 +200,14 @@ const Compare = () => {
                           <tr>
                             <th className="title-column">Rating</th>
                             {compareItems.map((compareItem, key) => {
+                              let averageRating =
+                                compareItem.reviews.reduce((total, review) => {
+                                  return total + review.rating;
+                                }, 0) / compareItem.reviews.length;
+                              averageRating = Math.floor(averageRating);
                               return (
                                 <td className="product-rating" key={key}>
-                                  <Rating ratingValue={compareItem.rating} />
+                                  <Rating ratingValue={averageRating} />
                                 </td>
                               );
                             })}
@@ -233,4 +243,3 @@ const Compare = () => {
 };
 
 export default Compare;
-

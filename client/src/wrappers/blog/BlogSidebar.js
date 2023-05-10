@@ -1,7 +1,24 @@
-
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { blogsController } from "../../services/blogsApi";
+import { useEffect, useState } from "react";
 
 const BlogSidebar = () => {
+  const [blogs, setBlogs] = useState([]);
+  const { id } = useParams();
+
+  useEffect(() => {
+    async function fetchBlogs() {
+      try {
+        const response = await blogsController.getAllBlogsExceptCurrent(id);
+        setBlogs(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchBlogs();
+  }, []);
+
   return (
     <div className="sidebar-style">
       <div className="sidebar-widget">
@@ -16,133 +33,65 @@ const BlogSidebar = () => {
         </div>
       </div>
       <div className="sidebar-widget">
-        <h4 className="pro-sidebar-title">Recent Projects </h4>
+        <h4 className="pro-sidebar-title">Recent Blogs </h4>
         <div className="sidebar-project-wrap mt-30">
-          <div className="single-sidebar-blog">
-            <div className="sidebar-blog-img">
-              <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>
-                <img
-                  src={
-                    process.env.PUBLIC_URL + "/assets/img/blog/sidebar-1.jpg"
+          {blogs.map((blog) => (
+            <div className="single-sidebar-blog">
+              <div className="sidebar-blog-img">
+                <Link
+                  to={
+                    process.env.PUBLIC_URL +
+                    `/blog-details-standard/${blog._id}`
                   }
-                  alt=""
-                />
-              </Link>
-            </div>
-            <div className="sidebar-blog-content">
-              <span>Photography</span>
-              <h4>
-                <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>
-                  T- Shart And Jeans
+                >
+                  <img
+                    src={"http://localhost:8000/uploads/" + blog.images[0]}
+                    alt=""
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                      objectFit: "cover",
+                    }}
+                  />
                 </Link>
-              </h4>
+              </div>
+              <div className="sidebar-blog-content">
+                {/*<span>Photography</span>*/}
+                <h4>
+                  <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>
+                    {/*T- Shart And Jeans*/}
+                  </Link>
+                </h4>
+              </div>
             </div>
-          </div>
-          <div className="single-sidebar-blog">
-            <div className="sidebar-blog-img">
-              <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>
-                <img
-                  src={
-                    process.env.PUBLIC_URL + "/assets/img/blog/sidebar-2.jpg"
-                  }
-                  alt=""
-                />
-              </Link>
-            </div>
-            <div className="sidebar-blog-content">
-              <span>Branding</span>
-              <h4>
-                <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>
-                  T- Shart And Jeans
-                </Link>
-              </h4>
-            </div>
-          </div>
-          <div className="single-sidebar-blog">
-            <div className="sidebar-blog-img">
-              <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>
-                <img
-                  src={
-                    process.env.PUBLIC_URL + "/assets/img/blog/sidebar-3.jpg"
-                  }
-                  alt=""
-                />
-              </Link>
-            </div>
-            <div className="sidebar-blog-content">
-              <span>Design</span>
-              <h4>
-                <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>
-                  T- Shart And Jeans
-                </Link>
-              </h4>
-            </div>
-          </div>
-          <div className="single-sidebar-blog">
-            <div className="sidebar-blog-img">
-              <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>
-                <img
-                  src={
-                    process.env.PUBLIC_URL + "/assets/img/blog/sidebar-2.jpg"
-                  }
-                  alt=""
-                />
-              </Link>
-            </div>
-            <div className="sidebar-blog-content">
-              <span>Photography</span>
-              <h4>
-                <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>
-                  T- Shart And Jeans
-                </Link>
-              </h4>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
+
       <div className="sidebar-widget mt-35">
-        <h4 className="pro-sidebar-title">Categories</h4>
-        <div className="sidebar-widget-list sidebar-widget-list--blog mt-20">
-          <ul>
-            <li>
-              <div className="sidebar-widget-list-left">
-                <input type="checkbox" defaultValue />{" "}
-                <Link to={process.env.PUBLIC_URL + "/blog-standard"}>
-                  Women <span>4</span>{" "}
-                </Link>
-                <span className="checkmark" />
-              </div>
-            </li>
-            <li>
-              <div className="sidebar-widget-list-left">
-                <input type="checkbox" defaultValue />{" "}
-                <Link to={process.env.PUBLIC_URL + "/blog-standard"}>
-                  Men <span>4</span>{" "}
-                </Link>
-                <span className="checkmark" />
-              </div>
-            </li>
-            <li>
-              <div className="sidebar-widget-list-left">
-                <input type="checkbox" defaultValue />{" "}
-                <Link to={process.env.PUBLIC_URL + "/blog-standard"}>
-                  Bags <span>4</span>{" "}
-                </Link>
-                <span className="checkmark" />
-              </div>
-            </li>
-            <li>
-              <div className="sidebar-widget-list-left">
-                <input type="checkbox" defaultValue />{" "}
-                <Link to={process.env.PUBLIC_URL + "/blog-standard"}>
-                  Accessories <span>4</span>{" "}
-                </Link>
-                <span className="checkmark" />
-              </div>
-            </li>
-          </ul>
-        </div>
+        <h4 className="pro-sidebar-title">Others titles</h4>
+        {blogs.map((blog) => (
+          <div className="sidebar-widget-list sidebar-widget-list--blog mt-20">
+            <ul>
+              <li>
+                <div className="sidebar-widget-list-left">
+                  <input type="text" />
+                  <Link
+                    to={
+                      process.env.PUBLIC_URL +
+                      `/blog-details-standard/${blog._id}`
+                    }
+                  >
+                    {blog.title.substr(0, 10)}
+                  {blog.title.length > 10 ? "..." : ""} <span> {blog?.comments?.length}</span>{" "}
+                  </Link>
+                </div>
+              </li>
+            </ul>
+          </div>
+        ))}
       </div>
+
       <div className="sidebar-widget mt-50">
         <h4 className="pro-sidebar-title">Tag </h4>
         <div className="sidebar-widget-tag mt-25">

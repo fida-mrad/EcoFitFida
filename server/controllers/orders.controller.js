@@ -161,16 +161,38 @@ const ordersController = {
   getOrdersByBrand: async (req, res) => {
     try {
       const brandId = mongoose.Types.ObjectId(req.params.id);
-      let orders = await Order.find({}).populate({
-        path: "orderItems.product",
-        match: { "brand": brandId },
-      });
-      console.log(orders);
-      if (orders) {
-        res.status(200).send(orders);
-      } else {
-        res.status(404).send({ message: "No Orders Found" });
-      }
+      // let orders = await Order.find({}).populate({
+      //   path: "orderItems.product",
+      //   match: { "brand._id": brandId },
+      // });
+      // console.log(orders.length);
+      // if (orders) {
+      //   res.status(200).send(orders);
+      // } else {
+      //   res.status(404).send({ message: "No Orders Found" });
+      // }
+
+      Order.find({})
+        .populate({
+          path: "orderItems",
+          match: { brand: brandId },
+          populate: {
+            path: "product",
+            model: "Product",
+          },
+        })
+        .exec((err, orders) => {
+          if (err) {
+            console.error(err);
+            return res.send({msg : err.message})
+          } else {
+            const filteredOrders = orders.filter((order) => {
+              return order.orderItems.length > 0;
+            });
+            console.log(filteredOrders);
+            return res.send(filteredOrders);
+          }
+        });
     } catch (err) {
       console.log(err);
       res.send({ msg: err.message });

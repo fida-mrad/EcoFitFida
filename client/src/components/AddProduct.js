@@ -164,13 +164,16 @@ const colors = {
 };
 function AddProduct() {
   const [materials, setMaterials] = useState([
-    { name: "Cotton", percentage: 0 },
-    // { name: "Hemp", percentage: 0 },
-    { name: "Linen", percentage: 0 },
-    { name: "Silk", percentage: 0 },
-    { name: "Wool", percentage: 0 },
-    // { name: "Cashmere", percentage: 0 },
-    { name: "Polyester", percentage: 0 },
+    { name: "Cotton", percentage: 0 }, //E
+    { name: "Hemp", percentage: 0 }, //A
+    { name: "Linen", percentage: 0 }, //C
+    { name: "Silk", percentage: 0 }, //B
+    { name: "Wool", percentage: 0 }, //E
+    { name: "Viscose", percentage: 0 }, //E
+    { name: "Polyester", percentage: 0 }, //D
+    { name: "Recycled Polyester", percentage: 0 }, //A
+    { name: "Nylon", percentage: 0 }, //E
+    { name: "Recycled Nylon", percentage: 0 }, //B
   ]);
 
   const handlePercentageChange = (event, index) => {
@@ -297,7 +300,7 @@ function AddProduct() {
       result.message = "Please Fill In Your Varitions Correctly";
       return result;
     }
-    result = true;
+    result.status = true;
     return result;
   };
   const handleSubmit = async (event) => {
@@ -324,6 +327,7 @@ function AddProduct() {
     });
     // console.log(updatedVariations);
     let fromIsValid = validateForm();
+    console.log(fromIsValid.status);
     if (fromIsValid.status) {
       const data = {
         ...formData,

@@ -63,6 +63,8 @@ const productSchema = new mongoose.Schema(
     reviews: [reviewSchema],
     shortDescription: { type: String },
     fullDescription: { type: String },
+    stripeId: { type: String },
+    priceId: { type: String },
     materials: {
       type: [
         {

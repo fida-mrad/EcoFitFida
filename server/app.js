@@ -5,7 +5,8 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
 const passport = require("passport");
-const stripe = require('stripe')(process.env.STRIPE_SERCRET_KEY);
+const dotenv = require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SERCRET_KEY);
 //require('./passport-config');
 // const session = require('express-session');
 // require('dotenv').config();
@@ -21,6 +22,9 @@ var productsRouter = require("./routes/products.router");
 var ordersRouter = require("./routes/orders.router");
 var blogsRouter = require("./routes/blog.router");
 const db = require("./config/dbconnection");
+const Order = require("./models/order");
+const mongoose = require("mongoose");
+const Product = require("./models/product");
 var app = express();
 
 app.use(logger("dev"));
@@ -97,15 +101,60 @@ app.post("/checkout", async (req, res) => {
     success_url: "http://localhost:3000/success",
     cancel_url: "http://localhost:3000/cancel",
   });
-
   //show the user the session that stripe create for them
   res.send(
     JSON.stringify({
       url: session.url,
     })
   );
-});
+  try {
+    const newOrder = new Order({
+      _id: new mongoose.Types.ObjectId(),
+      orderItems: req.body.data.orderItems.map((item) => ({
+        _id: item._id,
+        name: item.name,
+        image: item.image,
+        price: item.price,
+        variation: item.variation,
+      })),
+      shippingAddress: {
+        fullName: req.body.data.shippingAddress.fullName,
+        address: req.body.data.shippingAddress.address,
+        city: req.body.data.shippingAddress.city,
+        postalCode: req.body.data.shippingAddress.postalCode,
+        country: req.body.data.shippingAddress.country,
+      },
+      totalPrice: req.body.data.totalPrice,
+      client: req.body.data.id,
+    });
+    const result = await newOrder.save();
+    let orderItems = req.body.data.orderItems;
+    orderItems.forEach((item) => {
+      Product.findById(item._id, (err, product) => {
+        product.saleCount++;
+        const variation = product.variation.find(
+          (v) => v.color == item.variation.color
+        );
 
+        if (variation) {
+          variation.size.forEach((s) => {
+            if (s.name === item.variation.size) {
+              s.stock -= item.variation.quantity;
+            }
+          });
+          product.saleCount += 1;
+          product.save((err) => {
+            if (err) {
+              console.log(err.message);
+            }
+          });
+        }
+      });
+    });
+  } catch (err) {
+    return;
+  }
+});
 // login facebook
 app.use(passport.initialize());
 app.use(passport.session());

@@ -28,7 +28,11 @@ const ProductGridSingle = ({
     discountedPrice * currency.currencyRate
   ).toFixed(2);
   const dispatch = useDispatch();
-
+  let averageRating =
+    product.reviews.reduce((total, review) => {
+      return total + review.rating;
+    }, 0) / product.reviews.length;
+  averageRating = Math.floor(averageRating);
   return (
     <Fragment>
       <div className={clsx("product-wrap", spaceBottomClass)}>
@@ -129,9 +133,9 @@ const ProductGridSingle = ({
               {product.name}
             </Link>
           </h3>
-          {product.rating && product.rating > 0 ? (
+          {product.reviews.length > 0 && averageRating > 0 ? (
             <div className="product-rating">
-              <Rating ratingValue={product.rating} />
+              <Rating ratingValue={averageRating} />
             </div>
           ) : (
             ""

@@ -1,5 +1,5 @@
-import React, { Fragment, useState, useMemo } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { Fragment, useState, useMemo, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getDiscountPrice } from "../../helpers/product";
 import SEO from "../../components/seo";
@@ -13,12 +13,12 @@ import { ordersController } from "../../services/coreApi";
 import { deleteAllFromCart } from "../../store/slices/cart-slice";
 import { store } from "../../store/store";
 import { setProducts } from "../../store/slices/product-slice";
-const stripe = require("stripe")(
-  "sk_test_51N2WnWAjlSGuPHxBk55yEix0U7ISI0DYyddQptPLhkD8op06HYPdRgyV64bIbYyFibm25pnsWoXah6Vh1Q7yhIaG00gJ7SomlO"
-);
+import { useClient } from "../../ClientContext";
 
 const Checkout = () => {
   let cartTotalPrice = 0;
+  const { client, setClient } = useClient();
+  const [clientState, setClientState] = useState(null);
   const [phoneNumber, setphoneNumber] = useState("");
   const dispatch = useDispatch();
   const [formFields, setformFields] = useState({
@@ -32,7 +32,38 @@ const Checkout = () => {
   const [country, setCountry] = useState("");
   const [countryLabel, setCountryLabel] = useState("");
   const options = useMemo(() => countryList().getData(), []);
-
+  const navigate = useNavigate();
+  useEffect(() => {
+    setClientState((prevState) => ({
+      ...prevState,
+      firstname: client?.data?.firstname,
+      lastname: client?.data?.lastname,
+      phone: client?.data?.phone,
+    }));
+    setformFields((prevState) => ({
+      ...prevState,
+      firstname: client?.data?.firstname,
+      lastname: client?.data?.lastname,
+    }));
+    setphoneNumber(client?.data?.phone);
+  }, [client]);
+  const ItemsProd = [
+    {
+      // id: "price_1MxYsTEXYQfbBZFawbRuVC62",
+      // id: "price_1N5oKzEXYQfbBZFaGKsCc1PT",
+      id: "price_1N5oSsEXYQfbBZFa8xq9s86B",
+      // id:"price_1N5odGEXYQfbBZFaWWKE00D9",
+      quantity: 1,
+    },
+    {
+      // id: "price_1MxYsTEXYQfbBZFawbRuVC62",
+      // id: "price_1N5oKzEXYQfbBZFaGKsCc1PT",
+      // id: "price_1N5oSsEXYQfbBZFa8xq9s86B",
+      id: "price_1N5odGEXYQfbBZFaWWKE00D9",
+      quantity: 2,
+    },
+    // {},
+  ];
   const countryChangeHandler = (value) => {
     setCountry(value);
     setCountryLabel(value.label);
@@ -46,22 +77,55 @@ const Checkout = () => {
     setformFields({ ...formFields, [text]: e.target.value });
   };
   const checkout = async () => {
-    await fetch("http://localhost:8000/checkout", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + stripe.apiKey,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ items: cartItems }),
-    })
-      .then((response) => {
-        return response.json();
+    if (!client) {
+      navigate("/login");
+    } else {
+      let data = {
+        orderItems: cartItems.map((item) => ({
+          _id: item._id,
+          name: item.name,
+          image: item.image[0],
+          price:
+            getDiscountPrice(item.price, item.discount)?.toFixed(2) ||
+            item.price.toFixed(2),
+          variation: {
+            color: item.selectedProductColor,
+            size: item.selectedProductSize,
+            quantity: item.quantity,
+          },
+        })),
+        shippingAddress: {
+          fullName: formFields.firstname + " " + formFields.lastname,
+          address: formFields.address,
+          city: formFields.city,
+          postalCode: formFields.postalCode,
+          country: countryLabel,
+        },
+        additionalInfo: formFields.additionalInfo,
+        totalPrice: cartTotalPrice.toFixed(2),
+      };
+      let stripeItems = cartItems.map((item) => ({
+        id: item.priceId,
+        quantity: item.quantity,
+      }));
+      await fetch("http://localhost:8000/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ items: stripeItems, data: data }),
+        // body: JSON.stringify({ items: ItemsProd }),
       })
-      .then((response) => {
-        if (response.url) {
-          window.location.assign(response.url); // Forwarding user to Stripe
-        }
-      });
+        .then((response) => {
+          return response.json();
+        })
+        .then((response) => {
+          if (response.url) {
+            console.log(response.url);
+            window.location.assign(response.url); // Forwarding user to Stripe
+          }
+        });
+    }
   };
   const addOrder = async () => {
     console.log(cartItems);
@@ -126,6 +190,7 @@ const Checkout = () => {
                           <input
                             type="text"
                             onChange={handleChange("firstname")}
+                            value={formFields.firstname || ""}
                           />
                         </div>
                       </div>
@@ -135,6 +200,7 @@ const Checkout = () => {
                           <input
                             type="text"
                             onChange={handleChange("lastname")}
+                            value={formFields.lastname || ""}
                           />
                         </div>
                       </div>
@@ -273,11 +339,11 @@ const Checkout = () => {
                       </div>
                       <div className="payment-method"></div>
                     </div>
-                    <div className="place-order mt-25">
+                    {/* <div className="place-order mt-25">
                       <button className="btn-hover" onClick={addOrder}>
                         Place Order
                       </button>
-                    </div>
+                    </div> */}
                     <div className="place-order mt-25">
                       <button className="btn-hover" onClick={checkout}>
                         Pay

@@ -73,7 +73,7 @@ function BrandProducts({ agent }) {
     e.preventDefault();
     let data = { productId: currentProductId, discount: discount };
     console.log(data);
-    const res = await productsController.addReview(data);
+    const res = await productsController.setOnSale(data);
     console.log(res);
     if (res.status === 201) {
       setShowDiscountInput(false);

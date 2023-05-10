@@ -61,7 +61,7 @@ export const productsController = {
         return err.response;
       });
   },
-  async addReview(data) {
+  async setOnSale(data) {
     return axios
       .put(`${url}/products/setOnSale`, data, {
         withCredentials: true,

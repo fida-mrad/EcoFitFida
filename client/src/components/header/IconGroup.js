@@ -60,12 +60,16 @@ const IconGroup = ({ iconWhiteClass }) => {
         </button>
         <div className="account-dropdown">
           <ul>
-            <li>
-              <Link to={process.env.PUBLIC_URL + "/login"}>Login</Link>
-            </li>
-            <li>
-              <Link to={process.env.PUBLIC_URL + "/register"}>Sign Up</Link>
-            </li>
+            {!clientState && (
+              <li>
+                <Link to={process.env.PUBLIC_URL + "/login"}>Login</Link>
+              </li>
+            )}
+            {!clientState && (
+              <li>
+                <Link to={process.env.PUBLIC_URL + "/register"}>Sign Up</Link>
+              </li>
+            )}
             {clientState && (
               <>
                 <li>

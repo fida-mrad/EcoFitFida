@@ -20,13 +20,15 @@ const ProductDescriptionInfoSlider = ({
 }) => {
   const dispatch = useDispatch();
   const [selectedProductColor, setSelectedProductColor] = useState(
-    product.variation.length!==0 ? product.variation[0].color : ""
+    product.variation.length !== 0 ? product.variation[0].color : ""
   );
   const [selectedProductSize, setSelectedProductSize] = useState(
-    product.variation.length!==0 ? product.variation[0].size[0].name : ""
+    product.variation.length !== 0 ? product.variation[0].size[0].name : ""
   );
   const [productStock, setProductStock] = useState(
-    product.variation.length!==0 ? product.variation[0].size[0].stock : product.stock
+    product.variation.length !== 0
+      ? product.variation[0].size[0].stock
+      : product.stock
   );
   const [quantityCount, setQuantityCount] = useState(1);
 
@@ -36,6 +38,11 @@ const ProductDescriptionInfoSlider = ({
     selectedProductColor,
     selectedProductSize
   );
+  let averageRating =
+    product.reviews.reduce((total, review) => {
+      return total + review.rating;
+    }, 0) / product.reviews.length;
+  averageRating = Math.floor(averageRating);
 
   return (
     <div className="product-details-content pro-details-slider-content">
@@ -52,10 +59,10 @@ const ProductDescriptionInfoSlider = ({
           <span>{currency.currencySymbol + finalProductPrice} </span>
         )}
       </div>
-      {product.rating && product.rating > 0 ? (
+      {product.reviews.length > 0 && averageRating > 0 > 0 ? (
         <div className="pro-details-rating-wrap justify-content-center">
           <div className="pro-details-rating mr-0">
-            <Rating ratingValue={product.rating} />
+            <Rating ratingValue={averageRating} />
           </div>
         </div>
       ) : (
@@ -100,7 +107,7 @@ const ProductDescriptionInfoSlider = ({
             <span>Size</span>
             <div className="pro-details-size-content">
               {product.variation &&
-                product.variation.map(single => {
+                product.variation.map((single) => {
                   return single.color === selectedProductColor
                     ? single.size.map((singleSize, key) => {
                         return (
@@ -147,17 +154,20 @@ const ProductDescriptionInfoSlider = ({
         //   </div>
         // </div>
         <div className="pro-details-quality">
-        <div className="pro-details-cart btn-hover" onClick={()=>console.log("Buy Nom")}>
-          {/* <a
+          <div
+            className="pro-details-cart btn-hover"
+            onClick={() => console.log("Buy Nom")}
+          >
+            {/* <a
             // href={product.affiliateLink}
             href="#!"
             rel="noopener noreferrer"
             target="_blank"
           > */}
             Buy Now PDInfoSlider
-          {/* </a> */}
+            {/* </a> */}
+          </div>
         </div>
-      </div>
       ) : (
         <div className="pro-details-quality justify-content-center">
           <div className="cart-plus-minus">
@@ -192,12 +202,22 @@ const ProductDescriptionInfoSlider = ({
             {productStock && productStock > 0 ? (
               <button
                 onClick={() =>
-                  dispatch(addToCart({
-                    ...product,
-                    quantity: quantityCount,
-                    selectedProductColor: selectedProductColor ? selectedProductColor : product.selectedProductColor ? product.selectedProductColor : null,
-                    selectedProductSize: selectedProductSize ? selectedProductSize : product.selectedProductSize ? product.selectedProductSize : null
-                  }))
+                  dispatch(
+                    addToCart({
+                      ...product,
+                      quantity: quantityCount,
+                      selectedProductColor: selectedProductColor
+                        ? selectedProductColor
+                        : product.selectedProductColor
+                        ? product.selectedProductColor
+                        : null,
+                      selectedProductSize: selectedProductSize
+                        ? selectedProductSize
+                        : product.selectedProductSize
+                        ? product.selectedProductSize
+                        : null,
+                    })
+                  )
                 }
                 disabled={productCartQty >= productStock}
               >
@@ -316,7 +336,7 @@ ProductDescriptionInfoSlider.propTypes = {
   finalDiscountedPrice: PropTypes.number,
   finalProductPrice: PropTypes.number,
   product: PropTypes.shape({}),
-  wishlistItem: PropTypes.shape({})
+  wishlistItem: PropTypes.shape({}),
 };
 
 export default ProductDescriptionInfoSlider;

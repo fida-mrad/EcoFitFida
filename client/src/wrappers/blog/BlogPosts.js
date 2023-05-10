@@ -24,10 +24,15 @@ const BlogPosts = () => {
                 <div key={blog._id} className="col-lg-6 col-md-6 col-sm-12">
                     <div className="blog-wrap-2 mb-30">
                         <div className="blog-img-2">
-                            <Link to={process.env.PUBLIC_URL + `/blog-details-standard/${blog._id}`}>
+                            <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>
                                 <img
                                     src={ "http://localhost:8000/uploads/" + blog.images[0]}
                                     alt=""
+                                    style={{
+                                        width : "750px",
+                                        height : "440px",
+                                        objectFit: "cover"
+                                    }}
                                 />
                             </Link>
                         </div>
@@ -37,15 +42,15 @@ const BlogPosts = () => {
                                     <li>{blog.createdAt}</li>
                                     <li>
                                         <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>
-                                            4 <i className="fa fa-comments-o" />
+                                            {blog?.comments?.length} <i className="fa fa-comments-o" />
                                         </Link>
                                     </li>
                                 </ul>
                             </div>
                             <h4>
-                                <Link to={process.env.PUBLIC_URL + `/blog-details-standard/${blog._id}`}>{blog.title}</Link>
+                                <Link to={process.env.PUBLIC_URL + "/blog-details-standard"}>{blog.title.substr(0, 30)}{blog.title.length > 30 ? "..." : ""}</Link>
                             </h4>
-                            <p>{blog.description}</p>
+                            <p>{blog.description.substr(0, 35)}{blog.description.length > 35 ? "...." : ""}</p>
                             <div className="blog-share-comment">
                                 <div className="blog-btn-2">
                                     <Link to={process.env.PUBLIC_URL + `/blog-details-standard/${blog._id}`}>read more</Link>

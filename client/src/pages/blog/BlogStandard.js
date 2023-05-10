@@ -38,10 +38,7 @@ const BlogStandard = () => {
                   <BlogPagination />
                 </div>
               </div>
-              <div className="col-lg-3">
-                {/* blog sidebar */}
-                <BlogSidebar />
-              </div>
+            
             </div>
           </div>
         </div>

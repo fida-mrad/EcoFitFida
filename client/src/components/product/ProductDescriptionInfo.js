@@ -1,6 +1,10 @@
 import PropTypes from "prop-types";
 import React, { Fragment, useEffect, useState } from "react";
-import { FacebookShareButton, PinterestShareButton, TwitterShareButton } from "react-share";
+import {
+  FacebookShareButton,
+  PinterestShareButton,
+  TwitterShareButton,
+} from "react-share";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getProductCartQuantity } from "../../helpers/product";
@@ -54,10 +58,18 @@ const ProductDescriptionInfo = ({
     selectedProductColor,
     selectedProductSize
   );
-
+  let averageRating =
+    product.reviews.reduce((total, review) => {
+      return total + review.rating;
+    }, 0) / product.reviews.length;
+  averageRating = Math.floor(averageRating);
   return (
     <div className="product-details-content ml-70">
       <h2>{product.name}</h2>
+      <br></br>
+      <h4>
+        <i class="fas fa-registered"></i> {product.brand.brandname}
+      </h4>
       <div className="product-details-price">
         {discountedPrice !== null ? (
           <Fragment>
@@ -70,10 +82,10 @@ const ProductDescriptionInfo = ({
           <span>{currency.currencySymbol + finalProductPrice} </span>
         )}
       </div>
-      {product.rating && product.rating > 0 ? (
+      {product.reviews.length > 0 && averageRating > 0 ? (
         <div className="pro-details-rating-wrap">
           <div className="pro-details-rating">
-            <Rating ratingValue={product.rating} />
+            <Rating ratingValue={averageRating} />
           </div>
         </div>
       ) : (

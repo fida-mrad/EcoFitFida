@@ -9,16 +9,12 @@ const BlogFeatured = ({ spaceTopClass, spaceBottomClass }) => {
     <div className={clsx("blog-area", spaceTopClass, spaceBottomClass)}>
       <div className="container">
         <SectionTitle
-          titleText="OUR BLOG"
+          titleText="OUR BLOGS"
           positionClass="text-center"
           spaceClass="mb-55"
         />
         <div className="row">
-          {blogFeaturedData?.map(singlePost => (
-            <div className="col-lg-4 col-sm-6" key={singlePost.id}>
-              <BlogFeaturedSingle singlePost={singlePost} />
-            </div>
-          ))}
+          <BlogFeaturedSingle />
         </div>
       </div>
     </div>
@@ -27,7 +23,7 @@ const BlogFeatured = ({ spaceTopClass, spaceBottomClass }) => {
 
 BlogFeatured.propTypes = {
   spaceBottomClass: PropTypes.string,
-  spaceTopClass: PropTypes.string
+  spaceTopClass: PropTypes.string,
 };
 
 export default BlogFeatured;

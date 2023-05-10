@@ -6,6 +6,7 @@ import {
   getIndividualColors,
   getProductsIndividualSizes,
   getIndividualMaterials,
+  getIndividualBrands,
 } from "../../helpers/product";
 import ShopSearch from "../../components/product/ShopSearch";
 import ShopCategories from "../../components/product/ShopCategories";
@@ -13,6 +14,7 @@ import ShopColor from "../../components/product/ShopColor";
 import ShopSize from "../../components/product/ShopSize";
 import ShopTag from "../../components/product/ShopTag";
 import ShopMaterials from "../../components/product/ShopMaterials";
+import ShopBrands from "../../components/product/ShopBrands";
 
 const ShopSidebar = ({ products, getSortParams, sideSpaceClass }) => {
   const uniqueCategories = getIndividualCategories(products);
@@ -20,11 +22,15 @@ const ShopSidebar = ({ products, getSortParams, sideSpaceClass }) => {
   const uniqueSizes = getProductsIndividualSizes(products);
   const uniqueTags = getIndividualTags(products);
   const uniqueMaterials = getIndividualMaterials(products);
+  const brands = getIndividualBrands(products);
 
   return (
     <div className={clsx("sidebar-style", sideSpaceClass)}>
       {/* shop search */}
       <ShopSearch />
+
+      {/* filter by brand */}
+      <ShopBrands brands={brands} getSortParams={getSortParams} />
 
       {/* filter by categories */}
       <ShopCategories

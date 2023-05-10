@@ -64,6 +64,57 @@ export const findSimilarProducts = (products, productId) => {
   return similarityScores.slice(1, 6).map((s) => s.product);
 };
 
+export const getEcoProducts = (products) => {
+  const ecoProducts = products.map((p) => ({
+    product: p,
+    score: calculateScore(p),
+  }));
+  console.log("Eco Products :");
+  console.log(ecoProducts);
+
+  // sort the products by their similarity scores in descending order
+  ecoProducts.sort((a, b) => b.score - a.score);
+  // return the products with the highest similarity scores
+  return ecoProducts.slice(1, 6).map((s) => s.product);
+};
+const calculateScore = (prod) => {
+  let score = 0;
+  prod.materials.map((mat) => {
+    console.log(mat);
+    if (mat.name === "Cotton") {
+      score += mat.percentage * 4;
+    }
+    if (mat.name === "Hemp") {
+      score += mat.percentage * 20;
+    }
+    if (mat.name === "Linen") {
+      score += mat.percentage * 12;
+    }
+    if (mat.name === "Wool") {
+      score += mat.percentage * 4;
+    }
+    if (mat.name === "Viscose") {
+      score += mat.percentage * 4;
+    }
+    if (mat.name === "Polyester") {
+      score += mat.percentage * 8;
+    }
+    if (mat.name === "Recycled Polyester") {
+      score += mat.percentage * 20;
+    }
+    if (mat.name === "Nylon") {
+      score += mat.percentage * 4;
+    }
+    if (mat.name === "Recycled Nylon") {
+      score += mat.percentage * 16;
+    }
+    if (mat.name === "Silk") {
+      score += mat.percentage * 16;
+    }
+  });
+  return score;
+};
+
 function calculateJaccardSimilarity(setA, setB) {
   const intersection = new Set([...setA].filter((x) => setB.has(x)));
   const union = new Set([...setA, ...setB]);
@@ -120,6 +171,11 @@ export const getSortedProducts = (products, sortType, sortValue) => {
       return products.filter(
         (product) =>
           product.category.filter((single) => single === sortValue)[0]
+      );
+    }
+    if (sortType === "brands") {
+      return products.filter(
+        (product) => product.brand.brandname === sortValue
       );
     }
     if (sortType === "tag") {
@@ -195,6 +251,17 @@ export const getIndividualCategories = (products) => {
     });
   const individualProductCategories = getIndividualItemArray(productCategories);
   return individualProductCategories;
+};
+
+// get individual brands
+export const getIndividualBrands = (products) => {
+  let brands = [];
+  products &&
+    products.map((product) => {
+      return product.brand.brandname && brands.push(product.brand.brandname);
+    });
+  const individualBrands = getIndividualItemArray(brands);
+  return individualBrands;
 };
 
 // get individual tags

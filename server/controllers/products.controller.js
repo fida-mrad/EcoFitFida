@@ -6,6 +6,8 @@ const twilio = require("twilio");
 const accountSid = "ACfe57609f0902b9d2a40c61057289e577";
 const authToken = "14e20c42d08ab06982974241b483054a";
 const client = new twilio(accountSid, authToken);
+const dotenv = require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SERCRET_KEY);
 function sendSMS(name, shortDescription, price) {
   client.messages
     .create({
@@ -18,14 +20,16 @@ function sendSMS(name, shortDescription, price) {
 }
 const productsController = {
   getAll: async (req, res) => {
-    const products = await Product.find().populate({
-      path: "reviews",
-      populate: {
-        path: "client",
-        model: "client",
-        select: "firstname lastname username email _id",
-      },
-    });
+    const products = await Product.find()
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "client",
+          model: "client",
+          select: "firstname lastname username email _id",
+        },
+      })
+      .populate("brand");
     return res.status(200).send(products);
   },
   getByBrand: async (req, res) => {
@@ -101,6 +105,22 @@ const productsController = {
     if (product)
       return res.status(400).json({ msg: "Product already exists." });
     try {
+      const stripeProduct = await stripe.products.create({
+        name,
+        description: shortDescription,
+      });
+      console.log("Stripe Product :");
+      console.log(stripeProduct);
+
+      const priceObj = await stripe.prices.create({
+        product: stripeProduct.id,
+        unit_amount: price * 100, // Stripe requires the price in cents
+        currency: "usd",
+      });
+      console.log("Stripe Price :");
+      console.log(priceObj);
+      console.log(priceObj.unit_amount / 100);
+
       const newProduct = new Product({
         name: name,
         price: price,
@@ -112,10 +132,13 @@ const productsController = {
         materials: materials,
         brand: brand,
         variation: variation,
+        stripeId: stripeProduct.id,
+        priceId: priceObj.id,
       });
       console.log(newProduct);
       await newProduct.save();
       // sendSMS(name, shortDescription, fullDescription, price);
+
       return res.status(201).send({
         msg: "Product Added Successfully.",
       });
@@ -263,5 +286,6 @@ const productsController = {
       return res.send({ msg: error.message });
     }
   },
+  getEcoProducts: async (req, res) => {},
 };
 module.exports = productsController;
