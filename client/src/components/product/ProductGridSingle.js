@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Rating from "./sub-components/ProductRating";
-import { getDiscountPrice } from "../../helpers/product";
+import { calculateScore, getDiscountPrice } from "../../helpers/product";
 import ProductModal from "./ProductModal";
 import { addToCart } from "../../store/slices/cart-slice";
 import { addToWishlist } from "../../store/slices/wishlist-slice";
@@ -61,9 +61,34 @@ const ProductGridSingle = ({
                 ""
               )}
               {diffInDays < 3 ? <span className="purple">New</span> : ""}
+              <span
+                className={
+                  calculateScore(product) === 2000
+                    ? "green"
+                    : calculateScore(product) < 2000 &&
+                      calculateScore(product) > 400
+                    ? "orange"
+                    : "red"
+                }
+              >
+                {calculateScore(product) / 200}
+              </span>
             </div>
           ) : (
-            ""
+            <div className="product-img-badges">
+              <span
+                className={
+                  calculateScore(product) === 2000
+                    ? "green"
+                    : calculateScore(product) < 2000 &&
+                      calculateScore(product) > 400
+                    ? "orange"
+                    : "red"
+                }
+              >
+                {calculateScore(product) / 200}
+              </span>
+            </div>
           )}
 
           <div className="product-action">

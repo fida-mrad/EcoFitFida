@@ -2,9 +2,10 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { productsController } from "../../services/coreApi";
 import { useParams } from "react-router-dom";
+import { useClient } from "../../ClientContext";
 
 const ProductDescriptionTab = ({
   spaceBottomClass,
@@ -15,9 +16,20 @@ const ProductDescriptionTab = ({
   const filteredMaterials = productMaterials.filter(
     (material) => material.percentage > 0
   );
+  const [revs, setRevs] = useState(productReviews);
   const [rating, setRating] = useState(0);
   const { id } = useParams();
   const [comment, setComment] = useState("");
+  const [clientState, setClientState] = useState(null);
+  const { client, setClient } = useClient();
+  useEffect(() => {
+    setClientState((prevState) => ({
+      ...prevState,
+      firstname: client?.data.firstname,
+      lastname: client?.data.lastname,
+      _id: client?.data._id,
+    }));
+  }, [client]);
   const handleStarClick = (index) => {
     setRating(index + 1);
   };
@@ -48,9 +60,18 @@ const ProductDescriptionTab = ({
       rating: rating,
       comment: comment,
     });
-    if (res.status === 200) {
+    console.log(res);
+    if (res.status === 201) {
+      setRevs(res.data.reviews);
       setComment("");
       setRating(0);
+    }
+  };
+  const deleteReview = async (e, reviewId) => {
+    e.preventDefault();
+    const res = await productsController.deleteReview(id, reviewId);
+    if (res.status === 200) {
+      setRevs(revs.filter((r) => r._id != reviewId));
     }
   };
   return (
@@ -69,7 +90,7 @@ const ProductDescriptionTab = ({
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link eventKey="productReviews">
-                  Reviews({productReviews.length})
+                  Reviews({revs.length})
                 </Nav.Link>
               </Nav.Item>
             </Nav>
@@ -86,13 +107,13 @@ const ProductDescriptionTab = ({
                     <li>
                       <span>Materials</span>{" "}
                       {filteredMaterials.map((mat) => {
-                        return mat.name + ": " + mat.percentage+'% ';
+                        return mat.name + ": " + mat.percentage + "% ";
                       })}
                     </li>
-                    <li>
+                    {/* <li>
                       <span>Other Info</span> American heirloom jean shorts pug
                       seitan letterpress
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </Tab.Pane>
@@ -103,7 +124,8 @@ const ProductDescriptionTab = ({
                 <div className="row">
                   <div className="col-lg-7">
                     <div className="review-wrapper">
-                      {productReviews.map((review, index) => {
+                      {/* {productReviews.map((review, index) => { */}
+                      {revs.map((review, index) => {
                         return (
                           <>
                             {index % 2 === 0 ? (
@@ -146,7 +168,20 @@ const ProductDescriptionTab = ({
                                       </div>
                                     </div>
                                     <div className="review-left">
-                                      <button>Reply</button>
+                                      {clientState &&
+                                        clientState._id ===
+                                          review.client._id && (
+                                          <button
+                                            onClick={(e) =>
+                                              deleteReview(e, review._id)
+                                            }
+                                          >
+                                            <i
+                                              class="fas fa-trash"
+                                              style={{ color: "#ff0026" }}
+                                            ></i>
+                                          </button>
+                                        )}
                                     </div>
                                   </div>
                                   <div className="review-bottom">
@@ -195,7 +230,20 @@ const ProductDescriptionTab = ({
                                       </div>
                                     </div>
                                     <div className="review-left">
-                                      <button>Reply</button>
+                                      {clientState &&
+                                        clientState._id ===
+                                          review.client._id && (
+                                          <button
+                                            onClick={(e) =>
+                                              deleteReview(e, review._id)
+                                            }
+                                          >
+                                            <i
+                                              class="fas fa-trash"
+                                              style={{ color: "#ff0026" }}
+                                            ></i>
+                                          </button>
+                                        )}
                                     </div>
                                   </div>
                                   <div className="review-bottom">

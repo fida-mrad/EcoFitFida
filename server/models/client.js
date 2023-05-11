@@ -41,18 +41,18 @@ const clientSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    tfaSecret :{
-      type : String ,
-      required : false
+    tfaSecret: {
+      type: String,
+      required: false,
     },
-    tfa : {
-      type : Boolean,
-      default : false
+    tfa: {
+      type: Boolean,
+      default: false,
     },
-    banned : {
-      type : Boolean,
-      required : true,
-      default : false
+    banned: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
     role: {
       type: String,
@@ -61,8 +61,13 @@ const clientSchema = new mongoose.Schema(
     },
   },
   {
+    strictPopulate: false,
     timestamps: true,
   }
+  // ,
+  // {
+  //   timestamps: true,
+  // }
 );
 
 clientSchema.plugin(findOrCreate);

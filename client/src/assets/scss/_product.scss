@@ -275,6 +275,15 @@
         &.purple {
           background-color: $theme-color;
         }
+        &.green {
+          background-color: #12b648;
+        }
+        &.red {
+          background-color: #e92741;
+        }
+        &.orange {
+          background-color: #ffa812;
+        }
 
         &:last-child {
           margin-bottom: 0;
@@ -2988,6 +2997,15 @@
         &.pink {
           background-color: #fa6bff;
         }
+        &.green {
+          background-color: #12b648;
+        }
+        &.red {
+          background-color: #e92741;
+        }
+        &.orange {
+          background-color: #ffa812;
+        }
         &:last-child {
           margin-bottom: 0;
         }
@@ -3427,6 +3445,15 @@
       }
       &.pink {
         background-color: #fa6bff;
+      }
+      &.green {
+        background-color: #12b648;
+      }
+      &.red {
+        background-color: #e92741;
+      }
+      &.orange {
+        background-color: #ffa812;
       }
       &:last-child {
         margin-bottom: 0;

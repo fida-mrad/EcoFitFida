@@ -6,7 +6,7 @@ const transporter = require("../middleware/transporter");
 const _ = require("lodash");
 const mongoose = require("mongoose");
 const Brand = require("../models/brand");
-const cloudinary = require('../helpers/cloudinary');
+const cloudinary = require("../helpers/cloudinary");
 require("dotenv").config();
 
 const agentController = {
@@ -17,13 +17,14 @@ const agentController = {
       const lastname = req.body.lastname;
       const email = req.body.email;
       const password = req.body.password;
-      const uploadedImage = await cloudinary.uploader.upload(
-        req.file.path,
-        { folder: 'ecofit' }
-      );
-      let profileimg = uploadedImage.secure_url;
-      console.log(profileimg);
-      // const profileimg = req.file.path;
+      // const uploadedImage = await cloudinary.uploader.upload(
+      //   req.file.path,
+      //   { folder: 'ecofit' }
+      // );
+      // let profileimg = uploadedImage.secure_url;
+      // console.log(profileimg);
+
+      const profileimg = req.file.path;
       const brand = req.body.brand;
       if (
         !firstname ||
@@ -331,7 +332,9 @@ const agentController = {
         .send({ msg: "Rest Password Email Sent, please check your email." });
     } catch (err) {
       // res.status(400).send({ msg: err.message });
-      res.status(500).send({ msg: "Something Went Wrong , Please Try Again !" });
+      res
+        .status(500)
+        .send({ msg: "Something Went Wrong , Please Try Again !" });
     }
   },
   reset: async (req, res) => {

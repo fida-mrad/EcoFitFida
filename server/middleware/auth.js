@@ -11,14 +11,15 @@ const authAdmin = async (req, res, next) => {
   }
   try {
     const { id, role, exp } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
-    if (role != "Admin") return res.status(403).send("Access Denied");
+    if (role != "Admin")
+      return res.status(403).send({ msg: "Access Denied", role: role });
     req.body.id = id;
     req.body.exp = exp;
     req.body.role = role;
     next();
   } catch (ex) {
     // Invalid token
-    return res.status(500).send({msg : ex.message});
+    return res.status(500).send({ msg: ex.message });
   }
 };
 const authClient = async (req, res, next) => {
@@ -30,7 +31,10 @@ const authClient = async (req, res, next) => {
       );
       if (Object.keys(decodedToken).length !== 0) {
         if (decodedToken.passport.user.role != "Client") {
-          return res.status(403).send("Access Denied");
+          return res.status(403).send({
+            msg: "Access Denied",
+            role: decodedToken.passport.user.role,
+          });
         }
 
         req.body.id = decodedToken.passport.user._id;
@@ -46,7 +50,7 @@ const authClient = async (req, res, next) => {
   } else {
     try {
       const { id, role, exp } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
-      if (role != "Client") return res.status(403).send("Access Denied");
+      if (role != "Client") return res.status(401).send("Access Denied");
       req.body.id = id;
       req.body.exp = exp;
       req.body.role = role;
@@ -65,7 +69,8 @@ const authAgent = async (req, res, next) => {
   }
   try {
     const { id, role, exp } = jwt.verify(token, config.REFRESH_TOKEN_SECRET);
-    if (role != "Agent") return res.status(403).send("Access Denied");
+    if (role != "Agent")
+      return res.status(403).send({ msg: "Access Denied", role: role });
     req.body.id = id;
     req.body.exp = exp;
     req.body.role = role;

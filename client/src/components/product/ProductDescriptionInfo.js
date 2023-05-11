@@ -68,7 +68,7 @@ const ProductDescriptionInfo = ({
       <h2>{product.name}</h2>
       <br></br>
       <h4>
-        <i class="fas fa-registered"></i> {product.brand.brandname}
+        <i class="far fa-registered"></i> {product.brand.brandname}
       </h4>
       <div className="product-details-price">
         {discountedPrice !== null ? (

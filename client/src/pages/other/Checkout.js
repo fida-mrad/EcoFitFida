@@ -103,6 +103,7 @@ const Checkout = () => {
         },
         additionalInfo: formFields.additionalInfo,
         totalPrice: cartTotalPrice.toFixed(2),
+        id: client.data._id,
       };
       let stripeItems = cartItems.map((item) => ({
         id: item.priceId,
@@ -123,6 +124,7 @@ const Checkout = () => {
           if (response.url) {
             console.log(response.url);
             window.location.assign(response.url); // Forwarding user to Stripe
+            dispatch(deleteAllFromCart());
           }
         });
     }

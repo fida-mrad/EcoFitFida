@@ -103,6 +103,7 @@ const MyOrders = () => {
                             const formattedDate = new Date(
                               order.createdAt
                             ).toLocaleDateString();
+                            console.log(formattedDate);
                             return (
                               //   <>
                               <tr key={index}>
@@ -135,7 +136,10 @@ const MyOrders = () => {
                                                 //   process.env.PUBLIC_URL +
                                                 //   item.image
                                                 // }
-                                                src={"http://localhost:8000/images/"+item.image}
+                                                src={
+                                                  "http://localhost:8000/images/" +
+                                                  item.image
+                                                }
                                                 alt=""
                                               />
                                             </td>

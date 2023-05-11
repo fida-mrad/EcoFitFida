@@ -73,14 +73,13 @@ export const getEcoProducts = (products) => {
   console.log(ecoProducts);
 
   // sort the products by their similarity scores in descending order
-  ecoProducts.sort((a, b) => b.score - a.score);
+  let sorted = ecoProducts.sort((a, b) => b.score - a.score);
   // return the products with the highest similarity scores
-  return ecoProducts.slice(1, 6).map((s) => s.product);
+  return sorted.slice(0, 6).map((s) => s.product);
 };
-const calculateScore = (prod) => {
+export const calculateScore = (prod) => {
   let score = 0;
   prod.materials.map((mat) => {
-    console.log(mat);
     if (mat.name === "Cotton") {
       score += mat.percentage * 4;
     }

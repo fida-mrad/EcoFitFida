@@ -59,20 +59,30 @@ function MyProfileAgent() {
   useEffect(() => {
     console.log(agent);
     if (agent != null && agent.status >= 400) {
-      navigate("/agentlogin");
+      if (agent.status === 403 && agent.data.role === "Client") {
+        navigate("/");
+      } else if (agent.status === 403 && agent.data.role === "Admin") {
+        navigate("/adminlogin");
+      } else {
+        navigate("/agentlogin");
+      }
     } else {
-      const fetchImage = async () => {
-        const response = await fetch(
-          `http://localhost:8000/images/${agent?.data?.profileimg}`
-        );
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        setprofileImage((prevState) => ({
-          new: url,
-          old: url,
-        }));
-      };
-      fetchImage();
+      // const fetchImage = async () => {
+      //   const response = await fetch(
+      //     `http://localhost:8000/images/${agent?.data?.profileimg}`
+      //   );
+      //   const blob = await response.blob();
+      //   const url = URL.createObjectURL(blob);
+      //   setprofileImage((prevState) => ({
+      //     new: url,
+      //     old: url,
+      //   }));
+      // };
+      // fetchImage();
+      setprofileImage((prevState) => ({
+        new: `http://localhost:8000/images/${agent?.data?.profileimg}`,
+        old: `http://localhost:8000/images/${agent?.data?.profileimg}`,
+      }));
       setformFields((prevState) => ({
         ...prevState,
         firstname: agent?.data.firstname,
@@ -137,7 +147,7 @@ function MyProfileAgent() {
         // navigate("/agent");
         setUpdateAgentAlert({
           show: true,
-          msg: "Password Updated Successfully",
+          msg: "Profile Updated Successfully",
           color: "success",
           icon: cilCheckCircle,
         });

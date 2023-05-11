@@ -61,9 +61,40 @@ export const productsController = {
         return err.response;
       });
   },
+  async deleteReview(productId, reviewId) {
+    return axios
+      .delete(`${url}/products/deleteReview/${productId}/${reviewId}`, {
+        withCredentials: true,
+      })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  },
+
   async setOnSale(data) {
     return axios
       .put(`${url}/products/setOnSale`, data, {
+        withCredentials: true,
+      })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  },
+  async deleteProduct(id) {
+    return axios
+      .delete(`${url}/products/deleteProduct/${id}`, {
+        withCredentials: true,
+      })
+      .catch((err) => {
+        console.log(err);
+        return err.response;
+      });
+  },
+  async deleteProductByAdmin(id) {
+    return axios
+      .delete(`${url}/products/deleteProductAdmin/${id}`, {
         withCredentials: true,
       })
       .catch((err) => {

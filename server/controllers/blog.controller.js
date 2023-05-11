@@ -115,7 +115,7 @@ exports.createBlog = async (req, res) => {
 exports.getAllBlogs = (req, res) => {
   Blog.find()
     .then((blogs) => {
-      console.log(blogs);
+      // console.log(blogs);
       res.status(200).json(blogs);
     })
     .catch((err) => {

@@ -35,27 +35,28 @@ const AdminHeaderDropDown = () => {
     if (admin != null && admin.status >= 400) {
       navigate("/adminlogin");
     } else {
-      const fetchImage = async () => {
-        // const response = await fetch(
-        //   `http://localhost:8000/images/${admin.data?.profileimg}`
-        // );
-        // const blob = await response.blob();
-        // const url = URL.createObjectURL(blob);
-        // setAdminAvatar(url);
+      setAdminAvatar(avatar);
+      // const fetchImage = async () => {
+      //   // const response = await fetch(
+      //   //   `http://localhost:8000/images/${admin.data?.profileimg}`
+      //   // );
+      //   // const blob = await response.blob();
+      //   // const url = URL.createObjectURL(blob);
+      //   // setAdminAvatar(url);
 
-        fetch(`http://localhost:8000/images/${admin.data?.profileimg}`).then(
-          (response) => {
-            if (response.ok) {
-              const blob = response.blob();
-              const url = URL.createObjectURL(blob);
-              setAdminAvatar(url);
-            } else {
-              setAdminAvatar(avatar);
-            }
-          }
-        );
-      };
-      fetchImage();
+      //   fetch(`http://localhost:8000/images/${admin.data?.profileimg}`).then(
+      //     (response) => {
+      //       if (response.ok) {
+      //         const blob = response.blob();
+      //         const url = URL.createObjectURL(blob);
+      //         setAdminAvatar(url);
+      //       } else {
+      //         setAdminAvatar(avatar);
+      //       }
+      //     }
+      //   );
+      // };
+      // fetchImage();
     }
   }, [admin]);
 

@@ -43,10 +43,12 @@ const orderSchema = new mongoose.Schema(
   },
   {
     strictPopulate: false,
-  },
-  {
     timestamps: true,
   }
+  // ,
+  // {
+  //   timestamps: true,
+  // }
 );
 
 const Order = mongoose.model("Order", orderSchema);

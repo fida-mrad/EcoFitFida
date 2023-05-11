@@ -35,7 +35,7 @@ import { productsController } from "../services/coreApi";
 import { useAgent } from "../AgentContext";
 import { useNavigate } from "react-router-dom";
 import ProductModalBackOffice from "./product/ProductModalBackOffice";
-function BrandProducts({ agent }) {
+function ProductsAdmin({ agent }) {
   const navigate = useNavigate();
   // const { agent } = useAgent();
   // console.log("agent.data : ");
@@ -43,15 +43,9 @@ function BrandProducts({ agent }) {
   useEffect(() => {
     console.log("Agent : ");
     console.log(agent);
-    if (agent != null && agent.status > 400) {
-      if (agent.status === 403 && agent.data.role === "Client") {
-        navigate("/");
-      } else if (agent.status === 403 && agent.data.role === "Admin") {
-        navigate("/admin");
-      } else {
-        navigate("/agentlogin");
-      }
-    }
+    // if (agent!=null && agent.status>400) {
+    //   console.log("not logged in");
+    // }
     getProducts();
   }, [agent]);
 
@@ -64,9 +58,7 @@ function BrandProducts({ agent }) {
   //   const [alert, setAlert] = useState(false);
 
   const getProducts = async () => {
-    const res = await productsController.getProductsByBrand({
-      brandId: agent?.data.brand._id,
-    });
+    const res = await productsController.getAll();
     if (res.status === 200) setProducts(res.data);
   };
   const goToUpdateForm = (id) => {
@@ -86,7 +78,7 @@ function BrandProducts({ agent }) {
     }
   };
   const deleteProduct = async (id) => {
-    const res = await productsController.deleteProduct(id);
+    const res = await productsController.deleteProductByAdmin(id);
     if (res.status === 200) {
       const updatedProducts = products.filter((p) => p._id !== id);
       setProducts(updatedProducts);
@@ -175,59 +167,12 @@ function BrandProducts({ agent }) {
                       <i class="fas fa-eye"></i>
                     </CButton>
                     <CButton
-                      color="warning"
-                      onClick={() => goToUpdateForm(product._id)}
-                    >
-                      <i class="fas fa-pen"></i>
-                    </CButton>
-                    <CButton
-                      color="info"
-                      onClick={() => {
-                        setShowDiscountInput(true);
-                        setCurrentProductId(product._id);
-                      }}
-                    >
-                      {/* <i class="fas fa-percentage"></i> */}
-                      <i class="fas fa-dollar-sign"></i>
-                    </CButton>
-                    <CButton
                       color="danger"
                       onClick={() => deleteProduct(product._id)}
                     >
                       <i class="fas fa-trash"></i>
                     </CButton>
                   </div>
-                  <CModal
-                    visible={showDiscountInput}
-                    onClose={() => setShowDiscountInput(false)}
-                  >
-                    <CModalHeader onClose={() => setShowDiscountInput(false)}>
-                      <CModalTitle>Put Product On Sale</CModalTitle>
-                    </CModalHeader>
-                    <CModalBody>
-                      <CInputGroup className="mb-3">
-                        <CInputGroupText>%</CInputGroupText>
-                        <CFormInput
-                          min={0}
-                          max={90}
-                          placeholder="Discount Rate"
-                          onChange={handleDiscountChange}
-                          value={discount}
-                        />
-                      </CInputGroup>
-                    </CModalBody>
-                    <CModalFooter>
-                      <CButton
-                        color="secondary"
-                        onClick={() => setShowDiscountInput(false)}
-                      >
-                        Close
-                      </CButton>
-                      <CButton color="primary" onClick={setProductOnSale}>
-                        Save changes
-                      </CButton>
-                    </CModalFooter>
-                  </CModal>
                   {/* product modal */}
                   <ProductModalBackOffice
                     show={modalShow}
@@ -249,4 +194,4 @@ function BrandProducts({ agent }) {
   );
 }
 
-export default BrandProducts;
+export default ProductsAdmin;

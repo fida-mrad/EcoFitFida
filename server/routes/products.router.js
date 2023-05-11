@@ -13,5 +13,7 @@ router.put("/updateProduct", upload.any(), controller.updateProduct);
 router.post("/getById", authAgent, controller.getById);
 router.post("/addReview", authClient, controller.addReview);
 router.put("/setOnSale", authAgent, controller.setProductOnSale);
-
+router.delete("/deleteProduct/:id", authAgent, controller.deleteProduct);
+router.delete("/deleteProductAdmin/:id", authAdmin, controller.deleteProduct);
+router.delete("/deleteReview/:productId/:reviewId", authClient, controller.deleteReview);
 module.exports = router;
